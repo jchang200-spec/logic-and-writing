@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1: Paragraph Structure</title>
+<style>
+  :root{
+    --purple:#6b4a92;
+    --purple-dark:#4f3670;
+    --maroon:#7d1949;
+    --gold:#f2c869;
+    --gold-pale:#fbf0d3;
+    --cream:#fffdf8;
+    --ink:#2a2430;
+    --ink-soft:#5c5566;
+    --line:#e7dfd0;
+    --correct:#2f7d5b;
+    --correct-bg:#e6f4ed;
+    --wrong:#b3413a;
+    --wrong-bg:#fbebe9;
+  }
+  *{box-sizing:border-box;}
+  html{ font-size:19px; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Georgia","Noto Serif KR",serif;
+    line-height:1.7;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .top-banner{
+    background:linear-gradient(135deg,var(--purple) 0%,var(--purple-dark) 100%);
+    color:#fff;
+    padding:14px 24px;
+    flex-shrink:0;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .top-banner .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.7rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .top-banner h1{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:700;
+    display:inline;
+  }
+  .top-banner p{
+    margin:0;
+    color:#e7defb;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    flex:1;
+    min-width:200px;
+  }
+
+  .layout{
+    display:flex;
+    align-items:stretch;
+    flex:1;
+    min-height:0;
+  }
+  .sidebar{
+    position:relative;
+    top:0;
+    height:100%;
+    width:270px;
+    flex-shrink:0;
+    overflow-y:auto;
+    background:#faf6ec;
+    border-right:1px solid var(--line);
+    padding:22px 0;
+  }
+  .sidebar nav{
+    display:flex;
+    flex-direction:column;
+  }
+  .sidebar a{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:9px 22px;
+    border-left:3px solid transparent;
+  }
+  .sidebar a:hover{ color:var(--purple); background:#f2ecdd; }
+  .sidebar a.active{
+    color:var(--maroon);
+    font-weight:700;
+    border-left-color:var(--maroon);
+    background:#f2ecdd;
+  }
+  .sidebar .group-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a89f8c;
+    padding:14px 22px 4px;
+  }
+
+  .menu-toggle{
+    display:none;
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:50;
+    background:var(--maroon);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:9px 14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    cursor:pointer;
+  }
+
+  main{
+    flex:1;
+    min-width:0;
+    max-width:1040px;
+    margin:0 auto;
+    padding:30px 56px 90px;
+    height:100%;
+    overflow-y:auto;
+  }
+  section.block{
+    display:none;
+    margin-top:0;
+    animation:fadeIn .2s ease;
+  }
+  section.block.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:36px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .page-nav button{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:#fff;
+    border:1px solid var(--purple);
+    color:var(--purple);
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .page-nav button:hover{ background:var(--purple); color:#fff; }
+  .page-nav button:disabled{ opacity:.35; cursor:default; }
+  .page-nav button:disabled:hover{ background:#fff; color:var(--purple); }
+  h2.section-title{
+    background:var(--maroon);
+    color:#fff;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1rem;
+    letter-spacing:.04em;
+    padding:11px 18px;
+    margin:0 0 18px;
+    border-radius:2px;
+  }
+  h3.sub-title{
+    color:var(--maroon);
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1.02rem;
+    border-bottom:2px solid var(--gold);
+    display:inline-block;
+    padding-bottom:4px;
+    margin:28px 0 14px;
+  }
+  .model-para{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--purple);
+    padding:20px 22px;
+    border-radius:4px;
+    font-size:1.02rem;
+  }
+  .model-para .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage{
+    background:var(--gold-pale);
+    border:1px solid #ecd9a0;
+    padding:18px 20px;
+    border-radius:4px;
+    font-size:1rem;
+    margin-bottom:16px;
+  }
+  .passage h4{
+    margin:0 0 10px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--maroon);
+    font-size:.95rem;
+  }
+  .vocab{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .instructions{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.94rem;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .qa-item{ margin-bottom:16px; }
+  .qa-item label.qlabel{
+    display:block;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:600;
+    font-size:.93rem;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  textarea, input[type="text"]{
+    width:100%;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:.98rem;
+    padding:9px 11px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{ resize:vertical; min-height:52px; }
+  input[type="text"]{ height:38px; }
+
+  .group-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 18px 6px;
+    margin-bottom:22px;
+  }
+  .group-title{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--maroon);
+    font-size:.92rem;
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .item-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px dashed var(--line);
+  }
+  .item-row:first-of-type{ border-top:none; }
+  .item-letter{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--purple);
+    min-width:18px;
+  }
+  .item-text{ flex:1; font-size:.97rem; }
+  .item-select select{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.86rem;
+    padding:6px 8px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+  .mark{
+    display:inline-block;
+    min-width:22px;
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    margin-left:8px;
+  }
+  .mark.ok{ color:var(--correct); }
+  .mark.no{ color:var(--wrong); }
+
+  .radio-line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    margin-top:6px;
+    align-items:center;
+  }
+  .radio-line label{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+  }
+
+  .feedback-box{
+    margin-top:6px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    padding:8px 12px;
+    border-radius:3px;
+    display:none;
+  }
+  .feedback-box.show{ display:block; }
+  .feedback-box.correct{ background:var(--correct-bg); color:var(--correct); }
+  .feedback-box.wrong{ background:var(--wrong-bg); color:var(--wrong); }
+
+  .check-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    font-size:.92rem;
+    font-weight:600;
+    cursor:pointer;
+    margin:10px 0 6px;
+  }
+  .check-btn:hover{ background:var(--purple-dark); }
+
+  .score-banner{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:4px;
+    margin-top:10px;
+    display:none;
+  }
+  .score-banner.show{ display:block; }
+
+  .p4-sentence{
+    font-size:1rem;
+    margin-bottom:8px;
+  }
+  .label-tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    font-style:normal;
+    letter-spacing:.02em;
+  }
+  .p4-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .p4-col{
+    flex:1;
+    min-width:220px;
+  }
+  .p4-col span.tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:3px;
+  }
+  .p4-col select{
+    width:100%;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    padding:7px 9px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+
+  footer{
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    color:var(--ink-soft);
+    margin-top:60px;
+  }
+
+  @media (max-width:900px){
+    .menu-toggle{ display:block; }
+    .sidebar{
+      position:fixed;
+      top:0; left:0;
+      height:100vh;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:40;
+      box-shadow:2px 0 12px rgba(0,0,0,.15);
+    }
+    .sidebar.open{ transform:translateX(0); }
+    main{ padding:0 18px 90px; }
+    .top-banner h1{ font-size:1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">Sections ☰</button>
+
+<div class="top-banner">
+  <div class="eyebrow">Chapter 1</div>
+  <h1>Paragraph Structure</h1>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <span class="group-label">Introduction</span>
+      <a href="#sec-intro">Introduction</a>
+      <a href="#sec-model">Analyzing the Model</a>
+      <span class="group-label">Parts of a Paragraph</span>
+      <a href="#sec-parts">The Topic Sentence</a>
+      <a href="#sec-p2">Practice 2</a>
+      <a href="#sec-p3">Practice 3</a>
+      <a href="#sec-p4">Practice 4</a>
+      <a href="#sec-p5">Practice 5</a>
+      <a href="#sec-supporting">Supporting Sentences</a>
+      <a href="#sec-p6">Practice 6</a>
+      <a href="#sec-p7">Practice 7</a>
+      <a href="#sec-concluding">The Concluding Sentence</a>
+      <a href="#sec-p8">Practice 8</a>
+      <a href="#sec-p9">Practice 9</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- ================= INTRODUCTION ================= -->
+    <section class="block" id="sec-intro">
+      <h2 class="section-title">INTRODUCTION</h2>
+      <p>In this chapter, you will focus on the structure of a good paragraph. A <strong>paragraph</strong> is a group of related sentences that discusses one (and usually only one) main idea. A paragraph can be as short as one sentence or as long as ten sentences or more. The number of sentences is unimportant; however, the paragraph should be long enough to develop the main idea clearly. At the end of this chapter, you will write a well-structured paragraph on the topic of communication. For an example of a well-structured paragraph, look at the model.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL ================= -->
+    <section class="block" id="sec-model">
+      <h2 class="section-title">ANALYZING THE MODEL</h2>
+      <div class="model-para">
+        <h4 style="margin-top:0;color:var(--maroon);font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;">Communication Styles That Don't Communicate</h4>
+        <p>
+          <span class="num">1</span>Studies show that certain styles of interpersonal communication are less effective than<br>
+          others. <span class="num">2</span>Which styles are the ones to avoid? <span class="num">3</span>These same studies indicate that the two least<br>
+          effective styles are aggressive and passive communication. <span class="num">4</span>On the one hand, an aggressive<br>
+          style involves speaking in a disrespectful manner, expressing anger, or trying to dominate the<br>
+          conversation. <span class="num">5</span>For example, a business executive might tell her coworker that his ideas for<br>
+          a new product are terrible. <span class="num">6</span>Then she might interrupt him when he tries to explain his ideas.<br>
+          <span class="num">7</span>This approach hinders successful communication. <span class="num">8</span>It also creates barriers between people.<br>
+          <span class="num">9</span>A passive communication style, on the other hand, can be equally unproductive. <span class="num">10</span>A passive<br>
+          style might lead a person to hide his or her beliefs, speak quietly, and submit to all demands.<br>
+          <span class="num">11</span>Someone working on a fashion design project, for instance, might agree to use a fabric that he<br>
+          thinks is unattractive. <span class="num">12</span>He would not express his true feelings to the group. <span class="num">13</span>In short, ineffective<br>
+          communicators can fail to influence others either by being too forceful or by hiding their opinions.
+        </p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Model</h3>
+      <p class="instructions">Answer using the sentence numbers above as evidence. (We'll go over these together in class.)</p>
+      <div id="model-questions"></div>
+    </section>
+
+    <!-- ================= PARTS OF A PARAGRAPH ================= -->
+    <section class="block" id="sec-parts">
+      <h2 class="section-title">THE TOPIC SENTENCE</h2>
+      <p>Paragraphs generally include three parts. All paragraphs have a <strong>topic sentence</strong> and <strong>supporting sentences</strong>. Most paragraphs also have a <strong>concluding sentence</strong>.</p>
+
+      <p>Every good paragraph has a topic sentence. A topic sentence is the most important sentence in a paragraph. The topic sentence briefly indicates what the paragraph is going to discuss. For this reason, the topic sentence is a helpful guide to both the writer and the reader. The writer can see what information to include (and what information to exclude). The reader can see what the paragraph is going to be about and is therefore better prepared to understand it. For example, in the writing model, the topic sentence alerts the reader to look for communication styles that are ineffective.</p>
+
+      <p>Here are three important points to remember about a topic sentence:</p>
+      <ul>
+        <li>A topic sentence is a <strong>complete sentence</strong>; that is, it contains at least one subject and one verb. These examples are not complete sentences because they do not contain a subject and a verb:<br>
+          <span class="label-tag">INCOMPLETE:</span> Communicating with colleagues.<br>
+          <span class="label-tag">INCOMPLETE:</span> How to improve online social networks.
+        </li>
+        <li>A topic sentence contains two parts: a <strong>topic</strong> and a <strong>controlling idea</strong>. It names the topic and then limits the topic to a specific area to be discussed in the space of a single paragraph.<br>
+          <em><span class="label-tag">TOPIC:</span> Communication with colleagues / <span class="label-tag">CONTROLLING IDEA:</span> requires sensitivity and understanding.</em><br>
+          <em><span class="label-tag">TOPIC:</span> Improving online social networks / <span class="label-tag">CONTROLLING IDEA:</span> can help professionals communicate.</em>
+        </li>
+        <li>A topic sentence is the most general statement in the paragraph because it gives only the topic and the controlling idea. It does not give any specific details.</li>
+      </ul>
+      <p>This is a general statement that could serve as a good topic sentence: <em>The Arabic origin of many English words is not always obvious.</em></p>
+      <p><span class="label-tag">too general:</span> English has been influenced by other languages. &nbsp;→ doesn't give enough guidance about what the paragraph will discuss<br>
+      <span class="label-tag">too specific:</span> The slang expression <em>so long</em> (meaning "good-bye") is probably a corruption of the Arabic <em>salaam</em>. &nbsp;→ better suited as a supporting sentence</p>
+
+      <h3 class="sub-title">The Position of Topic Sentences</h3>
+      <p>The topic sentence is usually (but not always) the first sentence in a paragraph. Experienced writers sometimes put topic sentences in other locations, but the best spot is usually right at the beginning. Readers who are used to the English way of writing want to know what they will read about as soon as they begin reading.</p>
+      <div class="passage">Synonyms, words with the same basic meaning, do not always have<br>
+      the same emotional meaning. For example, <em>stingy</em> and <em>frugal</em> both mean<br>
+      "careful with money." However, calling someone stingy is an insult, but<br>
+      calling someone frugal is usually a compliment. Similarly, a person wants<br>
+      to be slender but not skinny. Therefore, you should be careful in choosing<br>
+      words as many so-called synonyms are not completely synonymous.</div>
+      <p>At times, a topic sentence comes at the end of the paragraph. In this case, the paragraph might begin with a series of examples or facts. Then the topic sentence at the end would be the conclusion drawn from these examples or facts.</p>
+      <div class="passage">Mediation is now a popular way to solve disagreements between children<br>
+      in school. A mediator can also help a divorcing couple discuss finances or<br>
+      improve communication between employees and company executives. These<br>
+      are a few ways that mediators can help opposing parties come to agreement.</div>
+
+      <h3 class="sub-title">The Two Parts of a Topic Sentence</h3>
+      <p>As noted earlier, a topic sentence has two essential parts: the topic and the controlling idea. The topic names the subject of the paragraph. The controlling idea limits or controls the topic to a specific area that you can discuss in the space of a single paragraph.</p>
+      <p>The reader immediately knows that this paragraph will discuss how easy it is to prepare convenience foods and perhaps will give some examples (canned soup, frozen dinners, and so on).<br>
+      <em><span class="label-tag">TOPIC:</span> Convenience foods / <span class="label-tag">CONTROLLING IDEA:</span> are easy to prepare.</em></p>
+      <p>The reader of this topic sentence expects to read about various ethnic foods popular in the United States: tacos, egg rolls, sushi, baklava, pizza, and so on.<br>
+      <em><span class="label-tag">CONTROLLING IDEA:</span> Immigrants have contributed many delicious foods to / <span class="label-tag">TOPIC:</span> U.S. cuisine.</em></p>
+      <p>A topic sentence should not have controlling ideas that are unrelated. The three parts of the controlling idea in this topic sentence are too unrelated for a single paragraph. They require three separate paragraphs to explain fully.</p>
+      <p><span class="label-tag">too many ideas:</span> Advanced communication technologies have improved dramatically, and they have also enhanced business relationships and nurtured social interactions. &nbsp;✗<br>
+      <span class="label-tag">good:</span> Advanced communication technologies have improved dramatically. &nbsp;✓</p>
+    </section>
+
+    <!-- ================= PRACTICE 2 ================= -->
+    <section class="block" id="sec-p2">
+      <h2 class="section-title">PRACTICE 2 &nbsp;·&nbsp; Choosing Topic Sentences</h2>
+      <p class="instructions">Decide which sentence in each group is the best topic sentence and label it <em>best</em>. Then look at the other sentences in the group and label them <em>TG</em> (too general), <em>TS</em> (too specific), or <em>I</em> (incomplete).</p>
+      <div id="practice2"></div>
+      <button class="check-btn" onclick="checkPractice2()">Check Answers</button>
+      <div class="score-banner" id="p2-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 3 ================= -->
+    <section class="block" id="sec-p3">
+      <h2 class="section-title">PRACTICE 3 &nbsp;·&nbsp; Recognizing Topic Sentences</h2>
+      <p class="instructions">Read the sentences in each group and decide which is the topic sentence. Select it. <em>(Hint: the topic sentence is the most general statement in a paragraph.)</em></p>
+      <div id="practice3"></div>
+      <button class="check-btn" onclick="checkPractice3()">Check Answers</button>
+      <div class="score-banner" id="p3-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 4 ================= -->
+    <section class="block" id="sec-p4">
+      <h2 class="section-title">PRACTICE 4 &nbsp;·&nbsp; Identifying the Topic and Controlling Idea</h2>
+      <p class="instructions">Read each sentence and choose the topic and the controlling idea from the dropdown menus.</p>
+      <p class="instructions" style="color:var(--ink-soft)">Example: 1. Driving on freeways requires skill and alertness.<br>→ topic: "Driving on freeways"<br>→ controlling idea: "requires skill and alertness"</p>
+      <div id="practice4"></div>
+      <button class="check-btn" onclick="checkPractice4()">Check Answers</button>
+      <div class="score-banner" id="p4-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 5 ================= -->
+    <section class="block" id="sec-p5">
+      <h2 class="section-title">PRACTICE 5 &nbsp;·&nbsp; Writing Topic Sentences</h2>
+      <p class="instructions">Write a topic sentence for each paragraph with a topic and a controlling idea.</p>
+      <div id="practice5"></div>
+      <button class="check-btn" onclick="checkPractice5()">Check Answers</button>
+      <div class="score-banner" id="p5-score"></div>
+    </section>
+
+    <!-- ================= SUPPORTING SENTENCES CONCEPT ================= -->
+    <section class="block" id="sec-supporting">
+      <h2 class="section-title">SUPPORTING SENTENCES</h2>
+      <p>Supporting sentences explain or prove the topic sentence. One of the biggest problems in student writing is that student writers often fail to support their ideas adequately. You need to use specific details to be thorough and convincing. There are several kinds of specific supporting details such as examples, facts and statistics, and quotations.</p>
+      <h3 class="sub-title">Opinions vs. Facts</h3>
+      <p>When supporting your ideas, it is important to distinguish between facts and opinions. <strong>Opinions</strong> are subjective statements based on a person's beliefs or attitudes, as in these examples:</p>
+      <p><em>Women are better communicators than men.</em><br>
+      <em>Smoking is a bad habit.</em><br>
+      <em>English is an easy language to learn.</em></p>
+      <p><strong>Opinions are not acceptable as support.</strong> It is certainly suitable to express opinions in academic writing. In fact, most professors want you to express your own ideas. However, you may not use an opinion as support, and if you express an opinion, you must support it with facts. <strong>Facts</strong> are objective statements of truths.</p>
+      <p><em>At sea level, water boils at 100 degrees Celsius.</em><br>
+      <em>Women live longer than men.</em><br>
+      <em>Cigarettes are addictive.</em></p>
+      <p>Sometimes even facts need proof. While all three statements above are facts, the last two need proof. Your readers may not believe that women live longer than men, or they may not agree that cigarettes are addictive. You have to use specific supporting details such as examples, statistics, and quotations to prove that these statements are true facts.</p>
+      <p><span class="label-tag">opinion:</span> Photographs of ultrathin fashion models send the wrong message to girls and young women.<br>
+      <span class="label-tag">fact but needs proof:</span> Fashion models are extremely thin.<br>
+      <span class="label-tag">specific supporting detail:</span> The average model weighs 23 percent less than the average woman of the same height.</p>
+
+      <h3 class="sub-title">Using Examples as Support</h3>
+      <p>Examples are perhaps the easiest kind of supporting detail to use because you can often take examples from your own knowledge and experience. You don't always have to search the library or the Internet for supporting material. Furthermore, examples make your writing lively and interesting, and your reader is more likely to remember your point if you support it with a memorable example.</p>
+      <p>Words and phrases that introduce examples include <em>for example</em>, <em>for instance</em>, and <em>such as</em>.</p>
+    </section>
+
+    <!-- ================= PRACTICE 6 ================= -->
+    <section class="block" id="sec-p6">
+      <h2 class="section-title">PRACTICE 6 &nbsp;·&nbsp; Identifying Supporting Details</h2>
+      <p class="instructions">Read both versions of the paragraph below, then answer the questions.</p>
+      <h3 class="sub-title">Version 1: Paragraph without Support</h3>
+      <div class="passage">
+        <h4>Cell Phones and Driving</h4>
+        <p><span class="num">1</span>Many governments are responding aggressively to the threat that<br>
+        cell phones pose to safety on the road. <span class="num">2</span>Cell phones cause accidents all the<br>
+        time. <span class="num">3</span>Sometimes people are injured and have to go to the hospital. <span class="num">4</span>People<br>
+        don't pay attention while they are talking on the phone, so they run into<br>
+        other cars. <span class="num">5</span>A lot of governments are tired of dealing with the problem.<br>
+        <span class="num">6</span>If you are caught with a cell phone while driving, you might have to pay a<br>
+        fine. <span class="num">7</span>In conclusion, driving while on the phone is a bad idea.</p>
+      </div>
+      <h3 class="sub-title">Version 2: Paragraph with Support</h3>
+      <div class="passage">
+        <h4>Cell Phones and Driving</h4>
+        <p><span class="num">1</span>Many governments are responding aggressively to the threat that<br>
+        cell phones pose to safety on the road. <span class="num">2</span>In 2009, almost 1,000 automobile<br>
+        deaths occurred in the United States alone because drivers were distracted<br>
+        by cellular phones (Snyder). <span class="num">3</span>Cell phone use increases the chance of an<br>
+        accident resulting in hospitalization by a factor of four (Nikkel). <span class="num">4</span>These<br>
+        problems can be blamed on the fact that using cell phones dramatically<br>
+        slows drivers' reaction times. <span class="num">5</span>"If you put 20-year-old drivers behind the<br>
+        wheel with a cell phone, their reaction times are the same as 70-year-old<br>
+        drivers who are not using a cell phone," said University of Utah psychology<br>
+        professor David Strayer. <span class="num">6</span>"It's like instantly aging a large number of<br>
+        drivers (Britt)." <span class="num">7</span>Because studies show that the use of cell phones while<br>
+        driving is so dangerous, it has been banned in dozens of countries around<br>
+        the world. <span class="num">8</span>For example, in Australia, Bahrain, the United Kingdom, and<br>
+        Brazil, drivers are now required to pay a fine if they are caught texting or<br>
+        talking on a mobile device. <span class="num">9</span>Governments are hopeful that these laws will<br>
+        lead to safer communication practices and fewer fatal accidents.</p>
+      </div>
+      <h3 class="sub-title">Questions about the Paragraphs</h3>
+      <div class="qa-item">
+        <label class="qlabel">1. What is the topic sentence of each paragraph? Choose the topic and the controlling idea.</label>
+        <div class="p4-row">
+          <div class="p4-col">
+            <span class="tag">topic</span>
+            <select id="p6-topic">
+              <option value="">-- choose --</option>
+              <option value="a">the threat that cell phones pose to safety on the road</option>
+              <option value="b">Many governments</option>
+              <option value="c">driving while on the phone</option>
+            </select>
+          </div>
+          <div class="p4-col">
+            <span class="tag">controlling idea</span>
+            <select id="p6-ctrl">
+              <option value="">-- choose --</option>
+              <option value="a">Many governments are responding aggressively to it.</option>
+              <option value="b">cause accidents all the time</option>
+              <option value="c">is a bad idea</option>
+            </select>
+          </div>
+        </div>
+        <div class="feedback-box" id="p6-fb1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2. Which supporting sentences in Version 2 contain these details? Choose the sentence numbers.</label>
+        <div class="p4-row">
+          <div class="p4-col">
+            <span class="tag">an example — sentence</span>
+            <select id="p6-example">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+          </div>
+          <div class="p4-col">
+            <span class="tag">a statistic — sentences</span>
+            <select id="p6-stat1">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+            <select id="p6-stat2">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+          </div>
+          <div class="p4-col">
+            <span class="tag">a quotation — sentences</span>
+            <select id="p6-quo1">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+            <select id="p6-quo2">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            </select>
+          </div>
+        </div>
+        <div class="feedback-box" id="p6-fb2"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">3. How do the details in Version 2 improve the paragraph?</label>
+      </div>
+      <button class="check-btn" onclick="checkPractice6()">Check Answers</button>
+      <div class="score-banner" id="p6-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 7 ================= -->
+    <section class="block" id="sec-p7">
+      <h2 class="section-title">PRACTICE 7 &nbsp;·&nbsp; Using Specific Supporting Details</h2>
+      <p class="instructions">Read each sentence and label it <em>O</em> (opinion), <em>F-NP</em> (fact that needs proof), or <em>SSD</em> (specific supporting detail).</p>
+      <div id="practice7"></div>
+      <button class="check-btn" onclick="checkPractice7()">Check Answers</button>
+      <div class="score-banner" id="p7-score"></div>
+    </section>
+
+    <!-- ================= CONCLUDING SENTENCE CONCEPT ================= -->
+    <section class="block" id="sec-concluding">
+      <h2 class="section-title">THE CONCLUDING SENTENCE</h2>
+      <p>A concluding sentence serves two purposes: it signals the end of the paragraph, and reminds the reader of the important ideas. It can do this either by summarizing the main points of the paragraph or by repeating the topic sentence in different words (paraphrasing).</p>
+      <p>A paragraph does not always need a concluding sentence. For example, not every paragraph in a multi-paragraph essay needs one. However, for single paragraphs, especially long ones, a concluding sentence is helpful to the reader because it is a reminder of the important points.</p>
+      <p><strong>Never introduce a new idea in the concluding sentence.</strong> For example if this sentence were in a paragraph about different kinds of greeting cards, adding a comment about the cost of cards would add a new idea.</p>
+      <div class="passage">In conclusion, we now have a greater variety of greeting cards to choose<br>
+      from, but they are also becoming very expensive.</div>
+      <p>You may want to begin your concluding sentence with one of the signals in this list. You may also end a paragraph without a formal signal.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.92rem;margin:14px 0;">
+        <tr style="background:var(--gold-pale);">
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Followed by a Comma</th>
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Not Followed by a Comma</th>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);">In brief, In conclusion, Indeed, In short, Therefore, Thus, To sum up</td>
+          <td style="padding:8px;border:1px solid var(--line);">The evidence suggests that . . . / There can be no doubt that . . . / These examples show that . . . / We can see that . . .</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ================= PRACTICE 8 ================= -->
+    <section class="block" id="sec-p8">
+      <h2 class="section-title">PRACTICE 8 &nbsp;·&nbsp; Analyzing Conclusions</h2>
+      <div class="passage">
+        <h4>Paragraph 1 — Greeting Cards</h4>
+        <p>Have you noticed how many different kinds of greeting cards you<br>
+        can buy these days? In the old days, the local drugstore had one rack<br>
+        displaying maybe five or six basic kinds of cards. You could walk into<br>
+        the store and choose an appropriate card in five minutes or less. Today,<br>
+        however, the display space for greeting cards is as big as a soccer field,<br>
+        and it may take an hour or two to hunt down the right card with exactly<br>
+        the right message. There are at least 30 categories of birthday cards<br>
+        alone: birthday cards for different ages, from different ages, for different<br>
+        relatives, from different relatives, for different genders, from different<br>
+        genders, from a couple, from the office, for dog owners, for cat owners,<br>
+        and so on. There are cards for getting a job, for retiring from a job, for<br>
+        acquiring a pet, for losing a pet, for becoming engaged, for breaking up.<br>
+        There are also greeting cards to send for no reason—"Thinking of you"<br>
+        or "Just because" cards. The newest type of card is the "encouragement<br>
+        card." An encouragement card offers comforting thoughts and helpful<br>
+        advice to someone who is sad or distressed in these troubled times.<br>
+        <u>These examples clearly show that</u> these days there is a greeting card for<br>
+        every possible life event and for a few nonevents as well.</p>
+      </div>
+      <div class="passage">
+        <h4>Paragraph 2 — A Hawaiian Legend</h4>
+        <p>Native people create legends to explain unusual phenomena in<br>
+        their environment. A legend from the Hawaiian island of Kauai explains<br>
+        how the naupaka flower, a flower that grows on beaches there, got its<br>
+        unusual shape. The flower looks like half a small daisy—there are petals<br>
+        on one side only. The legend says that the marriage of two young lovers<br>
+        on the island was opposed by both sets of parents. The parents found<br>
+        the couple together on a beach one day, and to prevent them from being<br>
+        together, one of the families moved to the mountains, separating the<br>
+        young couple forever. As a result, the naupaka flower separated itself<br>
+        into two halves. One half moved to the mountains, and the other half<br>
+        stayed near the beach. <u>This story is a good example of</u> a legend invented<br>
+        by native people to interpret the world around them.</p>
+      </div>
+      <p class="instructions">Read the paragraphs above. Decide whether each concluding sentence summarizes the main points or repeats the topic sentence in different words. Then answer the questions.</p>
+      <div id="practice8"></div>
+      <button class="check-btn" onclick="checkPractice8()">Check Answers</button>
+      <div class="score-banner" id="p8-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 9 ================= -->
+    <section class="block" id="sec-p9">
+      <h2 class="section-title">PRACTICE 9 &nbsp;·&nbsp; Writing Concluding Sentences</h2>
+      <p class="instructions">Read the paragraphs and underline the topic sentences. Then add a good concluding sentence to each paragraph by paraphrasing the topic sentence or summarizing the main points. Remember to use an end-of-paragraph signal.</p>
+
+      <div class="group-box">
+        <div class="group-title">Paragraph 1</div>
+        <p><u>A person can be a good communicator by being a good listener.</u><br>
+        When speaking with someone, a good listener pays close attention to<br>
+        the speaker's words while looking at his or her face. A good listener also<br>
+        shows interest by smiling and nodding. Also, posture is important; it can<br>
+        affect communication for both the speaker and the listener. For instance,<br>
+        sitting slumped in a chair makes a person seem passive, while a relaxed<br>
+        posture with the body bent slightly forward shows interest in the<br>
+        speaker and the conversation. Remember, too, that good communicators<br>
+        do not interrupt while someone is speaking; although interruption is<br>
+        active participation, it can be impolite.</p>
+        <textarea id="p9-a-0" rows="2" placeholder="Write your concluding sentence here..."></textarea>
+        <div class="feedback-box" id="p9-fb-0"></div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-title">Paragraph 2</div>
+        <p><u>Modern communication technology is raising the stress level<br>
+        for corporate workers.</u> They feel buried under the large number of<br>
+        messages they receive daily. In addition to telephone calls, office workers<br>
+        receive dozens of email, voice mail, and text messages daily. In fact,<br>
+        U.S. managers receive on average more than 200 email messages a day.<br>
+        Because they do not have enough time to respond to these messages<br>
+        during office hours, it is common for them to do so in the evenings or on<br>
+        weekends at home.</p>
+        <textarea id="p9-a-1" rows="2" placeholder="Write your concluding sentence here..."></textarea>
+        <div class="feedback-box" id="p9-fb-1"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkPractice9()">Check Answers</button>
+      <div class="score-banner" id="p9-score"></div>
+    </section>
+
+    <footer>Chapter 1 · Paragraph Structure — Answers are checked in your browser only and are never saved or transmitted.</footer>
+  </main>
+</div>
+
+<script>
+/* ---------------- sidebar nav : one section visible at a time ---------------- */
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+menuToggle.addEventListener("click", ()=> sidebar.classList.toggle("open"));
+
+const navLinks = Array.from(document.querySelectorAll(".sidebar a"));
+const sectionEls = navLinks.map(a=>document.querySelector(a.getAttribute("href")));
+const mainEl = document.querySelector("main");
+
+function showSection(index){
+  sectionEls.forEach((sec,i)=> sec.classList.toggle("active", i===index));
+  navLinks.forEach((a,i)=> a.classList.toggle("active", i===index));
+  mainEl.scrollTo({top:0, behavior:"instant"});
+  sidebar.classList.remove("open");
+  updatePageNavButtons(index);
+}
+navLinks.forEach((a,i)=>{
+  a.addEventListener("click", (e)=>{
+    e.preventDefault();
+    showSection(i);
+  });
+});
+
+/* Prev / Next controls appended to the end of every section */
+sectionEls.forEach((sec,i)=>{
+  const nav = document.createElement("div");
+  nav.className="page-nav";
+  nav.innerHTML = `<button class="prev-btn">&larr; Previous</button><button class="next-btn">Next &rarr;</button>`;
+  sec.appendChild(nav);
+  nav.querySelector(".prev-btn").addEventListener("click", ()=>{ if(i>0) showSection(i-1); });
+  nav.querySelector(".next-btn").addEventListener("click", ()=>{ if(i<sectionEls.length-1) showSection(i+1); });
+});
+function updatePageNavButtons(index){
+  sectionEls.forEach((sec,i)=>{
+    const prev = sec.querySelector(".prev-btn");
+    const next = sec.querySelector(".next-btn");
+    if(prev) prev.disabled = (i===0);
+    if(next) next.disabled = (i===sectionEls.length-1);
+  });
+}
+showSection(0);
+
+/* ---------------- helpers ---------------- */
+function norm(s){
+  return (s||"").toLowerCase().replace(/[.,!?'"“”‘’]/g,"").replace(/\s+/g," ").trim();
+}
+function containsKeywords(answer, keywordSets){
+  const a = norm(answer);
+  if(!a) return false;
+  return keywordSets.some(set => set.every(k => a.includes(norm(k))));
+}
+function setBanner(el, correctCount, total){
+  el.classList.add("show");
+  const pct = Math.round((correctCount/total)*100);
+  el.textContent = `${correctCount} / ${total} correct (${pct}%)`;
+  el.style.background = pct===100 ? "#e6f4ed" : "#fbf0d3";
+  el.style.color = pct===100 ? "var(--correct)" : "#8a6d1a";
+}
+
+/* ================= MODEL QUESTIONS (discussion only — no answer key shown) ================= */
+const modelQuestions = [
+  "1. What is the main idea of the paragraph?",
+  "2. In which sentence does the writer state the main idea?",
+  "3. How does sentence 3 support the main idea?",
+  "4. What points does the writer make about an aggressive style?",
+  "5. In which sentence does the writer introduce an example of an aggressive style?",
+  "6. What points does the writer make about a passive style?",
+  "7. In which sentence does the writer introduce an example of a passive style?"
+];
+const modelDiv = document.getElementById("model-questions");
+modelQuestions.forEach((q)=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${q}</label>`;
+  modelDiv.appendChild(d);
+});
+
+/* ================= PRACTICE 2 ================= */
+const p2data = [
+  {title:"Group 2", items:[
+    {letter:"a", text:"The history of astronomy is interesting.", ans:"TG"},
+    {letter:"b", text:"Ice Age people recorded the appearance of new moons by making scratches in animal bones.", ans:"TS"},
+    {letter:"c", text:"For example, Stonehenge in Britain was built 3,500 years ago to track the movement of the sun.", ans:"TS"},
+    {letter:"d", text:"Ancient people recorded lunar and solar events in different ways.", ans:"best"}
+  ]},
+  {title:"Group 3", items:[
+    {letter:"a", text:"It is hard to know which foods are safe to eat nowadays.", ans:"best"},
+    {letter:"b", text:"In some large ocean fish, there are high levels of mercury.", ans:"TS"},
+    {letter:"c", text:"Undercooked chicken and hamburger may carry E. coli bacteria.", ans:"TS"},
+    {letter:"d", text:"Not to mention mad cow disease.", ans:"I"},
+    {letter:"e", text:"Food safety is an important issue.", ans:"TG"}
+  ]},
+  {title:"Group 4", items:[
+    {letter:"a", text:"Hybrid automobiles more economical to operate than gasoline-powered cars.", ans:"I"},
+    {letter:"b", text:"The new hybrid automobiles are very popular.", ans:"TG"},
+    {letter:"c", text:"Hybrid cars have good fuel economy because a computer under the hood decides to run the electric motor, the small gasoline engine, or the two together.", ans:"TS"},
+    {letter:"d", text:"The new hybrid automobiles are popular because of their fuel economy.", ans:"best"}
+  ]}
+];
+const p2div = document.getElementById("practice2");
+p2data.forEach((group,gi)=>{
+  const box = document.createElement("div");
+  box.className="group-box";
+  let rows = `<div class="group-title">${group.title}</div>`;
+  group.items.forEach((it,ii)=>{
+    rows += `<div class="item-row">
+      <span class="item-letter">${it.letter}.</span>
+      <span class="item-text">${it.text}</span>
+      <span class="item-select">
+        <select id="p2-${gi}-${ii}">
+          <option value="">-- choose --</option>
+          <option value="best">best</option>
+          <option value="TG">TG (too general)</option>
+          <option value="TS">TS (too specific)</option>
+          <option value="I">I (incomplete)</option>
+        </select>
+      </span>
+      <span class="mark" id="p2-mark-${gi}-${ii}"></span>
+    </div>`;
+  });
+  box.innerHTML = rows;
+  p2div.appendChild(box);
+});
+function checkPractice2(){
+  let correct=0, total=0;
+  p2data.forEach((group,gi)=>{
+    group.items.forEach((it,ii)=>{
+      total++;
+      const val = document.getElementById(`p2-${gi}-${ii}`).value;
+      const mark = document.getElementById(`p2-mark-${gi}-${ii}`);
+      if(val===it.ans){ correct++; mark.textContent="✓"; mark.className="mark ok"; }
+      else{ mark.textContent="✗ ("+it.ans+")"; mark.className="mark no"; }
+    });
+  });
+  setBanner(document.getElementById("p2-score"), correct, total);
+}
+
+/* ================= PRACTICE 3 ================= */
+const p3data = [
+  {title:"Paragraph 1", answer:"f", items:[
+    ["a","A notes / memo function lets you make quick notes to yourself."],
+    ["b","Other capabilities include word processing, spreadsheets, and email."],
+    ["c","A voice recorder that uses a built-in microphone and speaker works like a tape recorder."],
+    ["d","Basic tools include an appointment calendar, an address book, to-do lists, and a calculator."],
+    ["e","MP3 playback lets you listen to digital music files, and a picture viewer lets you look at digital photos."],
+    ["f","Most smart phones have tools for basic tasks as well as for multimedia functions."],
+    ["g","A few models also include a built-in digital camera and keyboard."]
+  ]},
+  {title:"Paragraph 2", answer:"c", items:[
+    ["a","Twelve years after Sputnik, the United States caught up by becoming the first nation to land a man on the moon."],
+    ["b","The Europeans have joined the competition, vowing to land European astronauts on the moon by 2025 and on Mars by 2035."],
+    ["c","The number of nations competing in the “space race” has grown since the early days of space exploration."],
+    ["d","China joined the competition in 2003 when it launched Shenzhou 5."],
+    ["e","Initially, the former Soviet Union took the lead when it sent the first man into Earth orbit in the spaceship Sputnik in 1957."],
+    ["f","For almost 50 years, the United States and Russia were the only competitors in the contest to explore space using manned spacecraft."]
+  ]},
+  {title:"Paragraph 3", answer:"d", items:[
+    ["a","Another important change was that people had the freedom to live and work wherever they wanted."],
+    ["b","The earliest significant change was for farming families, who were no longer isolated."],
+    ["c","The final major change brought by the automobile was the building of superhighways, suburbs, huge shopping centers, and theme parks such as Disney World in Florida."],
+    ["d","The automobile revolutionized the way of life in the United States."],
+    ["e","The automobile enabled them to drive to towns and cities comfortably and conveniently."],
+    ["f","In fact, people could work in a busy metropolitan city and drive home to the quiet suburbs."]
+  ]},
+  {title:"Paragraph 4", answer:"b", items:[
+    ["a","In time, this melted part rises as magma."],
+    ["b","The formation of a volcanic eruption is a dramatic series of events."],
+    ["c","As the plate sinks, friction and Earth's heat cause part of it to melt."],
+    ["d","The magma produces heat, steam, and pressure."],
+    ["e","First of all, most volcanoes are formed where two plates collide."],
+    ["f","Then one of the plates is forced under the other and sinks."],
+    ["g","When the heat, steam, and pressure from the magma finally reach the surface of Earth, a volcanic eruption occurs."]
+  ]}
+];
+const p3div = document.getElementById("practice3");
+p3data.forEach((para,pi)=>{
+  const box = document.createElement("div");
+  box.className="group-box";
+  let rows = `<div class="group-title">${para.title}</div>`;
+  para.items.forEach(([letter,text])=>{
+    rows += `<div class="item-row">
+      <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;width:100%;">
+        <input type="radio" name="p3-${pi}" value="${letter}" style="margin-top:4px;">
+        <span class="item-letter">${letter}.</span>
+        <span class="item-text">${text}</span>
+      </label>
+    </div>`;
+  });
+  rows += `<div class="feedback-box" id="p3-fb-${pi}"></div>`;
+  box.innerHTML = rows;
+  p3div.appendChild(box);
+});
+function checkPractice3(){
+  let correct=0;
+  p3data.forEach((para,pi)=>{
+    const sel = document.querySelector(`input[name="p3-${pi}"]:checked`);
+    const fb = document.getElementById(`p3-fb-${pi}`);
+    fb.classList.add("show");
+    if(sel && sel.value===para.answer){
+      correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct ("+para.answer+")";
+    } else {
+      fb.className="feedback-box show wrong"; fb.textContent="✗ The correct answer is "+para.answer+".";
+    }
+  });
+  setBanner(document.getElementById("p3-score"), correct, p3data.length);
+}
+
+/* ================= PRACTICE 4 (dropdown version) ================= */
+const p4data = [
+  {n:2, text:"Driving on freeways requires strong nerves.",
+   topicOptions:["Driving on freeways","strong nerves"], topicAns:"Driving on freeways",
+   ctrlOptions:["requires strong nerves","Driving on freeways"], ctrlAns:"requires strong nerves"},
+  {n:3, text:"Driving on freeways sometimes requires an aggressive attitude.",
+   topicOptions:["Driving on freeways","an aggressive attitude"], topicAns:"Driving on freeways",
+   ctrlOptions:["requires an aggressive attitude","Driving on freeways"], ctrlAns:"requires an aggressive attitude"},
+  {n:4, text:"The Caribbean island of Trinidad attracts tourists because of its calypso music.",
+   topicOptions:["The Caribbean island of Trinidad","its calypso music"], topicAns:"The Caribbean island of Trinidad",
+   ctrlOptions:["attracts tourists because of its calypso music","its calypso music"], ctrlAns:"attracts tourists because of its calypso music"},
+  {n:5, text:"Spectacular beaches make Puerto Rico a tourist paradise.",
+   topicOptions:["Puerto Rico","Spectacular beaches"], topicAns:"Puerto Rico",
+   ctrlOptions:["a tourist paradise","Spectacular beaches"], ctrlAns:"a tourist paradise"},
+  {n:6, text:"Moving away from home can be a stressful experience for young people.",
+   topicOptions:["Moving away from home","young people"], topicAns:"Moving away from home",
+   ctrlOptions:["can be a stressful experience for young people","young people"], ctrlAns:"can be a stressful experience for young people"},
+  {n:7, text:"Owning an automobile is a necessity for me.",
+   topicOptions:["Owning an automobile","for me"], topicAns:"Owning an automobile",
+   ctrlOptions:["is a necessity for me","for me"], ctrlAns:"is a necessity for me"},
+  {n:8, text:"It is an expensive luxury to own an automobile in a large city.",
+   topicOptions:["to own an automobile in a large city","in a large city"], topicAns:"to own an automobile in a large city",
+   ctrlOptions:["It is an expensive luxury","in a large city"], ctrlAns:"It is an expensive luxury"},
+  {n:9, text:"A major problem for many students is the high cost of tuition and books.",
+   topicOptions:["A major problem for many students","tuition and books"], topicAns:"A major problem for many students",
+   ctrlOptions:["is the high cost of tuition and books","tuition and books"], ctrlAns:"is the high cost of tuition and books"},
+  {n:10, text:"Participating in class discussions can be a problem for some students.",
+   topicOptions:["Participating in class discussions","some students"], topicAns:"Participating in class discussions",
+   ctrlOptions:["can be a problem for some students","some students"], ctrlAns:"can be a problem for some students"}
+];
+const p4div = document.getElementById("practice4");
+p4data.forEach((item,i)=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  const topicOpts = item.topicOptions.map(o=>`<option value="${o}">${o}</option>`).join("");
+  const ctrlOpts = item.ctrlOptions.map(o=>`<option value="${o}">${o}</option>`).join("");
+  d.innerHTML = `<p class="p4-sentence"><strong>${item.n}.</strong> ${item.text}</p>
+    <div class="p4-row">
+      <div class="p4-col">
+        <span class="tag">topic</span>
+        <select id="p4-topic-${i}"><option value="">-- choose --</option>${topicOpts}</select>
+      </div>
+      <div class="p4-col">
+        <span class="tag">controlling idea</span>
+        <select id="p4-ctrl-${i}"><option value="">-- choose --</option>${ctrlOpts}</select>
+      </div>
+    </div>
+    <div class="feedback-box" id="p4-fb-${i}"></div>`;
+  p4div.appendChild(d);
+});
+function checkPractice4(){
+  let correct=0;
+  p4data.forEach((item,i)=>{
+    const t = document.getElementById(`p4-topic-${i}`).value;
+    const c = document.getElementById(`p4-ctrl-${i}`).value;
+    const fb = document.getElementById(`p4-fb-${i}`);
+    const ok = (t===item.topicAns) && (c===item.ctrlAns);
+    fb.classList.add("show");
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{
+      fb.className="feedback-box show wrong";
+      fb.textContent = `✗ topic: "${item.topicAns}" / controlling idea: "${item.ctrlAns}"`;
+    }
+  });
+  setBanner(document.getElementById("p4-score"), correct, p4data.length);
+}
+
+/* ================= PRACTICE 5 ================= */
+const p5data = [
+  {n:1, passage:`English speakers relaxing at home, for example, may put on <em>kimonos</em>, which is a Japanese word. English speakers who live in a warm climate may take an afternoon <em>siesta</em> on an outdoor <em>patio</em> without realizing that these are Spanish words. They may even relax on a <em>chaise</em> while snacking on <em>yogurt</em>, words of French and Turkish origin, respectively. At night, they may <em>shampoo</em> their hair and put on <em>pajamas</em>, words from the Hindi language of India.`,
+   keys:[["borrowed","language"],["english","words","other languages"]],
+   model:"English has borrowed many words from other languages."},
+  {n:2, passage:`In many European universities, students are not required to attend classes. In fact, professors in some countries generally do not know the names of the students enrolled in their courses. In the United States, however, students are required to attend all classes and may be penalized if they do not. Furthermore, in the European system, students usually take just one comprehensive examination at the end of their entire four or five years of study. In the North American system, on the other hand, students usually have numerous quizzes, tests, and homework assignments, and they almost always have to take a final examination in each course at the end of each semester.`,
+   keys:[["differences","european","american"],["higher education"]],
+   model:"There are several differences between the European system of higher education and the American one."},
+  {n:3, passage:`For example, the Eskimos, living in a treeless region of snow and ice, sometimes build temporary homes out of thick blocks of ice. People who live in deserts, on the other hand, use the most available materials, mud or clay, which provide good insulation from the heat. In Northern Europe, Russia, and other areas of the world where forests are plentiful, people usually construct their homes out of wood. In the islands of the South Pacific, where there is an abundant supply of bamboo and palm, people use these tough, fibrous plants to build their homes.`,
+   keys:[["housing","materials"],["culture","material"]],
+   model:"Housing design in different cultures is generally related to the types of materials available for construction."}
+];
+const p5div = document.getElementById("practice5");
+p5data.forEach((item,i)=>{
+  const d = document.createElement("div");
+  d.className="group-box";
+  d.innerHTML = `<div class="group-title">Paragraph ${item.n}</div>
+    <textarea id="p5-a-${i}" rows="2" placeholder="Write your topic sentence here..."></textarea>
+    <p style="margin:10px 0 0;">${item.passage}</p>
+    <div class="feedback-box" id="p5-fb-${i}"></div>`;
+  p5div.appendChild(d);
+});
+function checkPractice5(){
+  let correct=0;
+  p5data.forEach((item,i)=>{
+    const val = document.getElementById(`p5-a-${i}`).value;
+    const fb = document.getElementById(`p5-fb-${i}`);
+    const ok = containsKeywords(val, item.keys);
+    fb.classList.add("show");
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Good — that captures it.<br><span style="opacity:.8;">Sample answer: ${item.model}</span>`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `Compare with the sample answer below.<br><span style="opacity:.9;">Sample answer: ${item.model}</span>`; }
+  });
+  setBanner(document.getElementById("p5-score"), correct, p5data.length);
+}
+
+/* ================= PRACTICE 6 ================= */
+function checkPractice6(){
+  let correct=0; const total=4;
+
+  const topic = document.getElementById("p6-topic").value;
+  const ctrl = document.getElementById("p6-ctrl").value;
+  const fb1 = document.getElementById("p6-fb1");
+  fb1.classList.add("show");
+  const q1ok = (topic==="a") && (ctrl==="a");
+  if(q1ok){ correct++; fb1.className="feedback-box show correct"; fb1.textContent="✓ Correct."; }
+  else{ fb1.className="feedback-box show wrong"; fb1.textContent='✗ topic: "the threat that cell phones pose to safety on the road" / controlling idea: "Many governments are responding aggressively to it."'; }
+
+  const ex = document.getElementById("p6-example").value;
+  const s1 = document.getElementById("p6-stat1").value;
+  const s2 = document.getElementById("p6-stat2").value;
+  const q1n = document.getElementById("p6-quo1").value;
+  const q2n = document.getElementById("p6-quo2").value;
+  const fb2 = document.getElementById("p6-fb2");
+  fb2.classList.add("show");
+
+  const exOk = ex==="8";
+  const statOk = [s1,s2].includes("2") && [s1,s2].includes("3");
+  const quoOk = [q1n,q2n].includes("5") && [q1n,q2n].includes("6");
+  if(exOk) correct++;
+  if(statOk) correct++;
+  if(quoOk) correct++;
+
+  if(exOk && statOk && quoOk){
+    fb2.className="feedback-box show correct"; fb2.textContent="✓ Correct — example: 8 / statistic: 2, 3 / quotation: 5, 6";
+  } else {
+    fb2.className="feedback-box show wrong"; fb2.textContent="✗ Correct answer — example: 8 / statistic: 2, 3 / quotation: 5, 6";
+  }
+  setBanner(document.getElementById("p6-score"), correct, total);
+}
+
+/* ================= PRACTICE 7 ================= */
+const p7data = [
+  {n:4, text:"Identity theft is more serious than any other type of theft.", ans:"O"},
+  {n:5, text:"Identity theft is increasing at a rapid pace.", ans:"F-NP"},
+  {n:6, text:"In 2000, 31,000 cases of identity theft were reported to the Federal Trade Commission (FTC); in 2009, the number was 278,000.", ans:"SSD"},
+  {n:7, text:"Many people do not report identity theft to the police.", ans:"F-NP"},
+  {n:8, text:"In 2009, 28 percent of identity theft victims did not notify the police, according to the FTC.", ans:"SSD"},
+  {n:9, text:"Identity theft happens to ordinary people, not just to the wealthy.", ans:"O"},
+  {n:10, text:"It is easy for a thief to use the U.S. Postal Service to steal identities.", ans:"F-NP"},
+  {n:11, text:"For example, thieves steal credit card statements from mailboxes, and then send a change-of-address card to the postal service to have future statements sent to a different address.", ans:"SSD"},
+  {n:12, text:"Most victims of identity theft are young adults.", ans:"F-NP"},
+  {n:13, text:"The FTC reports that there were more victims in the age group 20–29 than in any other group.", ans:"SSD"},
+  {n:14, text:"The police should do more to protect citizens from identity theft.", ans:"O"}
+];
+const p7div = document.getElementById("practice7");
+p7data.forEach((item,i)=>{
+  const row = document.createElement("div");
+  row.className="item-row";
+  row.innerHTML = `<span class="item-letter">${item.n}.</span>
+    <span class="item-text">${item.text}</span>
+    <span class="item-select">
+      <select id="p7-${i}">
+        <option value="">-- choose --</option>
+        <option value="O">O (opinion)</option>
+        <option value="F-NP">F-NP (fact, needs proof)</option>
+        <option value="SSD">SSD (specific supporting detail)</option>
+      </select>
+    </span>
+    <span class="mark" id="p7-mark-${i}"></span>`;
+  p7div.appendChild(row);
+});
+function checkPractice7(){
+  let correct=0;
+  p7data.forEach((item,i)=>{
+    const val = document.getElementById(`p7-${i}`).value;
+    const mark = document.getElementById(`p7-mark-${i}`);
+    if(val===item.ans){ correct++; mark.textContent="✓"; mark.className="mark ok"; }
+    else{ mark.textContent="✗ ("+item.ans+")"; mark.className="mark no"; }
+  });
+  setBanner(document.getElementById("p7-score"), correct, p7data.length);
+}
+
+/* ================= PRACTICE 8 ================= */
+const p8div = document.getElementById("practice8");
+p8div.innerHTML = `
+  <div class="qa-item">
+    <label class="qlabel">1. In which paragraph does the concluding sentence summarize the main points of the paragraph, which are not specifically stated in the topic sentence?</label>
+    <div class="radio-line">
+      <label><input type="radio" name="p8-1" value="1"> Paragraph 1</label>
+      <label><input type="radio" name="p8-1" value="2"> Paragraph 2</label>
+    </div>
+    <div class="feedback-box" id="p8-fb-1"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">2. In which paragraph does the concluding sentence paraphrase (repeat in different words) the topic sentence?</label>
+    <div class="radio-line">
+      <label><input type="radio" name="p8-2" value="1"> Paragraph 1</label>
+      <label><input type="radio" name="p8-2" value="2"> Paragraph 2</label>
+    </div>
+    <div class="feedback-box" id="p8-fb-2"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">3-1. What is the conclusion signal in Paragraph 1?</label>
+    <input type="text" id="p8-sig1">
+    <div class="feedback-box" id="p8-fb-sig1"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">3-2. What is the conclusion signal in Paragraph 2?</label>
+    <input type="text" id="p8-sig2">
+    <div class="feedback-box" id="p8-fb-sig2"></div>
+  </div>
+`;
+function checkPractice8(){
+  let correct=0; const total=4;
+  const q1 = document.querySelector('input[name="p8-1"]:checked');
+  const fb1 = document.getElementById("p8-fb-1");
+  fb1.classList.add("show");
+  if(q1 && q1.value==="1"){ correct++; fb1.className="feedback-box show correct"; fb1.textContent="✓ Correct (Paragraph 1)"; }
+  else{ fb1.className="feedback-box show wrong"; fb1.textContent="✗ The correct answer is Paragraph 1."; }
+
+  const q2 = document.querySelector('input[name="p8-2"]:checked');
+  const fb2 = document.getElementById("p8-fb-2");
+  fb2.classList.add("show");
+  if(q2 && q2.value==="2"){ correct++; fb2.className="feedback-box show correct"; fb2.textContent="✓ Correct (Paragraph 2)"; }
+  else{ fb2.className="feedback-box show wrong"; fb2.textContent="✗ The correct answer is Paragraph 2."; }
+
+  const sig1 = document.getElementById("p8-sig1").value;
+  const fbs1 = document.getElementById("p8-fb-sig1");
+  fbs1.classList.add("show");
+  if(containsKeywords(sig1,[["these examples","clearly show"]])){ correct++; fbs1.className="feedback-box show correct"; fbs1.textContent="✓ Correct."; }
+  else{ fbs1.className="feedback-box show wrong"; fbs1.textContent='✗ Correct answer: "These examples clearly show that"'; }
+
+  const sig2 = document.getElementById("p8-sig2").value;
+  const fbs2 = document.getElementById("p8-fb-sig2");
+  fbs2.classList.add("show");
+  if(containsKeywords(sig2,[["this story","good example"]])){ correct++; fbs2.className="feedback-box show correct"; fbs2.textContent="✓ Correct."; }
+  else{ fbs2.className="feedback-box show wrong"; fbs2.textContent='✗ Correct answer: "This story is a good example of"'; }
+
+  setBanner(document.getElementById("p8-score"), correct, total);
+}
+
+/* ================= PRACTICE 9 ================= */
+const p9data = [
+  {keys:[["listen"],["speak"]], model:"In short, a good communicator knows how to listen, as well as how to speak effectively."},
+  {keys:[["technology"],["stressful"]], model:"We can now see that technology intended to make workers' lives easier can, in fact, make them more stressful."}
+];
+function checkPractice9(){
+  let correct=0;
+  p9data.forEach((item,i)=>{
+    const val = document.getElementById(`p9-a-${i}`).value;
+    const fb = document.getElementById(`p9-fb-${i}`);
+    const ok = containsKeywords(val, item.keys);
+    fb.classList.add("show");
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Good — that works as a concluding sentence.<br><span style="opacity:.8;">Sample answer: ${item.model}</span>`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `Compare with the sample answer below.<br><span style="opacity:.9;">Sample answer: ${item.model}</span>`; }
+  });
+  setBanner(document.getElementById("p9-score"), correct, p9data.length);
+}
+</script>
+</body>
+</html>
