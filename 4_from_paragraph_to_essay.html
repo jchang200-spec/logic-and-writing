@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 4: From Paragraph to Essay</title>
+<style>
+  :root{
+    --purple:#6b4a92;
+    --purple-dark:#4f3670;
+    --maroon:#7d1949;
+    --gold:#f2c869;
+    --gold-pale:#fbf0d3;
+    --cream:#fffdf8;
+    --ink:#2a2430;
+    --ink-soft:#5c5566;
+    --line:#e7dfd0;
+    --correct:#2f7d5b;
+    --correct-bg:#e6f4ed;
+    --wrong:#b3413a;
+    --wrong-bg:#fbebe9;
+  }
+  *{box-sizing:border-box;}
+  html{ font-size:19px; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Georgia","Noto Serif KR",serif;
+    line-height:1.7;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .top-banner{
+    background:linear-gradient(135deg,var(--purple) 0%,var(--purple-dark) 100%);
+    color:#fff;
+    padding:14px 24px;
+    flex-shrink:0;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .top-banner .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.7rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .top-banner h1{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:700;
+    display:inline;
+  }
+  .top-banner p{
+    margin:0;
+    color:#e7defb;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    flex:1;
+    min-width:200px;
+  }
+
+  .layout{
+    display:flex;
+    align-items:stretch;
+    flex:1;
+    min-height:0;
+  }
+  .sidebar{
+    position:relative;
+    top:0;
+    height:100%;
+    width:270px;
+    flex-shrink:0;
+    overflow-y:auto;
+    background:#faf6ec;
+    border-right:1px solid var(--line);
+    padding:22px 0;
+  }
+  .sidebar nav{
+    display:flex;
+    flex-direction:column;
+  }
+  .sidebar a{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:9px 22px;
+    border-left:3px solid transparent;
+  }
+  .sidebar a:hover{ color:var(--purple); background:#f2ecdd; }
+  .sidebar a.active{
+    color:var(--maroon);
+    font-weight:700;
+    border-left-color:var(--maroon);
+    background:#f2ecdd;
+  }
+  .sidebar .group-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a89f8c;
+    padding:14px 22px 4px;
+  }
+
+  .menu-toggle{
+    display:none;
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:50;
+    background:var(--maroon);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:9px 14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    cursor:pointer;
+  }
+
+  main{
+    flex:1;
+    min-width:0;
+    max-width:1040px;
+    margin:0 auto;
+    padding:30px 56px 90px;
+    height:100%;
+    overflow-y:auto;
+  }
+  section.block{
+    display:none;
+    margin-top:0;
+    animation:fadeIn .2s ease;
+  }
+  section.block.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:36px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .page-nav button{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:#fff;
+    border:1px solid var(--purple);
+    color:var(--purple);
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .page-nav button:hover{ background:var(--purple); color:#fff; }
+  .page-nav button:disabled{ opacity:.35; cursor:default; }
+  .page-nav button:disabled:hover{ background:#fff; color:var(--purple); }
+  h2.section-title{
+    background:var(--maroon);
+    color:#fff;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1rem;
+    letter-spacing:.04em;
+    padding:11px 18px;
+    margin:0 0 18px;
+    border-radius:2px;
+  }
+  h3.sub-title{
+    color:var(--maroon);
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1.02rem;
+    border-bottom:2px solid var(--gold);
+    display:inline-block;
+    padding-bottom:4px;
+    margin:28px 0 14px;
+  }
+  .model-para{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--purple);
+    padding:20px 22px;
+    border-radius:4px;
+    font-size:1.02rem;
+  }
+  .model-para .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage{
+    background:var(--gold-pale);
+    border:1px solid #ecd9a0;
+    padding:18px 20px;
+    border-radius:4px;
+    font-size:1rem;
+    margin-bottom:16px;
+  }
+  .passage h4{
+    margin:0 0 10px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--maroon);
+    font-size:.95rem;
+  }
+  .model-para p{
+    text-indent:1.5em;
+    margin:0 0 14px;
+  }
+  .model-para p:last-of-type{ margin-bottom:0; }
+  .passage p{
+    text-indent:1.5em;
+    margin:0 0 12px;
+  }
+  .passage p.label-tag-line{
+    text-indent:0;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    font-size:.78rem;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    margin:0 0 4px;
+  }
+  .passage p:last-of-type{ margin-bottom:0; }
+  .vocab{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .instructions{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.94rem;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .qa-item{ margin-bottom:16px; }
+  .qa-item label.qlabel{
+    display:block;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:600;
+    font-size:.93rem;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  textarea, input[type="text"]{
+    width:100%;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:.98rem;
+    padding:9px 11px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{ resize:vertical; min-height:52px; }
+  input[type="text"]{ height:38px; }
+  select{
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:9px 11px;
+    height:42px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+
+  .group-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 18px 6px;
+    margin-bottom:22px;
+  }
+  .group-title{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--maroon);
+    font-size:.92rem;
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .item-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px dashed var(--line);
+  }
+  .item-row:first-of-type{ border-top:none; }
+  .item-letter{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--purple);
+    min-width:18px;
+  }
+  .item-text{ flex:1; font-size:.97rem; }
+  .item-select select{
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:8px 10px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+  .mark{
+    display:inline-block;
+    min-width:22px;
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    margin-left:8px;
+  }
+  .mark.ok{ color:var(--correct); }
+  .mark.no{ color:var(--wrong); }
+
+  .radio-line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    margin-top:6px;
+    align-items:center;
+  }
+  .radio-line label{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+  }
+
+  .feedback-box{
+    margin-top:6px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    padding:8px 12px;
+    border-radius:3px;
+    display:none;
+  }
+  .feedback-box.show{ display:block; }
+  .feedback-box.correct{ background:var(--correct-bg); color:var(--correct); }
+  .feedback-box.wrong{ background:var(--wrong-bg); color:var(--wrong); }
+
+  .check-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    font-size:.92rem;
+    font-weight:600;
+    cursor:pointer;
+    margin:10px 0 6px;
+  }
+  .check-btn:hover{ background:var(--purple-dark); }
+
+  .score-banner{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:4px;
+    margin-top:10px;
+    display:none;
+  }
+  .score-banner.show{ display:block; }
+
+  .label-tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    font-style:normal;
+    letter-spacing:.02em;
+  }
+
+  footer{
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    color:var(--ink-soft);
+    margin-top:60px;
+  }
+
+  @media (max-width:900px){
+    .menu-toggle{ display:block; }
+    .sidebar{
+      position:fixed;
+      top:0; left:0;
+      height:100vh;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:40;
+      box-shadow:2px 0 12px rgba(0,0,0,.15);
+    }
+    .sidebar.open{ transform:translateX(0); }
+    main{ padding:0 18px 90px; }
+    .top-banner h1{ font-size:1.5rem; }
+  }
+
+  .del{ text-decoration:line-through; color:#a89f8f; }
+  .ins{ color:#1d5fc4; font-weight:700; }
+  .example-block{
+    margin:16px 0;
+    padding:2px 0;
+  }
+  .example-block em{ display:block; margin:8px 0; }
+  .rule-item{ display:flex; gap:8px; align-items:flex-start; }
+  .rule-no{ font-weight:700; flex-shrink:0; }
+  .rule-text{ flex:1; }
+
+  /* ---- essay-map outline diagram ---- */
+  .essay-map{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:18px 22px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    color:var(--ink);
+    line-height:1.9;
+  }
+  .essay-map .lvl1{ font-weight:700; color:var(--maroon); }
+  .essay-map .lvl2{ padding-left:22px; font-weight:700; color:var(--purple); }
+  .essay-map .lvl3{ padding-left:44px; }
+  .essay-map .lvl4{ padding-left:66px; color:var(--ink-soft); font-size:.84rem; }
+
+  .thesis-ex{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:12px 16px;
+    margin:8px 0;
+    font-size:.98rem;
+  }
+  .thesis-ex .tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    display:block;
+    margin-bottom:4px;
+  }
+  .thesis-ex p{
+    text-indent:1.5em;
+    margin:0;
+  }
+
+  table.tsig{ width:100%; border-collapse:collapse; font-size:.85rem; margin:14px 0; }
+  table.tsig th{ text-align:left; padding:8px; border:1px solid var(--line); background:var(--gold-pale); }
+  table.tsig td{ padding:8px; border:1px solid var(--line); vertical-align:top; }
+
+  /* ---- drag & drop reorder list (Practice 3) ---- */
+  ul.drag-list{ list-style:none; margin:0 0 10px; padding:0; }
+  li.drag-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border:1px solid #cfc6b8;
+    border-radius:4px;
+    padding:10px 12px;
+    margin-bottom:6px;
+    font-size:.95rem;
+    cursor:grab;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  li.drag-item:active{ cursor:grabbing; }
+  li.drag-item.dragging{ opacity:.4; }
+  li.drag-item.drag-over{ border-color:var(--purple); background:#f3eefa; }
+  li.drag-item .drag-handle{
+    color:#a89f8c;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    letter-spacing:-2px;
+    flex-shrink:0;
+    user-select:none;
+  }
+  li.drag-item .drag-text{ flex:1; }
+  li.drag-item .drag-btns{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    flex-shrink:0;
+  }
+  li.drag-item .drag-btns button{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:#faf6ec;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    font-size:.7rem;
+    line-height:1;
+    padding:3px 6px;
+    cursor:pointer;
+    color:var(--ink-soft);
+  }
+  li.drag-item .drag-btns button:hover{ background:var(--gold-pale); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">Sections ☰</button>
+
+<div class="top-banner">
+  <div class="eyebrow">Chapter 4</div>
+  <h1>From Paragraph to Essay</h1>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <span class="group-label">Introduction</span>
+      <a href="#sec-intro">Introduction</a>
+      <a href="#sec-model">Analyzing the Model</a>
+
+      <span class="group-label">Parts of an Essay</span>
+      <a href="#sec-parts">Parts of an Essay</a>
+      <a href="#sec-intro-para">The Introductory Paragraph</a>
+      <a href="#sec-p2">Practice 2</a>
+      <a href="#sec-p3">Practice 3</a>
+      <a href="#sec-thesis">The Thesis Statement</a>
+      <a href="#sec-p4">Practice 4</a>
+      <a href="#sec-body">Body Paragraphs</a>
+      <a href="#sec-conclusion">The Concluding Paragraph</a>
+      <a href="#sec-p6">Practice 6</a>
+
+      <span class="group-label">Patterns of Organization</span>
+      <a href="#sec-patterns">Patterns of Organization</a>
+      <a href="#sec-org-thesis">Organization and Thesis Statements</a>
+      <a href="#sec-p7">Practice 7</a>
+      <a href="#sec-logical-division">Logical Division of Ideas</a>
+      <a href="#sec-p8">Practice 8</a>
+      <a href="#sec-transitions">Transition Signals</a>
+      <a href="#sec-p9">Practice 9</a>
+
+      <span class="group-label">Outlines of Essays</span>
+      <a href="#sec-outlines">Outlines of Essays</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- ================= INTRODUCTION ================= -->
+    <section class="block" id="sec-intro">
+      <h2 class="section-title">INTRODUCTION</h2>
+      <p>In Chapters 1 through 3, you studied the key elements of a well-written academic paragraph. In this chapter, you'll do the same for an essay. An essay is a piece of writing several paragraphs long. It's about one topic, just as a paragraph is. However, because the topic is too complex to discuss in one paragraph, you need to divide it into several paragraphs, one for each major point. Then you need to tie the paragraphs together by adding an introduction and a conclusion. At the end of this chapter, you will write an essay on the topic of education.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL ================= -->
+    <section class="block" id="sec-model">
+      <h2 class="section-title">ANALYZING THE MODEL</h2>
+
+      <div class="model-para">
+        <h4 style="margin-top:0;color:var(--maroon);font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;">Separating the Sexes,<br>Just for the Tough Years</h4>
+        <p>
+          <span class="num">1</span>The middle school years (grades 6, 7, and 8) are known to be the "tough<br>
+          years." These are the years when the different rates of girls' and boys' physical,<br>
+          emotional, and cognitive development are most noticeable. Girls develop<br>
+          ahead of boys in every area, and both suffer. Educators debate whether the<br>
+          separation of boys and girls into single-sex classes might improve students'<br>
+          academic performance. Single-sex classes were against the law in public<br>
+          schools until several years ago, but now they have become more common<br>
+          (Bonner and Hollingsworth). Although some parents, educators, and civil<br>
+          liberties groups continue to oppose single-sex classes, there is some evidence<br>
+          that separating boys and girls in middle school produces positive results.
+        </p>
+        <p>
+          <span class="num">2</span>First of all, it is difficult to say whether single-sex education leads to higher<br>
+          test scores, but it may make a difference in more important areas. Although<br>
+          some research shows no improvement in test scores, other research shows<br>
+          opposite results (Blum). More important, many psychologists believe that test<br>
+          scores are not a good measure of success. They suggest that self-confidence<br>
+          and self-esteem issues are more important. For example, in same-sex classes,<br>
+          girls report increased confidence and improved attitudes toward math and<br>
+          science ("Study"). New York University professor Carol Gilligan believes girls<br>
+          are more likely to be "creative thinkers and risk-takers as adults if educated<br>
+          apart from boys in middle school" (qtd. in Gross). Boys, too, gain confidence<br>
+          when they do not have to compete with girls. Boys can feel inferior when<br>
+          compared to girls, who literally "out-think" them. This feeling can cause them<br>
+          to become angry and fight back. In contrast, with no girls in the classroom,<br>
+          they are more relaxed and more open to learning (Gross).
+        </p>
+        <p>
+          <span class="num">3</span>In addition to these benefits, it is also necessary to examine how single-sex<br>
+          education will affect students' careers in the future. Opponents of the practice<br>
+          note that when students go into the workforce, they will have to work side-<br>
+          by-side with the opposite sex. They worry that attending all-girl or all-boy<br>
+          schools could deny children the chance to learn how to do so ("North").<br>
+          However, this argument ignores the fact that children constantly interact with<br>
+          members of the opposite sex outside of school. This interaction can range<br>
+          from playing and arguing with siblings to negotiating allowances, chores, and<br>
+          privileges with their opposite-sex parent. Children learn and practice on a<br>
+          daily basis the skills they will need in their future workplaces.
+        </p>
+        <p>
+          <span class="num">4</span>Finally, opponents of same-sex education say that it is discriminatory.<br>
+          However, research supports the opposite conclusion: that discrimination is<br>
+          widespread in mixed classes. Several studies have shown that boys dominate<br>
+          discussions and receive more attention than girls. Studies also indicate that<br>
+          teachers call on boys more often than on girls, even when girls raise their<br>
+          hands ("North"). Clearly, this is discriminatory.
+        </p>
+        <p>
+          <span class="num">5</span>For all these reasons, the arguments against same-sex classes are not<br>
+          valid. On the contrary, many people say that same-sex classes provide a<br>
+          better learning environment. Boys and girls pay less attention to each other<br>
+          and more attention to their schoolwork (Marquez). Girls are less fearful<br>
+          of making mistakes and asking questions in math and science; boys are<br>
+          less shy about sharing their ideas in language and literature. Furthermore,<br>
+          schoolchildren do not lack contact with the opposite sex. Indeed, they have<br>
+          many opportunities outside school to interact with one another. Finally,<br>
+          discrimination occurs in mixed classes, so discrimination is not a valid<br>
+          argument. Therefore, in my opinion, the policy of allowing single-sex classes<br>
+          in public schools should be continued and encouraged.
+        </p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:14px;">
+          <strong>Sources:</strong><br>
+          1. Blum, Justin. "Scores Soar at D.C. School with Same-Sex Classes."<br>
+          2. Bonner, Jessie and Heather Hollingsworth. "Single Sex Classes Popular as More Public Schools Split Up Boys and Girls."<br>
+          3. Gross, Jane. "Splitting Up Boys and Girls, Just for the Tough Years."<br>
+          4. Marquez, Laura. "Should girls, boys be in separate classrooms?"<br>
+          5. "North Carolina School Stops Same-Sex Classes." <em>American Civil Liberties Union News</em>.<br>
+          6. "Study: All Girls Schools Don't Improve Test Scores." <em>CNNinteractive</em>.
+        </p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Model</h3>
+      <p class="instructions">(We'll go over these together in class.)</p>
+      <div class="qa-item"><label class="qlabel">1. How many paragraphs does this essay contain?</label></div>
+      <div class="qa-item"><label class="qlabel">2. What are the topic sentences of paragraphs 2, 3, and 4? Underline each topic sentence. (Note: The topic sentence is not necessarily the first sentence.)</label></div>
+      <div class="qa-item"><label class="qlabel">3. What key phrase appears three times in the introduction? Circle each repetition of this key phrase, or synonyms for this phrase, in the other paragraphs of the essay.</label></div>
+      <div class="qa-item"><label class="qlabel">4. What is one fact or example that supports the opinion expressed in the concluding sentence?</label></div>
+    </section>
+
+    <!-- ================= PARTS OF AN ESSAY ================= -->
+    <section class="block" id="sec-parts">
+      <h2 class="section-title">PARTS OF AN ESSAY</h2>
+      <p>Writing an essay is no more difficult than writing a paragraph except that an essay is longer. The principles of organization are the same for both, so if you can write a good paragraph, you can write a good essay.</p>
+      <p>An essay has three main parts: <strong>an introduction</strong> (introductory paragraph), <strong>a body</strong> (at least one, but usually two or more paragraphs), and <strong>a conclusion</strong> (concluding paragraph).</p>
+      <p class="instructions">The chart shows you how the parts of a paragraph correspond to the parts of an essay.</p>
+
+      <div class="essay-map">
+        <div class="lvl1">Essay</div>
+        <div class="lvl2">I. Introduction</div>
+        <div class="lvl3">General statements</div>
+        <div class="lvl3">Thesis statement</div>
+        <div class="lvl2">II. Body</div>
+        <div class="lvl3">A. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl3">B. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl3">C. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl2">III. Conclusion</div>
+        <div class="lvl3">Restatement or summary of the main points</div>
+        <div class="lvl3">final comment</div>
+      </div>
+
+      <h3 class="sub-title">The Introduction</h3>
+      <p>As the chart shows, an essay <strong>introduction</strong> consists of two parts: a few general statements to attract your reader's attention and a <strong>thesis statement</strong> to state the main idea of the essay. The thesis statement of an essay is like the topic sentence of a paragraph. It names the specific topic and gives the reader an idea of the contents of the essay. It may also suggest the writer's point of view on the topic.</p>
+      <p class="instructions">📌 The thesis statement is usually the last sentence of the introduction.</p>
+
+      <h3 class="sub-title">The Body</h3>
+      <p>The <strong>body</strong> consists of one or more paragraphs. Each body paragraph develops a subdivision or subtopic of the topic, so the number of paragraphs in the body will vary with the number of subtopics.</p>
+
+      <h3 class="sub-title">The Conclusion</h3>
+      <p>The <strong>conclusion</strong>, like the concluding sentence in a paragraph, is a summary or review of the main points discussed in the body. However, although every essay needs a concluding paragraph, a concluding sentence is not necessary for each body paragraph, especially when the ideas in consecutive paragraphs are closely related.</p>
+
+      <h3 class="sub-title">Unity and Coherence</h3>
+      <p>An essay has unity and coherence, just as a paragraph does. Transition signals and the repetition of key nouns help link the paragraphs and make the essay more coherent.</p>
+    </section>
+
+    <!-- ================= THE INTRODUCTORY PARAGRAPH ================= -->
+    <section class="block" id="sec-intro-para">
+      <h2 class="section-title">THE INTRODUCTORY PARAGRAPH</h2>
+      <p class="instructions">An introductory paragraph = the general statements + the thesis statement</p>
+
+      <h3 class="sub-title">General Statements</h3>
+      <ul>
+        <li>introduce the general topic of the essay;</li>
+        <li>capture the reader's interest.</li>
+      </ul>
+
+      <h3 class="sub-title">The Thesis Statement</h3>
+      <ul>
+        <li>states the specific topic;</li>
+        <li>may list subtopics of the main topic;</li>
+        <li>may indicate the pattern of organization of the essay;</li>
+        <li>may indicate the writer's position or point of view;</li>
+        <li>is usually the last sentence in the introductory paragraph.</li>
+      </ul>
+
+      <p>There are several different styles of introductory paragraphs. In this chapter, you'll learn about two of them: the <strong>funnel introduction</strong> and the <strong>attention-getting introduction</strong>.</p>
+
+      <h3 class="sub-title">Funnel Introduction</h3>
+      <p>A funnel introduction is so called because it is shaped like a funnel—wide at the top and narrow at the bottom. It begins with one or two very general sentences about the topic. Each subsequent sentence becomes increasingly focused on the topic until the last sentence, which states very specifically what the essay will be about.</p>
+      <p>Writing a funnel introduction is like focusing a camera with a telephoto lens. You start with a wide picture and gradually narrow the focus so that just one object appears in the camera's viewfinder: <span style="background:var(--gold-pale);">your thesis statement</span>.</p>
+
+      <div class="passage">
+        <h4>Model — Funnel Introduction: "Separating the Sexes, Just for the Tough Years"</h4>
+        <p><span class="num">1</span>The middle school years (grades 6, 7, and 8) are known to be the "tough<br>
+        years." These are the years when the different rates of girls' and boys' physical,<br>
+        emotional, and cognitive development are most noticeable. Girls develop<br>
+        ahead of boys in every area, and both suffer. Educators debate whether the<br>
+        separation of boys and girls into single-sex classes might improve students'<br>
+        academic performance. Single-sex classes were against the law in public<br>
+        schools until several years ago, but now they have become more common<br>
+        (Bonner and Hollingsworth). Although some parents, educators, and civil<br>
+        liberties groups continue to oppose single-sex classes, there is some evidence<br>
+        that <span style="background:var(--gold-pale);">separating boys and girls in middle school produces positive results</span>.</p>
+      </div>
+
+      <h3 class="sub-title">Attention-Getting Introduction</h3>
+      <p>Another kind of introduction is one that captures your reader's attention. Three of the most common attention-getting techniques are:</p>
+      <ul>
+        <li>telling a dramatic or funny story,</li>
+        <li>using surprising facts or statistics, and</li>
+        <li>offering historical background.</li>
+      </ul>
+    </section>
+
+    <!-- ================= PRACTICE 2 ================= -->
+    <section class="block" id="sec-p2">
+      <h2 class="section-title">PRACTICE 2 &nbsp;·&nbsp; Recognizing Introductory Techniques</h2>
+      <p class="instructions">Decide what kind of introduction each introductory paragraph is.</p>
+      <div id="practice2"></div>
+      <button class="check-btn" onclick="checkPractice2()">Check Answers</button>
+      <div class="score-banner" id="p2-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 3 ================= -->
+    <section class="block" id="sec-p3">
+      <h2 class="section-title">PRACTICE 3 &nbsp;·&nbsp; Constructing Introductory Paragraphs</h2>
+      <p class="instructions">The sentences in each group are in the wrong order. Drag the sentences into the correct order to form an introductory paragraph (the thesis statement should come last). Then identify the type of introduction: <em>funnel</em> or <em>attention-getting</em>.</p>
+      <div id="practice3"></div>
+      <button class="check-btn" onclick="checkPractice3()">Check Answers</button>
+      <div class="score-banner" id="p3-score"></div>
+    </section>
+
+    <!-- ================= THE THESIS STATEMENT ================= -->
+    <section class="block" id="sec-thesis">
+      <h2 class="section-title">THE THESIS STATEMENT</h2>
+      <p>The thesis statement is the most important sentence in the introduction. It states the specific topic of the essay and often gives the writer's point of view.</p>
+      <div class="thesis-ex">
+        <span class="tag">Example</span>
+        Although some parents and educators oppose same-sex classes, there is some evidence that separating boys and girls in middle school yields positive results.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Example</span>
+        Young people in my culture have less freedom than young people in the United States.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Example</span>
+        The large movement of people from rural to urban areas has major effects on cities.
+      </div>
+
+      <p>Sometimes a thesis statement <strong>lists the subtopics</strong> that will be discussed in the body.</p>
+      <div class="thesis-ex">
+        <span class="tag">Example</span>
+        Although some parents and educators oppose same-sex classes, there is some evidence that separating boys and girls in middle school yields positive results, particularly in <span style="background:var(--gold-pale);">improved learner self-confidence and decreased classroom discrimination</span>.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Example</span>
+        Young people in my culture have less freedom than young people in the United States in <span style="background:var(--gold-pale);">their choice of where they live, whom they marry, and what their job is</span>.
+      </div>
+
+      <h3 class="sub-title">Thesis Statement Pitfalls</h3>
+      <p>Because the thesis statement is so important, it must be written with special thought and care. Avoid these three common problems: <strong>the thesis is too general; the thesis makes a simple announcement; the thesis states an obvious fact.</strong></p>
+
+      <p><strong>Problem 1: The thesis is too general.</strong></p>
+      <div class="example-block">
+        <em><span class="label-tag">Too general</span> A college education is a good investment.</em>
+        <em><span class="label-tag">Improved</span> A college education is a good investment for four reasons.</em>
+        <em><span class="label-tag">Too general</span> Lasers are very useful.</em>
+        <em><span class="label-tag">Improved</span> Lasers have several applications in industry and medicine.</em>
+      </div>
+
+      <p><strong>Problem 2: The thesis makes a simple announcement.</strong></p>
+      <div class="example-block">
+        <em><span class="label-tag">Announcement</span> I am going to write about sports injuries.</em>
+        <em><span class="label-tag">Improved</span> You can avoid sports injuries by taking a few simple precautions.</em>
+      </div>
+
+      <p><strong>Problem 3: The thesis states an obvious fact.</strong></p>
+      <div class="example-block">
+        <em><span class="label-tag">Obvious fact</span> The Internet is a communication superhighway.</em>
+        <em><span class="label-tag">Improved</span> The growth of the Internet has had both positive and negative consequences.</em>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 4 ================= -->
+    <section class="block" id="sec-p4">
+      <h2 class="section-title">PRACTICE 4 &nbsp;·&nbsp; Analyzing Thesis Statements</h2>
+      <p class="instructions">Read each thesis statement. Identify the topic and the subtopics. Then write the words or punctuation marks that introduce the subtopics.</p>
+      <div id="practice4"></div>
+      <button class="check-btn" onclick="checkPractice4()">Check Answers</button>
+      <div class="score-banner" id="p4-score"></div>
+    </section>
+
+    <!-- ================= BODY PARAGRAPHS ================= -->
+    <section class="block" id="sec-body">
+      <h2 class="section-title">BODY PARAGRAPHS</h2>
+      <p>The body paragraphs in an essay are like the supporting sentences in a paragraph. They are the place to develop your topic and prove your points. You can use facts, examples, and other details to support your points. Quotations and paraphrases can also help to develop the subtopics that you explore in the body paragraphs.</p>
+    </section>
+
+    <!-- ================= THE CONCLUDING PARAGRAPH ================= -->
+    <section class="block" id="sec-conclusion">
+      <h2 class="section-title">THE CONCLUDING PARAGRAPH</h2>
+      <p>The conclusion is the final paragraph in an essay. It has three purposes:</p>
+      <ul>
+        <li>It signals the end of the essay. To do so, begin your conclusion with a transition signal.</li>
+        <li>It reminds your reader of your main points, which you can do by summarizing your subtopics and/or paraphrasing your thesis.</li>
+        <li>It leaves your reader with strong, effective thoughts on the topic. This is your opportunity to convey a strong, effective message that your reader will remember.</li>
+      </ul>
+
+      <h3 class="sub-title">Techniques for Memorable Conclusions</h3>
+      <p class="instructions">Some techniques you can use to write a memorable conclusion include making a prediction, suggesting results or consequences, recommending a solution or call to action, or quoting an authority.</p>
+
+      <div class="thesis-ex">
+        <span class="tag">Make a prediction</span>
+        <p>We have seen how the costs of attending college have been rising<br>
+        while, at the same time, sources of financial aid for students have been<br>
+        disappearing. If this trend continues, fewer and fewer families will be able<br>
+        to send their children through four years of college.</p>
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Suggest results or consequences</span>
+        <p>To sum up, the costs of attending college are up and financial aid for<br>
+        students is down. Fewer and fewer future members of the workforce are<br>
+        able to educate themselves beyond high school. As a result, the nation will<br>
+        waste the intelligence, imagination, and energy of a large segment of the<br>
+        present college-age generation.</p>
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Recommend a solution or a call for action</span>
+        <p>It is clear that the U.S. system of higher education is in trouble. For many<br>
+        students, completing four years of college is no longer possible because<br>
+        of increasing costs and decreasing financial aid. To reverse this trend, we<br>
+        must demand that government increase its financial support of colleges<br>
+        and universities and restore financial aid programs. Our future depends<br>
+        on it.</p>
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">Quote an authority on the topic</span>
+        <p>In conclusion, costs are rising and financial aid is declining, with the<br>
+        result that many can no longer afford to go to college. If our nation is to<br>
+        prosper, increased government funding for education is essential, even if it<br>
+        requires higher taxes. As Horace Mann argued in his <em>Fifth Annual Report</em>,<br>
+        a nation's economic wealth will increase through an educated public. It<br>
+        is therefore in the self-interest of business to pay the taxation for public<br>
+        education.</p>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 6 ================= -->
+    <section class="block" id="sec-p6">
+      <h2 class="section-title">PRACTICE 6 &nbsp;·&nbsp; Analyzing Concluding Paragraphs</h2>
+      <p class="instructions">Read the essay and the two possible concluding paragraphs. Then answer the questions.</p>
+
+      <div class="passage">
+        <h4>Student-Centered Teaching</h4>
+        <p><span class="num">1</span>For generations, students have complained that school is boring. A teaching approach called<br>
+        <em>student-centered teaching</em> aims to get learners more involved. With this approach, students do not<br>
+        simply listen to the teacher. Instead, they learn through group tasks or independent activities created<br>
+        by a teacher. These activities often require students to solve a problem, which exposes them to new<br>
+        information. As a result, students gain new understanding. Although there are many different ways<br>
+        to make a class student-centered, three approaches have become the most common: inquiry-based<br>
+        learning, problem-based learning, and project-based learning.</p>
+        <p><span class="num">2</span>Inquiry learning is based on the writings of John Dewey. Inquiry learning starts with a<br>
+        question and then engages students in problem-solving activities. Students learn as they explore,<br>
+        gather data, and analyze their data. The teacher's role in inquiry learning is one of a facilitator and<br>
+        provider of information (Savery). Ill-structured problems—ones with many different solutions and<br>
+        many paths to a solution (Jonassen)—are favored over well-structured problems. These are ones<br>
+        with a single correct answer.</p>
+        <p><span class="num">3</span>Problem-based learning (PBL) was first used in medical education (Barrows) and then<br>
+        adopted by K–12 educators. Like inquiry learning, PBL encourages learning through exploration<br>
+        and experiments. Ill-structured problems are also typical of problem-based learning instruction.<br>
+        These problems provide the learner with a broad area of exploration. However, the teacher's role<br>
+        in PBL differs from the role in inquiry learning. In PBL, the teacher<br>
+        acts as a facilitator, but does not provide information to the learner.<br>
+        Instead, the learners are expected to find the necessary information<br>
+        they need to solve the problem (Savery).</p>
+        <p><span class="num">4</span>Project-based learning is also an active learning strategy.<br>
+        Similarly, it often focuses on a problem. However, the problem<br>
+        in project-based learning is well structured, and learners are told<br>
+        the goal of their project (Savery). Goals could be as diverse as<br>
+        determining the percentage of voters in a district or creating a<br>
+        bird-friendly area in the school yard. Project-based learning is<br>
+        focused on following a process described by the teacher. This<br>
+        process may involve arriving at a calculation or reading specific<br>
+        materials. In contrast to the first two methods, the teacher's role in<br>
+        project-based learning is more likely to be as a coach who provides<br>
+        feedback and guidance (Savery).</p>
+      </div>
+
+      <div class="passage">
+        <h4>Concluding Paragraph A</h4>
+        <p>To sum up, student-centered teaching is very important to learning. Three kinds of student-centered approaches are inquiry-based learning, problem-based learning, and project-based learning. Of course, each individual teacher might use these approaches in different ways. In the end, however, student-centered methods will develop stronger critical thinking skills and better prepare students for future success.</p>
+      </div>
+      <div class="passage">
+        <h4>Concluding Paragraph B</h4>
+        <p>In conclusion, it is easy to see why these approaches are often used together. After all, each one focuses on problem solving, and the teacher's role in each approach is not limited to traditional lecturing. There are many approaches to making the learning environment more student-centered. Teachers must choose an approach that makes new information necessary and exciting.</p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Essay</h3>
+      <div class="qa-item">
+        <label class="qlabel">1. Which concluding paragraph provides a summary of the subtopics?</label>
+        <select id="p6-q1">
+          <option value="">-- choose --</option>
+          <option value="A">Concluding Paragraph A</option>
+          <option value="B">Concluding Paragraph B</option>
+        </select>
+        <div class="feedback-box" id="p6-fb-1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2. Which one paraphrases the thesis statement?</label>
+        <select id="p6-q2">
+          <option value="">-- choose --</option>
+          <option value="A">Concluding Paragraph A</option>
+          <option value="B">Concluding Paragraph B</option>
+        </select>
+        <div class="feedback-box" id="p6-fb-2"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">3. Which one presents a call to action?</label>
+        <select id="p6-q3">
+          <option value="">-- choose --</option>
+          <option value="A">Concluding Paragraph A</option>
+          <option value="B">Concluding Paragraph B</option>
+        </select>
+        <div class="feedback-box" id="p6-fb-3"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">4. Which one makes a prediction?</label>
+        <select id="p6-q4">
+          <option value="">-- choose --</option>
+          <option value="A">Concluding Paragraph A</option>
+          <option value="B">Concluding Paragraph B</option>
+        </select>
+        <div class="feedback-box" id="p6-fb-4"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkPractice6()">Check Answers</button>
+      <div class="score-banner" id="p6-score"></div>
+    </section>
+
+    <!-- ================= PATTERNS OF ORGANIZATION ================= -->
+    <section class="block" id="sec-patterns">
+      <h2 class="section-title">PATTERNS OF ORGANIZATION</h2>
+      <p>Like paragraphs, essays must be carefully organized. Remember that an essay has three parts: an introduction, a body, and a conclusion. However, the method that you choose for organizing the information and ideas in an essay can vary. You have already learned about three different patterns of order or organization: <strong>comparison/contrast</strong>, <strong>chronological order</strong>, and <strong>logical division of ideas</strong>. These and other organization patterns can be used to write an essay.</p>
+    </section>
+
+    <!-- ================= ORGANIZATION AND THESIS STATEMENTS ================= -->
+    <section class="block" id="sec-org-thesis">
+      <h2 class="section-title">ORGANIZATION AND THESIS STATEMENTS</h2>
+      <p>A thesis statement can indicate the pattern of organization that an essay will follow.</p>
+      <p class="instructions">Which of these thesis statements indicates chronological order? Logical division of ideas? Comparison / contrast?</p>
+
+      <div class="thesis-ex">
+        When buying a used car, use these four strategies to get the best price.
+        <br><span class="label-tag" style="color:var(--maroon);">→ Logical Division of Ideas</span>
+      </div>
+      <div class="thesis-ex">
+        There are several differences between a nurse practitioner and a physician's assistant.
+        <br><span class="label-tag" style="color:var(--maroon);">→ Comparison / Contrast</span>
+      </div>
+      <div class="thesis-ex">
+        My best friend and I spent an entire summer constructing a tree house in my grandmother's old apple tree.
+        <br><span class="label-tag" style="color:var(--maroon);">→ Chronological Order</span>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 7 ================= -->
+    <section class="block" id="sec-p7">
+      <h2 class="section-title">PRACTICE 7 &nbsp;·&nbsp; Signaling Organization with Thesis Statements</h2>
+
+      <h3 class="sub-title">A. Study the thesis statements. Choose the organization pattern used.</h3>
+      <div id="practice7a"></div>
+
+      <h3 class="sub-title">B. Find the topic and subtopics of each paragraph. Then decide how many paragraphs will probably be in the body of each essay.</h3>
+      <div id="practice7b"></div>
+
+      <button class="check-btn" onclick="checkPractice7()">Check Answers</button>
+      <div class="score-banner" id="p7-score"></div>
+    </section>
+
+    <!-- ================= LOGICAL DIVISION OF IDEAS ================= -->
+    <section class="block" id="sec-logical-division">
+      <h2 class="section-title">ORGANIZATION AND BODY PARAGRAPHS &nbsp;·&nbsp; LOGICAL DIVISION OF IDEAS</h2>
+      <p>As you have learned, body paragraphs develop subtopics of an essay's main topic. The pattern of organization you choose will help determine the focus and order of your body paragraphs. Will they emphasize similarities and/or differences? Will they follow events in time order? Will they each discuss an important point related to the main topic? Sometimes, depending on your topic, you will need to use a combination of these patterns.</p>
+
+      <p>As you read previously, a basic pattern for essays, like paragraphs, is the <strong>logical division of ideas</strong>. In this pattern, you divide your topic into subtopics, and each subtopic develops one important point or idea related to the main topic. Each subtopic is discussed in a separate paragraph, and paragraphs are presented in an order that will make sense to your readers. Logical division is an appropriate pattern for explaining causes, reasons, types, kinds, qualities, methods, advantages and disadvantages, as these typical college exam prompts ask you to do.</p>
+
+      <div style="overflow-x:auto;">
+      <table class="tsig">
+        <tr><th>Subject</th><th>Typical Prompt for College Exams</th></tr>
+        <tr><td>Economics</td><td>Explain the three causes of inflation.</td></tr>
+        <tr><td>Agriculture / Landscape Design</td><td>Describe the basic types of soils and what additives are needed to prepare each type for planting.</td></tr>
+        <tr><td>U.S. History</td><td>Discuss the causes of the U.S. Civil War.</td></tr>
+        <tr><td>Business</td><td>Explain the three main forms of business organization.</td></tr>
+        <tr><td>Health Sciences</td><td>Describe the various classes of drugs used to treat depression.</td></tr>
+      </table>
+      </div>
+
+      <h3 class="sub-title">Three Things to Remember</h3>
+      <p class="instructions">There are three things to remember when you write a logical division essay:</p>
+      <ul>
+        <li>Divide your topic into subtopics and make sure your thesis statement indicates logical division.</li>
+        <li>Discuss each subtopic in a separate paragraph.</li>
+        <li>Use transitions between paragraphs to guide your reader from one subtopic to the next.</li>
+      </ul>
+
+      <h3 class="sub-title">Thesis Statements for Logical Division of Ideas</h3>
+      <p>A thesis statement often indicates subtopics that will be discussed in the essay.</p>
+
+      <div class="thesis-ex">
+        <span class="tag">a. List each subtopic</span>
+        Native Americans have made valuable contributions to U.S. culture, particularly in the areas of <span style="background:var(--gold-pale);">language, art, food, and government</span>.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">b. Simply indicate the number of subtopics</span>
+        Native Americans have made valuable contributions to U.S. culture in <span style="background:var(--gold-pale);">four main areas</span>.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">c. Paired conjunctions for two subtopics (both . . . and, not only . . . but also)</span>
+        Young people in my culture have very little freedom <span style="background:var(--gold-pale);">not only</span> in their choice of lifestyle <span style="background:var(--gold-pale);">but also</span> in their choice of careers.
+      </div>
+      <div class="thesis-ex">
+        <span class="tag">d. A colon (:) before a list of subtopics</span>
+        The Father of Psychoanalysis, Sigmund Freud, believed that the human mind had three parts<span style="background:var(--gold-pale);">:</span> the id, the ego, and the superego.
+      </div>
+      <p class="instructions">Notice that the subtopics of a logical division of ideas essay are in <strong>parallel form</strong>, which means that they have the same grammatical form. In examples <em>a</em> and <em>d</em>, all the words are nouns; in <em>c</em>, two prepositional phrases are linked by the paired conjunctions <em>not only . . . but also</em>.</p>
+    </section>
+
+    <!-- ================= PRACTICE 8 ================= -->
+    <section class="block" id="sec-p8">
+      <h2 class="section-title">PRACTICE 8 &nbsp;·&nbsp; Recognizing Thesis Statements for Logical Division</h2>
+      <p class="instructions">Determine if the thesis statements use logical division as their method of organization.</p>
+      <div id="practice8"></div>
+      <button class="check-btn" onclick="checkPractice8()">Check Answers</button>
+      <div class="score-banner" id="p8-score"></div>
+    </section>
+
+    <!-- ================= TRANSITION SIGNALS ================= -->
+    <section class="block" id="sec-transitions">
+      <h2 class="section-title">TRANSITION SIGNALS FOR THE LOGICAL DIVISION OF IDEAS</h2>
+      <p>Transition signals are important to guide the reader through your essay. The ones you might use for a logical division essay include many that you already know. Review the chart for a list of common transition signals.</p>
+
+      <div style="overflow-x:auto;">
+      <table class="tsig">
+        <tr><th>Words and Phrases</th><th>Examples</th></tr>
+        <tr><td>first, first of all, second, third, etc.</td><td><strong>First</strong>, excessive government spending can lead to inflation.</td></tr>
+        <tr><td>also, in addition, moreover, furthermore</td><td><strong>In addition</strong>, unrestrained consumer borrowing can cause inflationary tendencies.</td></tr>
+        <tr><td>next, last, finally</td><td><strong>Finally</strong>, an increase in the supply of paper money gives rise to inflation.</td></tr>
+        <tr><th>Coordinators</th><th>Examples</th></tr>
+        <tr><td>and, both . . . and</td><td><strong>Both</strong> an increase in the supply of paper money <strong>and</strong> unrestrained consumer borrowing can cause inflationary tendencies.</td></tr>
+        <tr><td>not only . . . but also</td><td>To lose weight, one must <strong>not only</strong> exercise regularly <strong>but also</strong> eat wisely.</td></tr>
+        <tr><th>Others</th><th>Examples</th></tr>
+        <tr><td>the first cause, reason, factor, etc.<br>the / a second problem, result, advantage, etc.<br>one problem, reason, important factor, etc.<br>another way, reason, disadvantage, etc.<br>an additional problem, result, etc.</td><td><strong>A second cause</strong> is an increase in the supply of paper money.</td></tr>
+        <tr><td>in addition to math and science, . . .</td><td><strong>In addition to</strong> government spending, unrestrained consumer borrowing can cause inflationary tendencies.</td></tr>
+      </table>
+      </div>
+
+      <h3 class="sub-title">Transition Signals between Paragraphs</h3>
+      <p>Linking paragraphs with transition signals helps your reader see how the subtopics are related. Link one paragraph to the next by adding a transition to the topic sentence of the second paragraph. This transition may be a single word, a phrase, or a dependent clause that repeats or summarizes the main idea in the preceding paragraph.</p>
+
+      <div class="passage">
+        <h4>Model: "Aggressive Drivers"</h4>
+        <p class="label-tag-line">Introductory Paragraph</p>
+        <p>The number of vehicles on freeways and streets is growing at an alarming rate.<br>
+        This increase of motor vehicles is creating hazardous conditions. Moreover, drivers<br>
+        are in such a rush to get to their destinations that many become angry or impatient<br>
+        with other motorists who are too slow or who are in their way. Aggressive drivers react<br>
+        foolishly toward others in several dangerous ways.</p>
+        <p class="label-tag-line">Body Paragraph 1</p>
+        <p><strong>One way</strong> an angry driver may react is to cut off another motorist.<br>
+        <em>(+ supporting sentences) . . .</em></p>
+        <p class="label-tag-line">Body Paragraph 2</p>
+        <p><strong>Another way</strong> is to tailgate the other car. <em>(+ supporting sentences) . . .</em></p>
+        <p class="label-tag-line">Body Paragraph 3</p>
+        <p><strong>In addition to cutting off and tailgating other cars,</strong> aggressive drivers often use<br>
+        rude language or gestures to show their anger. <em>(+ supporting sentences) . . .</em></p>
+        <p class="label-tag-line">Body Paragraph 4</p>
+        <p><strong>Although law enforcement authorities warn motorists against aggressive</strong><br>
+        <strong>driving,</strong> the number who act out their angry impulses has not declined.<br>
+        <em>(+ supporting sentences) . . .</em></p>
+        <p class="label-tag-line">Concluding Paragraph</p>
+        <p><strong>To conclude,</strong> aggressive drivers are endangering everyone because they create<br>
+        hazardous conditions by acting and driving foolishly. They should control their anger<br>
+        and learn to drive safely. After all, the lives they save could be their own.</p>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 9 ================= -->
+    <section class="block" id="sec-p9">
+      <h2 class="section-title">PRACTICE 9 &nbsp;·&nbsp; Using Transitions between Paragraphs</h2>
+      <p class="instructions">Connect the paragraphs in this essay by choosing a transition to the topic sentences of each body paragraph.</p>
+
+      <div class="qa-item">
+        <label class="qlabel">Paragraph 1 &nbsp;·&nbsp; Medicine and Ethics</label>
+        <div class="passage">
+          <p><span class="num">1</span>Recent advances in the fields of medicine and biotechnology have brought about<br>
+          situations that could scarcely be imagined only a generation ago. Battery-operated plastic<br>
+          hearts can be implanted into people. People can be kept alive indefinitely by machines.<br>
+          Exact duplicates of animals can be made. While such scientific achievements may<br>
+          ultimately benefit humankind, they have also created complex legal and ethical issues.</p>
+        </div>
+      </div>
+
+      <div id="practice9"></div>
+      <button class="check-btn" onclick="checkPractice9()">Check Answers</button>
+      <div class="score-banner" id="p9-score"></div>
+    </section>
+
+    <!-- ================= OUTLINES OF ESSAYS ================= -->
+    <section class="block" id="sec-outlines">
+      <h2 class="section-title">OUTLINES OF ESSAYS</h2>
+      <p>Because an essay is long, it is important to organize and plan before you begin to write. The best way to do this is with an <strong>outline</strong>. An outline not only organizes your thoughts but also keeps you on track once you begin to write. Making an outline can help you organize both what you read and what you write.</p>
+
+      <div class="essay-map">
+        <div class="lvl1">Essay Outline Template</div>
+        <div class="lvl2">I. Introduction</div>
+        <div class="lvl3">General statements</div>
+        <div class="lvl3">Thesis statement</div>
+        <div class="lvl2">II. Body</div>
+        <div class="lvl3">A. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl3">B. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl3">C. Topic sentence</div>
+        <div class="lvl4">1. Support &nbsp; 2. Support &nbsp; 3. Support &nbsp; (Concluding sentence)</div>
+        <div class="lvl2">III. Conclusion</div>
+        <div class="lvl3">Restatement or summary of the main points</div>
+        <div class="lvl3">final comment</div>
+      </div>
+    </section>
+
+    <footer>Chapter 4 · From Paragraph to Essay — Answers are checked in your browser only and are never saved or transmitted.</footer>
+  </main>
+</div>
+
+<script>
+/* ---------------- sidebar nav : one section visible at a time ---------------- */
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+menuToggle.addEventListener("click", ()=> sidebar.classList.toggle("open"));
+
+const navLinks = Array.from(document.querySelectorAll(".sidebar a"));
+const sectionEls = navLinks.map(a=>document.querySelector(a.getAttribute("href")));
+const mainEl = document.querySelector("main");
+
+function showSection(index){
+  sectionEls.forEach((sec,i)=> sec.classList.toggle("active", i===index));
+  navLinks.forEach((a,i)=> a.classList.toggle("active", i===index));
+  mainEl.scrollTo({top:0, behavior:"instant"});
+  sidebar.classList.remove("open");
+  updatePageNavButtons(index);
+}
+navLinks.forEach((a,i)=>{
+  a.addEventListener("click", (e)=>{
+    e.preventDefault();
+    showSection(i);
+  });
+});
+
+sectionEls.forEach((sec,i)=>{
+  const nav = document.createElement("div");
+  nav.className="page-nav";
+  nav.innerHTML = `<button class="prev-btn">&larr; Previous</button><button class="next-btn">Next &rarr;</button>`;
+  sec.appendChild(nav);
+  nav.querySelector(".prev-btn").addEventListener("click", ()=>{ if(i>0) showSection(i-1); });
+  nav.querySelector(".next-btn").addEventListener("click", ()=>{ if(i<sectionEls.length-1) showSection(i+1); });
+});
+function updatePageNavButtons(index){
+  sectionEls.forEach((sec,i)=>{
+    const prev = sec.querySelector(".prev-btn");
+    const next = sec.querySelector(".next-btn");
+    if(prev) prev.disabled = (i===0);
+    if(next) next.disabled = (i===sectionEls.length-1);
+  });
+}
+showSection(0);
+
+/* ---------------- helpers ---------------- */
+function norm(s){
+  return (s||"").toLowerCase().replace(/[.,!?'"“”‘’:]/g,"").replace(/\s+/g," ").trim();
+}
+function normDigits(s){
+  return (s||"").replace(/[^0-9]/g,"");
+}
+function containsKeywords(answer, keywordSets){
+  const a = norm(answer);
+  if(!a) return false;
+  return keywordSets.some(set => set.every(k => a.includes(norm(k))));
+}
+function setBanner(el, correctCount, total){
+  el.classList.add("show");
+  const pct = Math.round((correctCount/total)*100);
+  el.textContent = `${correctCount} / ${total} correct (${pct}%)`;
+  el.style.background = pct===100 ? "#e6f4ed" : "#fbf0d3";
+  el.style.color = pct===100 ? "var(--correct)" : "#8a6d1a";
+}
+
+/* ================= PRACTICE 2 ================= */
+const p2data = [
+  {n:1, answer:"attention-getting",
+   text:`One day, a few miles off the southern coast of Iceland, the crew of a fishing boat noticed smoke on the horizon. Thinking that another fishing boat was on fire, they went to investigate. When they got closer, they discovered that the smoke was not from a boat on fire; rather, it was from an undersea volcano about to erupt. The next day, ash, cinders, and pumice were blown 1,000 feet into the air. The fishermen had witnessed a rare event—the violent birth of an island. The volcano continued to erupt for about four years, eventually creating an island about 1 square mile in area and 560 feet in height. The birth of Surtsey, as the island is named, offered scientists an extraordinary opportunity to learn how life takes hold on a sterile landmass.`},
+  {n:2, answer:"funnel",
+   text:`Moving to a new country can be an exciting, even exhilarating experience. In a new environment, you somehow feel more alive. Seeing new sights, eating new food, hearing the foreign sounds of a new language, and feeling a different climate against your skin stimulate your senses as never before. Soon, however, this sensory bombardment becomes sensory overload. Suddenly, new experiences seem stressful rather than stimulating, and delight turns into discomfort. This is the phenomenon known as culture shock. Culture shock is more than jet lag or homesickness, and it affects nearly everyone who enters a new culture—tourists, business travelers, diplomats, and students alike. Although not everyone experiences culture shock in exactly the same way, many experts agree that it has roughly five stages.`},
+  {n:3, answer:"attention-getting",
+   text:`The Pilgrims who arrived in Massachusetts in 1620 came to find religious freedom. In the 17th and 18th centuries, large numbers of African men and women were brought as slaves to work on large plantations in the South. Immigrants from northern and southern Europe came in the early 19th century to escape poor economic conditions at home. Later in the 19th century, the first immigrants from China came as contract laborers to build the railroads connecting East and West. In the 20th century, political and economic refugees arrived from Asia, Eastern Europe, and Latin America. Indeed, the United States has seen immigrants come from many different parts of the world, and they have come for many different reasons. Their ability to adjust to life in their adopted land has depended on several factors.`},
+  {n:4, answer:"attention-getting",
+   text:`Got high blood pressure? Try a truffle. Worried about heart disease? Buy a bon-bon. It's the best news in years! Studies in two prestigious scientific journals say dark chocolate is good for you. It seems that eating a small piece of dark chocolate regularly can reduce the risk of heart disease because dark chocolate—but not milk chocolate or white chocolate—contains high amounts of flavonoids, powerful cholesterol-fighting compounds. What is the next health food going to be? Ice cream? Sugar cookies? There are so many conflicting news stories about which foods are good for you that it is often difficult to make the right choices at the supermarket.`}
+];
+const p2div = document.getElementById("practice2");
+p2data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">Introductory Paragraph ${item.n}</label>
+    <div class="passage"><p>${item.text}</p></div>
+    <select id="p2-${item.n}">
+      <option value="">-- choose --</option>
+      <option value="funnel">Funnel</option>
+      <option value="attention-getting">Attention-getting</option>
+    </select>
+    <div class="feedback-box" id="p2-fb-${item.n}"></div>`;
+  p2div.appendChild(d);
+});
+function checkPractice2(){
+  let correct=0;
+  p2data.forEach(item=>{
+    const val = document.getElementById(`p2-${item.n}`).value;
+    const fb = document.getElementById(`p2-fb-${item.n}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${item.answer==="funnel"?"Funnel":"Attention-getting"}`; }
+  });
+  setBanner(document.getElementById("p2-score"), correct, p2data.length);
+}
+
+/* ================= PRACTICE 3 (drag & drop) ================= */
+const p3data = [
+  {group:1, title:"Group 1", type:"funnel", correctOrders:[[5,2,3,6,1,4]],
+   sentences:[
+     "If done properly, a handshake gives the impression of strength and honesty, and if done improperly, it conveys weakness and dishonesty.",
+     "In some cultures, people bow, and in others, they shake hands.",
+     "In English-speaking countries, shaking hands is the custom.",
+     "A proper handshake has four ingredients: pressure, pumps, eye contact, and verbal message.",
+     "The way people greet each other when they meet for the first time varies from culture to culture.",
+     "How one shakes hands sends an important message about one's character."
+   ], order:[1,2,3,4,5,6]},
+  {group:2, title:"Group 2", type:"attention-getting", correctOrders:[[2,9,10,3,1,4,8,5,6,7]],
+   sentences:[
+     "To celebrate the occasion, Mr. X decided to throw a big party at the plant.",
+     "Mr. X went from his native land to a new country to manage a milk pasteurization plant.",
+     "Then one day an impressive new pasteurization unit arrived and was installed.",
+     "The employees did most of the planning and draped the new unit with garlands.",
+     "During the party one of Mr. X's supervisors took him aside and said, \"Now we see what a good man you are; from now on I am sure everyone will really try to do their best for you.\"",
+     "And so it was—neither punctuality nor quality checks were any longer needed.",
+     "This story illustrates the need to understand that doing business in a different culture demands an understanding of the culture.",
+     "The party was a great success, and everybody had a good time.",
+     "For eight months, he tried every way possible to convince his workers of the importance of punctuality and of checking every detail of their work.",
+     "The response was always, \"Yes, yes, we will do our best,\" but nothing ever changed."
+   ], order:[1,2,3,4,5,6,7,8,9,10]},
+  {group:3, title:"Group 3", type:"attention-getting", correctOrders:[[5,3,2,4,1],[5,2,4,3,1]],
+   sentences:[
+     "Currently under study are four main methods for predicting when and where the next Big One will occur.",
+     "In 1976, an earthquake in Tangshan, China, killed over 250,000 people.",
+     "In an average year, earthquakes kill 10,000 people worldwide and cause millions of dollars of property damage.",
+     "Iran suffered more than 80,000 deaths in two massive quakes in 1990 and 2003.",
+     "Scientists keep trying to find ways to predict earthquakes—so far without much success."
+   ], order:[1,2,3,4,5], note:"Note: The order of sentences 2, 3, and 4 can vary."}
+];
+const p3div = document.getElementById("practice3");
+p3data.forEach(g=>{
+  const d = document.createElement("div");
+  d.className="group-box";
+  d.innerHTML = `<div class="group-title">${g.title}</div>
+    <ul class="drag-list" id="p3-list-${g.group}"></ul>
+    ${g.note ? `<p class="instructions">${g.note}</p>` : ""}
+    <div class="feedback-box" id="p3-order-fb-${g.group}"></div>
+    <div class="qa-item">
+      <label class="qlabel">Identify the type of ${g.title}</label>
+      <select id="p3-type-${g.group}">
+        <option value="">-- choose --</option>
+        <option value="funnel">Funnel</option>
+        <option value="attention-getting">Attention-getting</option>
+      </select>
+      <div class="feedback-box" id="p3-type-fb-${g.group}"></div>
+    </div>`;
+  p3div.appendChild(d);
+  p3Render(g);
+});
+
+let p3DragSrcPos = null;
+function p3Render(g){
+  const listEl = document.getElementById(`p3-list-${g.group}`);
+  listEl.innerHTML = "";
+  g.order.forEach((idx, pos)=>{
+    const li = document.createElement("li");
+    li.className = "drag-item";
+    li.draggable = true;
+    li.dataset.pos = pos;
+    li.innerHTML = `<span class="drag-handle">⠿⠿</span><span class="drag-text">${idx}. ${g.sentences[idx-1]}</span><span class="drag-btns"><button type="button" aria-label="Move up">▲</button><button type="button" aria-label="Move down">▼</button></span>`;
+    li.addEventListener("dragstart", ()=>{ p3DragSrcPos = pos; li.classList.add("dragging"); });
+    li.addEventListener("dragend", ()=>{ li.classList.remove("dragging"); });
+    li.addEventListener("dragover", (e)=>{ e.preventDefault(); li.classList.add("drag-over"); });
+    li.addEventListener("dragleave", ()=>{ li.classList.remove("drag-over"); });
+    li.addEventListener("drop", (e)=>{
+      e.preventDefault();
+      li.classList.remove("drag-over");
+      if(p3DragSrcPos===null || p3DragSrcPos===pos) return;
+      p3Reorder(g, p3DragSrcPos, pos);
+      p3DragSrcPos = null;
+    });
+    const [upBtn, downBtn] = li.querySelectorAll(".drag-btns button");
+    upBtn.addEventListener("click", ()=> p3Move(g, pos, -1));
+    downBtn.addEventListener("click", ()=> p3Move(g, pos, 1));
+    listEl.appendChild(li);
+  });
+}
+function p3Move(g, pos, dir){
+  const newPos = pos + dir;
+  if(newPos < 0 || newPos >= g.order.length) return;
+  const tmp = g.order[pos]; g.order[pos] = g.order[newPos]; g.order[newPos] = tmp;
+  p3Render(g);
+}
+function p3Reorder(g, fromPos, toPos){
+  const item = g.order.splice(fromPos, 1)[0];
+  g.order.splice(toPos, 0, item);
+  p3Render(g);
+}
+function checkPractice3(){
+  let correct=0; const total = p3data.length*2;
+  p3data.forEach(g=>{
+    const orderFb = document.getElementById(`p3-order-fb-${g.group}`);
+    orderFb.classList.add("show");
+    const isRight = g.correctOrders.some(co => co.length===g.order.length && co.every((v,i)=>v===g.order[i]));
+    if(isRight){ correct++; orderFb.className="feedback-box show correct"; orderFb.textContent="✓ Correct order."; }
+    else{ orderFb.className="feedback-box show wrong"; orderFb.textContent=`✗ Correct order: ${g.correctOrders.map(co=>co.join(", ")).join("  or  ")}`; }
+
+    const typeVal = document.getElementById(`p3-type-${g.group}`).value;
+    const typeFb = document.getElementById(`p3-type-fb-${g.group}`);
+    typeFb.classList.add("show");
+    if(typeVal===g.type){ correct++; typeFb.className="feedback-box show correct"; typeFb.textContent="✓ Correct."; }
+    else{ typeFb.className="feedback-box show wrong"; typeFb.textContent=`✗ Correct answer: ${g.type==="funnel"?"Funnel":"Attention-getting"}`; }
+  });
+  setBanner(document.getElementById("p3-score"), correct, total);
+}
+
+/* ================= PRACTICE 4 ================= */
+const p4data = [
+  {n:"2-1", full:`Women generally live longer than men for two main reasons: They tend to take better care of their health, and they have better resistance to stress.`,
+   topicPart:"Women generally live longer than men", subtopicPart:"They tend to take better care of their health, and they have better resistance to stress.",
+   words:["for two main reasons:","for two main reasons"]},
+  {n:"3-1", full:`Teenagers declare their separateness from their parents by the way they dress and talk.`,
+   topicPart:"Teenagers declare their separateness from their parents", subtopicPart:"the way they dress and talk",
+   words:["by"]},
+  {n:"4-1", full:`In choosing a major, a student has to consider various factors, such as personal interests, job opportunities, and the availability of training institutions.`,
+   topicPart:"In choosing a major, a student has to consider various factors", subtopicPart:"personal interests, job opportunities, and the availability of training institutions",
+   words:["such as",", such as"]},
+  {n:"5-1", full:`An architect should be both an artist and an engineer.`,
+   topicPart:"An architect", subtopicPart:"an artist and an engineer.",
+   words:["both … and ….","both and","both a and b","both...and"]},
+  {n:"6-1", full:`A healthy lifestyle involves eating a nutritious diet, exercising regularly, and getting enough sleep.`,
+   topicPart:"A healthy lifestyle", subtopicPart:"eating a nutritious diet, exercising regularly, and getting enough sleep",
+   words:["involves"]}
+];
+const p4div = document.getElementById("practice4");
+p4data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="group-box";
+  d.innerHTML = `<div class="group-title">${item.n}. ${item.full}</div>
+    <div class="qa-item">
+      <label class="qlabel">${item.topicPart}</label>
+      <select id="p4-topic-${item.n}">
+        <option value="">-- choose --</option>
+        <option value="topic">the topic</option>
+        <option value="subtopics">the subtopics</option>
+      </select>
+      <div class="feedback-box" id="p4-topic-fb-${item.n}"></div>
+    </div>
+    <div class="qa-item">
+      <label class="qlabel">${item.subtopicPart}</label>
+      <select id="p4-sub-${item.n}">
+        <option value="">-- choose --</option>
+        <option value="topic">the topic</option>
+        <option value="subtopics">the subtopics</option>
+      </select>
+      <div class="feedback-box" id="p4-sub-fb-${item.n}"></div>
+    </div>
+    <div class="qa-item">
+      <label class="qlabel">${item.n.split("-")[0]}-2. Write the words or punctuation marks that introduce the subtopics.</label>
+      <input type="text" id="p4-word-${item.n}">
+      <div class="feedback-box" id="p4-word-fb-${item.n}"></div>
+    </div>`;
+  p4div.appendChild(d);
+});
+function checkPractice4(){
+  let correct=0; const total = p4data.length*3;
+  p4data.forEach(item=>{
+    const topicVal = document.getElementById(`p4-topic-${item.n}`).value;
+    const topicFb = document.getElementById(`p4-topic-fb-${item.n}`);
+    topicFb.classList.add("show");
+    if(topicVal==="topic"){ correct++; topicFb.className="feedback-box show correct"; topicFb.textContent="✓ Correct — the topic."; }
+    else{ topicFb.className="feedback-box show wrong"; topicFb.textContent="✗ Correct answer: the topic"; }
+
+    const subVal = document.getElementById(`p4-sub-${item.n}`).value;
+    const subFb = document.getElementById(`p4-sub-fb-${item.n}`);
+    subFb.classList.add("show");
+    if(subVal==="subtopics"){ correct++; subFb.className="feedback-box show correct"; subFb.textContent="✓ Correct — the subtopics."; }
+    else{ subFb.className="feedback-box show wrong"; subFb.textContent="✗ Correct answer: the subtopics"; }
+
+    const wordVal = document.getElementById(`p4-word-${item.n}`).value;
+    const wordFb = document.getElementById(`p4-word-fb-${item.n}`);
+    wordFb.classList.add("show");
+    const ok = item.words.some(w=>norm(w)===norm(wordVal)) || containsKeywords(wordVal, item.words.map(w=>[w]));
+    if(ok){ correct++; wordFb.className="feedback-box show correct"; wordFb.textContent="✓ Correct."; }
+    else{ wordFb.className="feedback-box show wrong"; wordFb.textContent=`✗ Correct answer: ${item.words[0]}`; }
+  });
+  setBanner(document.getElementById("p4-score"), correct, total);
+}
+
+/* ================= PRACTICE 6 ================= */
+function checkPractice6(){
+  let correct=0; const total=4;
+  const answers = {1:"A", 2:"A", 3:"B", 4:"A"};
+  [1,2,3,4].forEach(n=>{
+    const val = document.getElementById(`p6-q${n}`).value;
+    const fb = document.getElementById(`p6-fb-${n}`);
+    fb.classList.add("show");
+    if(val===answers[n]){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: Concluding Paragraph ${answers[n]}`; }
+  });
+  setBanner(document.getElementById("p6-score"), correct, total);
+}
+
+/* ================= PRACTICE 7 ================= */
+const p7aData = [
+  {n:1, text:`Beginning in World War II and continuing through the period of economic boom, the structure of education in Xanadu has changed remarkably.`, answer:"time"},
+  {n:2, text:`Although higher education in Xanadu has improved remarkably in recent years, elementary and secondary schools lag far behind.`, answer:"comparison"}
+];
+const p7bData = [
+  {n:1, text:`Beginning in World War II and continuing through the period of economic boom, the structure of education in Xanadu has changed remarkably due to an improved economy and efforts by the government to provide education in rural areas.`, answer:"2"},
+  {n:2, text:`Education in Xanadu has improved remarkably in recent years in many areas of schooling, including liberal arts, medicine, law, and business.`, answer:"4"}
+];
+const p7aDiv = document.getElementById("practice7a");
+p7aData.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.text}</label>
+    <select id="p7a-${item.n}">
+      <option value="">-- choose --</option>
+      <option value="comparison">comparison/contrast</option>
+      <option value="time">time sequence (chronological order)</option>
+    </select>
+    <div class="feedback-box" id="p7a-fb-${item.n}"></div>`;
+  p7aDiv.appendChild(d);
+});
+const p7bDiv = document.getElementById("practice7b");
+p7bData.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.text}</label>
+    <label style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:.85rem;">Probable number of body paragraphs:</label>
+    <select id="p7b-${item.n}">
+      <option value="">-- choose --</option>
+      <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+    </select>
+    <div class="feedback-box" id="p7b-fb-${item.n}"></div>`;
+  p7bDiv.appendChild(d);
+});
+function checkPractice7(){
+  let correct=0; const total = p7aData.length + p7bData.length;
+  p7aData.forEach(item=>{
+    const val = document.getElementById(`p7a-${item.n}`).value;
+    const fb = document.getElementById(`p7a-fb-${item.n}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${item.answer==="time"?"time sequence (chronological order)":"comparison/contrast"}`; }
+  });
+  p7bData.forEach(item=>{
+    const val = document.getElementById(`p7b-${item.n}`).value;
+    const fb = document.getElementById(`p7b-fb-${item.n}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${item.answer}`; }
+  });
+  setBanner(document.getElementById("p7-score"), correct, total);
+}
+
+/* ================= PRACTICE 8 ================= */
+const p8data = [
+  {n:1, text:"Teenagers demonstrate their independence in several ways.", answer:"O"},
+  {n:2, text:"My 18th birthday was the most memorable day in my life so far.", answer:"X"},
+  {n:3, text:"On their 18th birthdays, U.S. citizens receive two important rights/responsibilities: They can vote, and they can sign legal contracts.", answer:"O"},
+  {n:4, text:"In most occupations, women are still unequal to men when careers are compared.", answer:"X"},
+  {n:5, text:"Living in a dormitory offers several advantages to first-year students.", answer:"O"},
+  {n:6, text:"Photosynthesis is the process by which plants manufacture their own food.", answer:"X"},
+  {n:7, text:"A college degree in international business requires (1) a knowledge of business procedures and (2) a knowledge of cultural differences.", answer:"O"},
+  {n:8, text:"A computer is usually faster and sometimes more accurate than a human.", answer:"X"},
+  {n:9, text:"Giving a surprise birthday party requires careful planning.", answer:"X"},
+  {n:10, text:"Being an only child is very different from having siblings.", answer:"X"}
+];
+const p8div = document.getElementById("practice8");
+p8data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.text}</label>
+    <select id="p8-${item.n}">
+      <option value="">-- choose --</option>
+      <option value="O">logical division O</option>
+      <option value="X">logical division X</option>
+    </select>
+    <div class="feedback-box" id="p8-fb-${item.n}"></div>`;
+  p8div.appendChild(d);
+});
+function checkPractice8(){
+  let correct=0;
+  p8data.forEach(item=>{
+    const val = document.getElementById(`p8-${item.n}`).value;
+    const fb = document.getElementById(`p8-fb-${item.n}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: logical division ${item.answer}`; }
+  });
+  setBanner(document.getElementById("p8-score"), correct, p8data.length);
+}
+
+/* ================= PRACTICE 9 ================= */
+const p9data = [
+  {n:2, before:``, blank:`involves doctors' ability to intervene in human<br>
+reproduction. A well-known example is the case of Baby M. A man paid a woman to bear<br>
+a child for him and his wife, who could not have children. They signed a contract, but<br>
+after the baby was born, the woman wanted to keep the baby. The father said the baby<br>
+was his, but the woman said it was hers. It took the courts many months to decide who<br>
+was right.`,
+   options:["First of all,","The first issue"], answer:"The first issue"},
+  {n:3, blank:`another ethical dilemma has arisen because doctors<br>
+are now able to keep people who are in comas alive for years by attaching their bodies to<br>
+machines. This gives great power and great responsibility to the people who control the<br>
+machines. As a result of this power, society has had to develop a new definition of death.<br>
+How does a person decide whether another person whose heart cannot beat on its own<br>
+and whose lungs are pumped by a machine is still alive or not?`,
+   options:["In addition,","In addition to"], answer:"In addition,"},
+  {n:4, blank:`the ability of biotechnologists to produce new forms<br>
+of life in their laboratories is another area with profound ethical consequences. Isn't a<br>
+scientist who creates, for example, a new bacterium "playing God"? Furthermore, is it<br>
+even safe to introduce new life forms into Earth's atmosphere? Is there a risk that such life<br>
+forms could get out of control? Some people fear so.`,
+   options:["Therefore,","Moreover,"], answer:"Moreover,"},
+  {n:5, blank:`scientists are now able to duplicate living organisms,<br>
+cell by cell, through a process called cloning. Recently, the world was stunned by the<br>
+successful cloning of a human embryo. Should biotechnologists be allowed to clone<br>
+people? Who should control human cloning?`,
+   options:["Finally,","However,"], answer:"Finally,"},
+  {n:6, blank:`revolutions—political or technological—cause<br>
+upheaval and force change. Our new ability to create and prolong life is raising questions<br>
+and forcing changes in our very concept of life, an issue involving not only legal but also<br>
+profound moral considerations.`,
+   options:["As a result,","To sum up,"], answer:"To sum up,"}
+];
+const p9div = document.getElementById("practice9");
+p9data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  const optHtml = item.options.map(o=>`<option value="${o}">${o}</option>`).join("");
+  d.innerHTML = `<label class="qlabel">Paragraph ${item.n}</label>
+    <div class="passage"><p>
+      <select id="p9-${item.n}" style="display:inline-block;width:auto;min-width:170px;">
+        <option value="">-- choose --</option>${optHtml}
+      </select>
+      &nbsp;${item.blank}
+    </p></div>
+    <div class="feedback-box" id="p9-fb-${item.n}"></div>`;
+  p9div.appendChild(d);
+});
+function checkPractice9(){
+  let correct=0;
+  p9data.forEach(item=>{
+    const val = document.getElementById(`p9-${item.n}`).value;
+    const fb = document.getElementById(`p9-fb-${item.n}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${item.answer}`; }
+  });
+  setBanner(document.getElementById("p9-score"), correct, p9data.length);
+}
+</script>
+</body>
+</html>
