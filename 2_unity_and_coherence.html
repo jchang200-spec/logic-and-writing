@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2: Unity and Coherence</title>
+<style>
+  :root{
+    --purple:#6b4a92;
+    --purple-dark:#4f3670;
+    --maroon:#7d1949;
+    --gold:#f2c869;
+    --gold-pale:#fbf0d3;
+    --cream:#fffdf8;
+    --ink:#2a2430;
+    --ink-soft:#5c5566;
+    --line:#e7dfd0;
+    --correct:#2f7d5b;
+    --correct-bg:#e6f4ed;
+    --wrong:#b3413a;
+    --wrong-bg:#fbebe9;
+  }
+  *{box-sizing:border-box;}
+  html{ font-size:19px; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Georgia","Noto Serif KR",serif;
+    line-height:1.7;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .top-banner{
+    background:linear-gradient(135deg,var(--purple) 0%,var(--purple-dark) 100%);
+    color:#fff;
+    padding:14px 24px;
+    flex-shrink:0;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .top-banner .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.7rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .top-banner h1{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:700;
+    display:inline;
+  }
+  .top-banner p{
+    margin:0;
+    color:#e7defb;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    flex:1;
+    min-width:200px;
+  }
+
+  .layout{
+    display:flex;
+    align-items:stretch;
+    flex:1;
+    min-height:0;
+  }
+  .sidebar{
+    position:relative;
+    top:0;
+    height:100%;
+    width:270px;
+    flex-shrink:0;
+    overflow-y:auto;
+    background:#faf6ec;
+    border-right:1px solid var(--line);
+    padding:22px 0;
+  }
+  .sidebar nav{
+    display:flex;
+    flex-direction:column;
+  }
+  .sidebar a{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:9px 22px;
+    border-left:3px solid transparent;
+  }
+  .sidebar a:hover{ color:var(--purple); background:#f2ecdd; }
+  .sidebar a.active{
+    color:var(--maroon);
+    font-weight:700;
+    border-left-color:var(--maroon);
+    background:#f2ecdd;
+  }
+  .sidebar .group-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a89f8c;
+    padding:14px 22px 4px;
+  }
+
+  .menu-toggle{
+    display:none;
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:50;
+    background:var(--maroon);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:9px 14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    cursor:pointer;
+  }
+
+  main{
+    flex:1;
+    min-width:0;
+    max-width:1040px;
+    margin:0 auto;
+    padding:30px 56px 90px;
+    height:100%;
+    overflow-y:auto;
+  }
+  section.block{
+    display:none;
+    margin-top:0;
+    animation:fadeIn .2s ease;
+  }
+  section.block.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:36px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .page-nav button{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:#fff;
+    border:1px solid var(--purple);
+    color:var(--purple);
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .page-nav button:hover{ background:var(--purple); color:#fff; }
+  .page-nav button:disabled{ opacity:.35; cursor:default; }
+  .page-nav button:disabled:hover{ background:#fff; color:var(--purple); }
+  h2.section-title{
+    background:var(--maroon);
+    color:#fff;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1rem;
+    letter-spacing:.04em;
+    padding:11px 18px;
+    margin:0 0 18px;
+    border-radius:2px;
+  }
+  h3.sub-title{
+    color:var(--maroon);
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1.02rem;
+    border-bottom:2px solid var(--gold);
+    display:inline-block;
+    padding-bottom:4px;
+    margin:28px 0 14px;
+  }
+  .model-para{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--purple);
+    padding:20px 22px;
+    border-radius:4px;
+    font-size:1.02rem;
+  }
+  .model-para .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage{
+    background:var(--gold-pale);
+    border:1px solid #ecd9a0;
+    padding:18px 20px;
+    border-radius:4px;
+    font-size:1rem;
+    margin-bottom:16px;
+  }
+  .passage h4{
+    margin:0 0 10px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--maroon);
+    font-size:.95rem;
+  }
+  .vocab{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .instructions{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.94rem;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .qa-item{ margin-bottom:16px; }
+  .qa-item label.qlabel{
+    display:block;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:600;
+    font-size:.93rem;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  textarea, input[type="text"]{
+    width:100%;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:.98rem;
+    padding:9px 11px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{ resize:vertical; min-height:52px; }
+  input[type="text"]{ height:38px; }
+
+  .group-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 18px 6px;
+    margin-bottom:22px;
+  }
+  .group-title{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--maroon);
+    font-size:.92rem;
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .item-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px dashed var(--line);
+  }
+  .item-row:first-of-type{ border-top:none; }
+  .item-letter{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--purple);
+    min-width:18px;
+  }
+  .item-text{ flex:1; font-size:.97rem; }
+  .item-select select{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.86rem;
+    padding:6px 8px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+  .mark{
+    display:inline-block;
+    min-width:22px;
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    margin-left:8px;
+  }
+  .mark.ok{ color:var(--correct); }
+  .mark.no{ color:var(--wrong); }
+
+  .radio-line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    margin-top:6px;
+    align-items:center;
+  }
+  .radio-line label{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+  }
+
+  .feedback-box{
+    margin-top:6px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    padding:8px 12px;
+    border-radius:3px;
+    display:none;
+  }
+  .feedback-box.show{ display:block; }
+  .feedback-box.correct{ background:var(--correct-bg); color:var(--correct); }
+  .feedback-box.wrong{ background:var(--wrong-bg); color:var(--wrong); }
+
+  .check-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    font-size:.92rem;
+    font-weight:600;
+    cursor:pointer;
+    margin:10px 0 6px;
+  }
+  .check-btn:hover{ background:var(--purple-dark); }
+
+  .score-banner{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:4px;
+    margin-top:10px;
+    display:none;
+  }
+  .score-banner.show{ display:block; }
+
+  .p4-sentence{
+    font-size:1rem;
+    margin-bottom:8px;
+  }
+  .label-tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    font-style:normal;
+    letter-spacing:.02em;
+  }
+  .p4-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .p4-col{
+    flex:1;
+    min-width:220px;
+  }
+  .p4-col span.tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:3px;
+  }
+  .p4-col select{
+    width:100%;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    padding:7px 9px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+
+  footer{
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    color:var(--ink-soft);
+    margin-top:60px;
+  }
+
+  @media (max-width:900px){
+    .menu-toggle{ display:block; }
+    .sidebar{
+      position:fixed;
+      top:0; left:0;
+      height:100vh;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:40;
+      box-shadow:2px 0 12px rgba(0,0,0,.15);
+    }
+    .sidebar.open{ transform:translateX(0); }
+    main{ padding:0 18px 90px; }
+    .top-banner h1{ font-size:1.5rem; }
+  }
+
+  .form-link-box{
+    background:#f2ecdd;
+    border:1px solid var(--gold);
+    border-radius:6px;
+    padding:16px 20px;
+    margin:16px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .form-link-box .flabel{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    color:var(--ink);
+  }
+  .form-link-box .flabel strong{ color:var(--maroon); }
+  .form-link-box a.form-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .form-link-box a.form-btn:hover{ background:var(--purple-dark); }
+  .missing-note{
+    background:var(--wrong-bg);
+    border:1px solid #e3b8b3;
+    border-radius:4px;
+    padding:12px 16px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--wrong);
+    margin:12px 0;
+  }
+  .compare-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .del{ text-decoration:line-through; color:#a89f8f; }
+  .ins{ color:#1d5fc4; font-weight:700; }
+  .sig-plain{ color:inherit; font-weight:700; text-transform:none; }
+  .example-block{
+    margin:16px 0;
+    padding:2px 0;
+  }
+  .example-block em{ display:block; margin:8px 0; }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">Sections ☰</button>
+
+<div class="top-banner">
+  <div class="eyebrow">Chapter 2</div>
+  <h1>Unity and Coherence</h1>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <span class="group-label">Introduction</span>
+      <a href="#sec-intro">Introduction</a>
+      <a href="#sec-model">Analyzing the Model</a>
+      <span class="group-label">Unity</span>
+      <a href="#sec-unity">Unity</a>
+      <a href="#sec-p2">Practice 2</a>
+      <a href="#sec-p3">Practice 3</a>
+      <span class="group-label">Coherence (Cohesion)</span>
+      <a href="#sec-coherence">Coherence</a>
+      <a href="#sec-repetition">Repetition of Key Nouns</a>
+      <a href="#sec-p4">Practice 4</a>
+      <a href="#sec-p5">Practice 5</a>
+      <a href="#sec-pronouns">Consistent Pronouns</a>
+      <a href="#sec-p6">Practice 6</a>
+      <a href="#sec-transition">Transition Signals</a>
+      <a href="#sec-p7">Practice 7</a>
+      <a href="#sec-p8">Practice 8</a>
+      <a href="#sec-p9a">Practice 9A</a>
+      <a href="#sec-p9b">Practice 9B</a>
+      <a href="#sec-p10">Practice 10</a>
+      <a href="#sec-logical">Logical Order</a>
+      <a href="#sec-p11">Practice 11</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- ================= INTRODUCTION ================= -->
+    <section class="block" id="sec-intro">
+      <h2 class="section-title">INTRODUCTION</h2>
+      <p>In this chapter, you will learn about the importance of <strong>unity</strong> and <strong>coherence</strong> in constructing a good paragraph. When a paragraph is unified, it is focused exclusively on one main idea. When it is coherent, information flows logically, and readers can easily follow your ideas. Your final assignment will be to write a unified and coherent paragraph about a topic related to health and medicine.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL ================= -->
+    <section class="block" id="sec-model">
+      <h2 class="section-title">ANALYZING THE MODEL</h2>
+      <div class="model-para">
+        <h4 style="margin-top:0;color:var(--maroon);font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;">Public Health Successes</h4>
+        <p>
+          <span class="num">1</span>Although it is difficult to solve public health problems, great success has been achieved<br>
+          with certain illnesses. <span class="num">2</span>For example, the eradication of smallpox was one of the most significant<br>
+          accomplishments of the 20th century. <span class="num">3</span>When the campaign against smallpox was launched in<br>
+          1967, about 10 to 15 million people contracted the disease each year. <span class="num">4</span>Of these, two million died.<br>
+          <span class="num">5</span>More than 10 million individuals were disfigured. <span class="num">6</span>However, a little more than a decade later,<br>
+          the smallpox program had met its goal; the last case of this terrible illness occurred in Somalia<br>
+          in 1977. <span class="num">7</span>Following this important achievement, the World Health Organization tried to recreate<br>
+          its success. <span class="num">8</span>The focus of the next campaign was polio, which can paralyze or kill its victims if<br>
+          it is untreated. <span class="num">9</span>The elimination of this disease is not yet complete, but the number of cases has<br>
+          greatly decreased. <span class="num">10</span>As the battles against smallpox and polio show, remarkable advances can<br>
+          be made in the field of public health.
+        </p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Model</h3>
+      <p class="instructions">Answer using the sentence numbers above as evidence. (We'll go over these together in class.)</p>
+      <div id="model-questions"></div>
+    </section>
+
+    <!-- ================= UNITY ================= -->
+    <section class="block" id="sec-unity">
+      <h2 class="section-title">UNITY</h2>
+      <p>As mentioned earlier, a key element in a well-written paragraph is <strong>unity</strong>. A unified paragraph focuses on one main idea. For example, if you are writing an essay about the advantages of different kinds of pain medications, you might have a paragraph about the advantages of taking aspirin. In your paragraph, you should discuss only the advantages of aspirin. Do not discuss the disadvantages or begin to discuss other kinds of medicine. If you are writing an entire essay about the advantages of taking aspirin, then discuss only one advantage, such as heart health, in each paragraph. If you begin to discuss another advantage, start a new paragraph.</p>
+      <p>The second feature of unity is that every supporting sentence must directly explain or prove the main idea. For example, in a paragraph about the high cost of prescription drugs in the United States, you could mention buying generic brands as an alternative to brand-name drugs, but if you write several sentences about how generic drugs are made, you are getting off topic, and your paragraph will not have unity.</p>
+    </section>
+
+    <!-- ================= PRACTICE 2 ================= -->
+    <section class="block" id="sec-p2">
+      <h2 class="section-title">PRACTICE 2 &nbsp;·&nbsp; Staying on Topic</h2>
+      <p class="instructions">These paragraphs contain one or more sentences that are off topic. Read each paragraph, then select the topic sentence and check any sentence(s) that are off topic.</p>
+
+      <div class="passage">
+        <h4>Paragraph 1</h4>
+        <p><span class="num">1</span>The cloning of genes has made many medical advances possible.<br>
+        <span class="num">2</span>Human growth hormone (HGH) is a good example. <span class="num">3</span>This hormone<br>
+        stimulates the growth of bones and muscles during childhood. <span class="num">4</span>Cloning<br>
+        the gene for HGH has provided an increase in the availability of the<br>
+        hormone. <span class="num">5</span>However, the availability of HGH and other products of<br>
+        biotechnology raises an ethical question. <span class="num">6</span>The hormone is used widely to<br>
+        treat children with dwarfism, a condition that results in an adult height<br>
+        of 4'10" or shorter. <span class="num">7</span>There have been several interesting television shows<br>
+        recently about individuals with dwarfism. <span class="num">8</span>Many of these shows are very<br>
+        popular. <span class="num">9</span>Should HGH be available to anyone who wants taller children<br>
+        or only those who have children with dwarfism? <span class="num">10</span>Suppose parents want<br>
+        their average-size son to be taller so he will have a better chance of<br>
+        making his high school varsity team? <span class="num">11</span>Doctors do not have any evidence<br>
+        that exposure to HGH affects average-size children negatively, but many<br>
+        feel it is unethical to provide it to children with no serious medical need.</p>
+      </div>
+      <div id="practice2-p1"></div>
+
+      <div class="passage">
+        <h4>Paragraph 2</h4>
+        <p><span class="num">1</span>Advances in medicine can come from surprising places, including<br>
+        water. <span class="num">2</span>Many scientists are interested in the medical uses of small<br>
+        aquatic animals. <span class="num">3</span>They believe these animals are useful for new medical<br>
+        products. <span class="num">4</span>Some ancient civilizations used berries and grasses for medical<br>
+        purposes. <span class="num">5</span>These plant-based medicines were often quite effective. <span class="num">6</span>In<br>
+        the future, important drugs may be made from aquatic organisms. <span class="num">7</span>In<br>
+        addition, these organisms may be used as models to understand human<br>
+        diseases. <span class="num">8</span>Many years from now, sea creatures may help people lead<br>
+        healthier and longer lives.</p>
+      </div>
+      <div id="practice2-p2"></div>
+
+      <button class="check-btn" onclick="checkPractice2()">Check Answers</button>
+      <div class="score-banner" id="p2-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 3 ================= -->
+    <section class="block" id="sec-p3">
+      <h2 class="section-title">PRACTICE 3 &nbsp;·&nbsp; Staying on Topic</h2>
+      <p class="instructions">This paragraph not only has a sentence that is off topic but also discusses more than one topic. Decide where the paragraph should be divided into two. Select the topic sentence of each part. Then check any sentence that is off topic.</p>
+      <div class="passage">
+        <h4>Polite or Not?</h4>
+        <p><span class="num">1</span>Even when you try to be polite, it is easy to do the wrong thing<br>
+        accidentally in a new culture. <span class="num">2</span>For example, in the United States, when<br>
+        someone offers you food or a beverage, accept it the first time it is<br>
+        offered if you want it. <span class="num">3</span>If you say, "No, thank you" because it is polite<br>
+        to decline the first one or two offers in your culture, you could become<br>
+        very hungry and thirsty. <span class="num">4</span>In the United States, a host thinks that "no"<br>
+        means "no" and will usually not offer again. <span class="num">5</span>Meals in the United<br>
+        States are usually more informal than meals in other countries, and the<br>
+        times of meals may be different. <span class="num">6</span>Although Americans are usually very<br>
+        direct in social matters, there are a few occasions when they are not.<br>
+        <span class="num">7</span>If an American says, "Please drop by sometime," he may or may not<br>
+        want you to visit him in his home. <span class="num">8</span>Your clue that this may not be a real<br>
+        invitation is the word "sometime." <span class="num">9</span>In some areas of the United States,<br>
+        people do not expect you to visit them unless you have an invitation<br>
+        for a specific day and time. <span class="num">10</span>In other areas of the United States, however,<br>
+        "dropping by" is a friendly, neighborly gesture. <span class="num">11</span>Idioms are often difficult<br>
+        for newcomers to understand.</p>
+      </div>
+      <div id="practice3"></div>
+      <button class="check-btn" onclick="checkPractice3()">Check Answers</button>
+      <div class="score-banner" id="p3-score"></div>
+    </section>
+
+    <!-- ================= REPETITION OF KEY NOUNS ================= -->
+    <!-- ================= COHERENCE ================= -->
+    <section class="block" id="sec-coherence">
+      <h2 class="section-title">COHERENCE</h2>
+      <p>Although paragraph unity is important, it is not the only factor that you need to consider in writing a successful paragraph. In order for paragraphs to be well-structured, they must also be <strong>coherent</strong>. The word <em>coherence</em> comes from the Latin verb <em>cohere</em>, which means "to hold together." For coherence in writing, the sentences must hold together; that is, the movement from one sentence to the next must be logical and smooth. There must be no sudden jumps. Each sentence should flow smoothly into the next one.</p>
+
+      <p>Here are four ways to achieve coherence:</p>
+      <ul>
+        <li>Repeat key nouns.</li>
+        <li>Use consistent pronouns.</li>
+        <li>Use transition signals to link ideas.</li>
+        <li>Arrange your ideas in logical order.</li>
+      </ul>
+    </section>
+
+    <!-- ================= REPETITION OF KEY NOUNS ================= -->
+    <section class="block" id="sec-repetition">
+      <h2 class="section-title">REPETITION OF KEY NOUNS</h2>
+      <p style="margin-bottom:4px;">The easiest way to achieve coherence is to repeat key nouns.</p>
+
+      <h3 class="sub-title">Paragraph without Coherence</h3>
+      <div class="passage">
+        <h4>The Health Consequences of Fear</h4>
+        <p>When worry escalates, the result is fear. Everyone has experienced it.<br>
+        A swimmer of only moderate skill might be afraid of swift waters; a child<br>
+        might fear the dark. A hiker will probably feel it when hearing the distinctive<br>
+        warning of a rattlesnake; a jogger might experience it when confronted with an<br>
+        angry dog. According to the author Norman Cousins, "It . . . create[s] negative<br>
+        expectations. One tends to move in the direction of one's expectations." It<br>
+        causes the heart to race, the head to spin, the palms to sweat, the knees to<br>
+        buckle, and breathing to become labored. Its physical effects are such that the<br>
+        human body can't withstand it indefinitely.</p>
+      </div>
+      <p style="margin-top:20px;margin-bottom:4px;">In this version of the paragraph, the word <em>fear</em> has been replaced by the pronoun <em>it</em> after the first use. This overuse of the pronoun makes the paragraph confusing and less coherent. The reader will forget what "it" stands for.</p>
+
+      <h3 class="sub-title">Paragraph with Coherence</h3>
+      <div class="passage">
+        <h4>The Health Consequences of Fear</h4>
+        <p>When worry escalates, the result is fear. Everyone has experienced fear. A<br>
+        swimmer of only moderate skill might be afraid of swift waters; a child might<br>
+        fear the dark. A hiker will probably feel fear when hearing the distinctive<br>
+        warning of a rattlesnake; a jogger might experience it when confronted<br>
+        with an angry dog. According to the author Norman Cousins, "Fear . . .<br>
+        create[s] negative expectations. One tends to move in the direction of one's<br>
+        expectations." Fear causes the heart to race, the head to spin, the palms to<br>
+        sweat, the knees to buckle, and breathing to become labored. Its physical effects<br>
+        are such that the human body can't withstand it indefinitely.</p>
+      </div>
+      <p>The repetition of the noun <em>fear</em> smooths the flow of the sentences and creates coherence.</p>
+
+      <p>There is no fixed rule about how often to repeat key nouns or when to use pronouns as a substitute. You should repeat a key noun instead of using a pronoun when the meaning is unclear.</p>
+
+      <h3 class="sub-title">Key Noun Substitutes</h3>
+      <p>Although repeating key words can make a paragraph more coherent, you don't want to repeat the same word too often. You can substitute synonyms or expressions with the same meaning if you do not wish to repeat a key word again and again. Pronouns, when used correctly, are also good substitutes for key nouns.</p>
+    </section>
+
+    <!-- ================= PRACTICE 4 ================= -->
+    <section class="block" id="sec-p4">
+      <h2 class="section-title">PRACTICE 4 &nbsp;·&nbsp; Using Key Nouns and Pronouns</h2>
+      <p class="instructions">Compare the original and corrected versions. Notice where the pronoun <em>it</em> or <em>they</em> is replaced with a key noun for clarity.</p>
+
+      <div class="group-box">
+        <div class="group-title">Passage 1 — English</div>
+        <div class="compare-label">Original</div>
+        <p>English has almost become an international language. Except for Chinese,<br>
+        more people speak it than any other language. Spanish is the official language<br>
+        of more countries in the world, but more countries have it as their official or<br>
+        unofficial second language. More than 70 percent of the world's mail is written<br>
+        in it. It is the primary language on the Internet. In international business, it is<br>
+        used more than any other language, and it is the language of airline pilots and<br>
+        air traffic controllers all over the world. Moreover, although French used to be<br>
+        the language of diplomacy, it has displaced it throughout the world. Therefore,<br>
+        it is a useful language to know.</p>
+        <div class="compare-label" style="margin-top:16px;">Corrected</div>
+        <p>English has almost become an international language. Except for Chinese,<br>
+        more people speak it than any other language. Spanish is the official language<br>
+        of more countries in the world, but more countries have <span class="del">it</span> <span class="ins">English</span> as their official or<br>
+        unofficial second language. More than 70 percent of the world's mail is written<br>
+        in <span class="del">it</span> <span class="ins">English</span>. It is the primary language on the Internet. In international business, it is<br>
+        used more than any other language, and it is the language of airline pilots and<br>
+        air traffic controllers all over the world. Moreover, although French used to be<br>
+        the language of diplomacy, <span class="del">it</span> <span class="ins">English</span> has displaced it throughout the world. Therefore,<br>
+        <span class="del">it</span> <span class="ins">English</span> is a useful language to know.</p>
+      </div>
+
+      <div class="group-box">
+        <div class="group-title">Passage 2 — Dolphins</div>
+        <div class="compare-label">Original</div>
+        <p>Dolphins display almost human behavior at times. For example, they<br>
+        display the human emotions of joy and sadness. During training, when they<br>
+        do something correctly, they squeal excitedly and race toward their trainer.<br>
+        When they make a mistake, however, they droop and mope around their pool.<br>
+        Furthermore, they help each other when they are in trouble. If one is sick, it<br>
+        sends out a message, and others in the area swim to help it. They push it to the<br>
+        surface of the water so that it can breathe. They stay with it for days or weeks<br>
+        until it recovers or dies. They have also helped trapped or lost whales navigate<br>
+        their way safely out to the open sea. They are so intelligent, in fact, that the U.S.<br>
+        Navy is training them to become underwater bomb disposal experts.</p>
+        <div class="compare-label" style="margin-top:16px;">Corrected</div>
+        <p>Dolphins display almost human behavior at times. For example, <span class="del">they</span> <span class="ins">dolphins</span><br>
+        display the human emotions of joy and sadness. During training, when they<br>
+        do something correctly, they squeal excitedly and race toward their trainer.<br>
+        When they make a mistake, however, they droop and mope around their pool.<br>
+        Furthermore, <span class="del">they</span> <span class="ins">dolphins</span> help each other when they are in trouble. If one is sick, it<br>
+        sends out a message, and others in the area swim to help it. They push <span class="del">it</span> <span class="ins">the sick dolphin</span> to the<br>
+        surface of the water so that it can breathe. <span class="del">They</span> <span class="ins">The other dolphins</span> stay with it for days or weeks<br>
+        until it recovers or dies. <span class="del">They</span> <span class="ins">Dolphins</span> have also helped trapped or lost whales navigate<br>
+        their way safely out to the open sea. They are so intelligent, in fact, that the U.S.<br>
+        Navy is training them to become underwater bomb disposal experts.</p>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 5 ================= -->
+    <section class="block" id="sec-p5">
+      <h2 class="section-title">PRACTICE 5 &nbsp;·&nbsp; Identifying Key Noun Substitutes</h2>
+      <p class="instructions">Read the paragraph. Then answer the questions.</p>
+      <div class="passage">
+        <h4>Children's Day: A Day to Honor Korean Children</h4>
+        <p><span class="num">1</span>Many countries around the world have holidays dedicated to celebrating mothers or fathers, presidents, teachers, or ancestors. <span class="num">2</span>Every year on May 5th, South Korea celebrates another part of the population—children! <span class="num">3</span>Children's Day was created in 1923 and became a national holiday in 1973. <span class="num">4</span>The day is all about honoring the young people of Korea. <span class="num">5</span>Korea considers children to be a national treasure, and they created Children's Day as a special time for them to have fun and, well, be kids! <span class="num">6</span>On this special day, parents often give their sons and daughters gifts and take them to their favorite places. <span class="num">7</span>Schools and academies give children the day off from studies and, instead, they host special celebrations and parties with lots of sweets and special surprises. <span class="num">8</span>Children in Korea usually work and study very hard, but not on Children's Day. <span class="num">9</span>They get to spend this day doing whatever it is that makes them happy!</p>
+      </div>
+      <div id="practice5"></div>
+      <button class="check-btn" onclick="checkPractice5()">Check Answers</button>
+      <div class="score-banner" id="p5-score"></div>
+    </section>
+
+    <!-- ================= CONSISTENT PRONOUNS ================= -->
+    <section class="block" id="sec-pronouns">
+      <h2 class="section-title">CONSISTENT PRONOUNS</h2>
+      <p>When you use pronouns, make sure that you use the same person and number throughout your paragraph. For example, don't change from <em>you</em> to <em>he</em> (change of person) or from <em>he</em> to <em>they</em> (change of number).</p>
+
+      <p>Notice the changes the writer makes for consistency.</p>
+      <div class="passage">
+        <p>The root of a word is <span class="del">their</span> <span class="ins">its</span> most basic part. A prefix is another word part. Prefixes<br>
+        can be added to the beginning of words to change <span class="del">its</span> <span class="ins">their</span> meaning. Students who<br>
+        know a few Latin and Greek roots and prefixes have an advantage over <span class="del">a student</span> <span class="ins">students</span><br>
+        who <span class="del">does not</span> <span class="ins">do not</span> know them. They can often guess the meaning of new words.<br>
+        If, for example, <span class="del">you</span> <span class="ins">students</span> know that the prefix <em>omni</em> means "all," <span class="del">you</span> <span class="ins">they</span> have a better<br>
+        chance of guessing the meanings of words such as <em>omnibus</em>, <em>omnipresent</em>, and<br>
+        <em>omnidirectional</em>. Furthermore, <span class="del">a student</span> <span class="ins">students</span> who <span class="del">knows</span> <span class="ins">know</span> that the root <em>sci-</em> comes from<br>
+        <em>scire</em>, "to know," can guess that <em>omniscient</em> means "all-knowing."</p>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 6 ================= -->
+    <section class="block" id="sec-p6">
+      <h2 class="section-title">PRACTICE 6 &nbsp;·&nbsp; Using Consistent Pronouns</h2>
+      <p class="instructions">Compare the original and corrected versions. Notice how the writer fixes the inconsistent pronouns.</p>
+      <div class="group-box">
+        <div class="group-title">Olympic Athletes</div>
+        <div class="compare-label">Original</div>
+        <p>Olympic athletes must be strong both physically and mentally. First of all,<br>
+        if you hope to compete in an Olympic sport, you must be physically strong.<br>
+        Furthermore, those who want to compete in the Olympics must train for many<br>
+        years. For the most demanding sports, they train several hours a day, five or<br>
+        six days a week, for ten or more years. In addition to being physically strong,<br>
+        athletes must also be mentally tough. This means that you have to be totally<br>
+        dedicated to your sport, often giving up a normal school, family, and social<br>
+        life. Being mentally strong also means that he or she must be able to withstand<br>
+        the intense pressure of international competition with its accompanying media<br>
+        coverage. Finally, not everyone can win a medal, so Olympians must possess<br>
+        the inner strength to live with defeat.</p>
+        <div class="compare-label" style="margin-top:16px;">Corrected</div>
+        <p>Olympic athletes must be strong both physically and mentally. First of all,<br>
+        if <span class="del">you</span> <span class="ins">athletes</span> hope to compete in an Olympic sport, <span class="del">you</span> <span class="ins">they</span> must be physically strong.<br>
+        Furthermore, those who want to compete in the Olympics must train for many<br>
+        years. For the most demanding sports, they train several hours a day, five or<br>
+        six days a week, for ten or more years. In addition to being physically strong,<br>
+        athletes must also be mentally tough. This means that <span class="del">you</span> <span class="ins">they</span> have to be totally<br>
+        dedicated to <span class="del">your</span> <span class="ins">their</span> sport, often giving up a normal school, family, and social<br>
+        life. Being mentally strong also means that <span class="del">he or she</span> <span class="ins">they</span> must be able to withstand<br>
+        the intense pressure of international competition with its accompanying media<br>
+        coverage. Finally, not everyone can win a medal, so Olympians must possess<br>
+        the inner strength to live with defeat.</p>
+      </div>
+    </section>
+
+    <!-- ================= TRANSITION SIGNALS ================= -->
+    <section class="block" id="sec-transition">
+      <h2 class="section-title">TRANSITION SIGNALS</h2>
+      <p>Another element of a smooth and coherent paragraph is the use of transition signals. Transition signals can be single words such as <em>first</em>, <em>finally</em>, and <em>however</em>, or phrases such as <em>in conclusion</em>, <em>on the other hand</em>, and <em>as a result</em>. There are different kinds of transition signals such as subordinators (<em>when, although</em>), coordinators (<em>and, but</em>), adjectives (<em>another, additional</em>), and prepositions (<em>because of, in spite of</em>).</p>
+      <p>Transition signals are like traffic signs; they tell your reader when to go forward, turn around, slow down, and stop. In other words, they tell your reader when you are presenting an example, a similar idea, an opposite idea, a result, or a conclusion. Transition signals give a paragraph coherence because they guide your reader from one idea to the next.</p>
+
+      <h3 class="sub-title">Transition Signals Chart</h3>
+      <p class="instructions">See Appendix B for a more complete list. Most groups of transition signals have different rules for punctuation and position in a sentence.</p>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin:14px 0;min-width:640px;">
+        <tr style="background:var(--gold-pale);">
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Meaning / Function</th>
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Transition Phrases</th>
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Conjunctive Adverbs</th>
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Coordinating Conj.</th>
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Subordinating Conj.</th>
+          <th style="text-align:left;padding:7px;border:1px solid var(--line);">Other Signals</th>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce an additional idea</td>
+          <td style="padding:7px;border:1px solid var(--line);">in addition</td>
+          <td style="padding:7px;border:1px solid var(--line);">furthermore, moreover, besides, also, too</td>
+          <td style="padding:7px;border:1px solid var(--line);">and</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">another (+ noun), an additional (+ noun)</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce an opposite idea or contrast</td>
+          <td style="padding:7px;border:1px solid var(--line);">on the other hand, in contrast</td>
+          <td style="padding:7px;border:1px solid var(--line);">however, nevertheless, instead, still, nonetheless</td>
+          <td style="padding:7px;border:1px solid var(--line);">but, yet</td>
+          <td style="padding:7px;border:1px solid var(--line);">although, though, even though, whereas, while</td>
+          <td style="padding:7px;border:1px solid var(--line);">in spite of (+ noun), despite (+ noun)</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce a restatement or explanation</td>
+          <td style="padding:7px;border:1px solid var(--line);">in fact, indeed</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">that is</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce a choice or alternative</td>
+          <td style="padding:7px;border:1px solid var(--line);">otherwise</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">or</td>
+          <td style="padding:7px;border:1px solid var(--line);">if, unless</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To list in order</td>
+          <td style="padding:7px;border:1px solid var(--line);">first, second, third; next, last, finally</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">the first/second/third (+ noun), the next/last/final (+ noun)</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce an example</td>
+          <td style="padding:7px;border:1px solid var(--line);">for example, for instance</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">an example of (+ noun), such as (+ noun)</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce a conclusion or summary</td>
+          <td style="padding:7px;border:1px solid var(--line);">in brief, in conclusion, in short, in summary</td>
+          <td style="padding:7px;border:1px solid var(--line);">clearly, indeed</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+        </tr>
+        <tr>
+          <td style="padding:7px;border:1px solid var(--line);">To introduce a result</td>
+          <td style="padding:7px;border:1px solid var(--line);">as a result, as a consequence</td>
+          <td style="padding:7px;border:1px solid var(--line);">therefore, consequently, hence, thus, accordingly, so</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+          <td style="padding:7px;border:1px solid var(--line);">—</td>
+        </tr>
+      </table>
+      </div>
+
+      <h3 class="sub-title">Punctuation Rules</h3>
+      <p><strong>Transition Phrases and Conjunctive Adverbs</strong><br>Most of these can appear at the beginning, in the middle, or at the end of an independent clause, usually set off by commas.</p>
+      <div class="example-block">
+        <em>For example, the Baltic Sea in northern Europe is only one-fourth as saline as the Red Sea in the Middle East.</em>
+        <em>The runoff created by melting snow, furthermore, adds a considerable amount of freshwater.</em>
+        <em>The Mediterranean Sea is more saline than the Red Sea, however.</em>
+      </div>
+      <p>The words in the Transition Phrases and Conjunctive Adverbs columns of the chart can also connect two independent clauses. In this case, use a semicolon and a comma.</p>
+      <div class="example-block">
+        <em>In warm climate zones, water evaporates rapidly; therefore, the concentration of salt is greater.</em>
+        <em>Both the Red Sea and the Mediterranean have narrow outlets to the ocean; however, the Mediterranean's is narrower.</em>
+        <em>A few societies in the world are matriarchal; that is, the mother is head of the family.</em>
+        <em>Some English words have no exact equivalents in other languages; for example, there is no German word for the adjective fair, as in fair play.</em>
+      </div>
+
+      <p><strong>Exceptions</strong></p>
+      <ul>
+        <li>The words and phrases in the groups for listing ideas in order, introducing a conclusion or summary, and introducing a result usually appear only at the beginning of a sentence, not in the middle or at the end.</li>
+        <li><em>Too</em> usually appears only at the end of a sentence, sometimes preceded by a comma.</li>
+        <li>The time words <em>then</em>, <em>now</em>, and <em>soon</em> usually do not need commas.</li>
+      </ul>
+
+      <p><strong>Coordinators</strong><br>This group includes <em>and, but, so, or, nor, for, yet</em> and paired conjunctions like <em>both...and, not only...but also</em>. When coordinators connect two independent clauses, use a comma.</p>
+      <div class="example-block">
+        <em>In a matriarchy, the mother is the head of the family, and all the children belong to her extended family group.</em>
+      </div>
+      <p>When coordinators connect two words or phrases, do not use a comma.</p>
+      <div class="example-block">
+        <em>Would you rather take a written or an oral exam?</em>
+        <em>Children need not only love but also discipline.</em>
+      </div>
+
+      <p><strong>Exception</strong><br>Some writers use a comma before <em>but</em> and <em>yet</em> even when they do not connect independent clauses, to emphasize the contrast of the connected ideas.</p>
+      <div class="example-block">
+        <em>The poem is solemn, yet optimistic in tone.</em>
+      </div>
+
+      <p><strong>Subordinators</strong><br>A subordinator is the first word in a dependent clause. Put a comma after a dependent clause but not in front of one.</p>
+      <div class="example-block">
+        <em>Although the company's sales increased last year, its net profit declined.</em>
+        <em>The company's net profit declined last year although its sales increased.</em>
+      </div>
+
+      <p><strong>Other Signals</strong><br>Notice what kind of word follows these signals. <em>Additional</em> is an adjective, followed by a noun. <em>In addition to</em> is a preposition, followed by a noun or noun phrase. <em>Such as</em> is followed by a noun or noun phrase and no comma.</p>
+      <div class="example-block">
+        <em>An additional reason for the company's bankruptcy was the lack of competent management.</em>
+        <em>In addition to increased competition, the lack of competent management caused the company's bankruptcy.</em>
+        <em>Vocabulary differences between British and American English include words such as bonnet/hood, petrol/gasoline.</em>
+      </div>
+
+      <h3 class="sub-title">Writing Tip</h3>
+      <p>Read your writing aloud and pay attention to your own language. Are you using too many transition signals? Too many can be distracting rather than helpful. There is no rule about how many to use in one paragraph. Use them only when they will help your reader follow your ideas.</p>
+    </section>
+
+    <!-- ================= PRACTICE 7 ================= -->
+    <section class="block" id="sec-p7">
+      <h2 class="section-title">PRACTICE 7 &nbsp;·&nbsp; Using Transition Signals</h2>
+      <p class="instructions">Compare these two paragraphs. Notice the transition signals highlighted in Paragraph 2.</p>
+      <div class="passage">
+        <h4>Paragraph 1</h4>
+        <p>One difference among the world's seas and oceans is that the salinity<br>
+        varies in different climate zones. The Baltic Sea in northern Europe is only one-<br>
+        fourth as salty as the Red Sea in the Middle East. There are reasons for this. In<br>
+        warm climates, water evaporates rapidly. The concentration of salt is greater.<br>
+        The surrounding land is dry and does not contribute much freshwater to dilute<br>
+        the salty seawater. In cold climate zones, water evaporates slowly. The runoff<br>
+        created by melting snow adds a considerable amount of freshwater to dilute the<br>
+        saline seawater.</p>
+      </div>
+      <div class="passage">
+        <h4>Paragraph 2</h4>
+        <p>One difference among the world's seas and oceans is that the salinity<br>
+        varies in different climate zones. <span class="ins">For example,</span> the Baltic Sea in northern Europe<br>
+        is only one-fourth as saline as the Red Sea in the Middle East. There are <span class="ins">two</span><br>
+        reasons for this. <span class="ins">First of all,</span> in warm climate zones, water evaporates rapidly;<br>
+        <span class="ins">therefore,</span> the concentration of salt is greater. <span class="ins">Second,</span> the surrounding land is<br>
+        dry; <span class="ins">consequently,</span> it does not contribute much freshwater to dilute the salty<br>
+        seawater. In cold climate zones, <span class="ins">on the other hand,</span> water evaporates slowly.<br>
+        <span class="ins">Furthermore,</span> the runoff created by melting snow adds a considerable amount<br>
+        of freshwater to dilute the saline seawater.</p>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 8 ================= -->
+    <section class="block" id="sec-p8">
+      <h2 class="section-title">PRACTICE 8 &nbsp;·&nbsp; Recognizing Transition Signals</h2>
+      <p class="instructions">Read the paragraphs and circle the transition signals. Punctuate them as needed.</p>
+      <div class="compare-label">Original</div>
+      <div class="passage">
+        <h4>Genetic Engineering</h4>
+        <p><span class="num">1</span>Genetic engineering is an exciting field where scientists alter the genes of human beings, animals, and food in order to achieve certain aims. Supporters argue that this practice will bring many benefits to human societies. On the one hand, it could help us to live longer and healthier lives by providing better food and enabling us to prevent many illnesses. On the other hand, some critics feel that it is a dangerous practice that should be stopped.</p>
+        <p><span class="num">2</span>Scientists have used genetic engineering to produce crops that are more nutritious than their "natural" counterparts. For example, thanks to genetic engineering, farmers have been able to grow a special kind of rice called "golden rice" that is rich in vitamin A. In addition, genetic engineering allows us to grow a wide range of disease-resistant foods such as papaya, corn, and zucchini.</p>
+        <p><span class="num">3</span>As a result of genetic engineering, it is also possible to improve human health. As scientists develop more advanced technology, it seems that many diseases and cancers could become a thing of the past. In fact, researchers are already working on a method to prevent sickle cell disease and other blood disorders. In another laboratory, scientists are studying ways to treat cystic fibrosis.</p>
+        <p><span class="num">4</span>Critics of genetic engineering believe that the process could lead to unwanted side effects and other unpredictable outcomes. Furthermore, they argue that there is an ethical perspective to take into account. Indeed, these are very real concerns. Nevertheless, it seems that genetic engineering is here to stay.</p>
+      </div>
+
+      <div class="compare-label" style="margin-top:18px;">Transition Signals Highlighted</div>
+      <div class="passage">
+        <h4>Genetic Engineering</h4>
+        <p><span class="num">1</span>Genetic engineering is an exciting field where scientists alter the genes of human beings, animals, and food in order to achieve certain aims. Supporters argue that this practice will bring many benefits to human societies. <span class="ins">On the one hand,</span> it could help us to live longer and healthier lives by providing better food and enabling us to prevent many illnesses. <span class="ins">On the other hand,</span> some critics feel that it is a dangerous practice that should be stopped.</p>
+        <p><span class="num">2</span>Scientists have used genetic engineering to produce crops that are more nutritious than their "natural" counterparts. <span class="ins">For example,</span> thanks to genetic engineering, farmers have been able to grow a special kind of rice called "golden rice" that is rich in vitamin A. <span class="ins">In addition,</span> genetic engineering allows us to grow a wide range of disease-resistant foods such as papaya, corn, and zucchini.</p>
+        <p><span class="num">3</span><span class="ins">As a result of</span> genetic engineering, it is also possible to improve human health. As scientists develop more advanced technology, it seems that many diseases and cancers could become a thing of the past. <span class="ins">In fact,</span> researchers are already working on a method to prevent sickle cell disease and other blood disorders. In <span class="ins">another</span> laboratory, scientists are studying ways to treat cystic fibrosis.</p>
+        <p><span class="num">4</span>Critics of genetic engineering believe that the process could lead to unwanted side effects and other unpredictable outcomes. <span class="ins">Furthermore,</span> they argue that there is an ethical perspective to take into account. <span class="ins">Indeed,</span> these are very real concerns. <span class="ins">Nevertheless,</span> it seems that genetic engineering is here to stay.</p>
+      </div>
+      <p class="instructions">Discuss with a partner what kind of relationship each highlighted signal shows (addition, contrast, example, result, etc.).</p>
+    </section>
+
+    <!-- ================= PRACTICE 9A ================= -->
+    <section class="block" id="sec-p9a">
+      <h2 class="section-title">PRACTICE 9A &nbsp;·&nbsp; Choosing Transition Phrases and Conjunctive Adverbs</h2>
+      <p class="instructions">Write the transition signal that best shows the relationship between the sentences. Make punctuation and capitalization changes as needed.</p>
+      <div id="practice9a"></div>
+      <button class="check-btn" onclick="checkPractice9a()">Check Answers</button>
+      <div class="score-banner" id="p9a-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 9B ================= -->
+    <section class="block" id="sec-p9b">
+      <h2 class="section-title">PRACTICE 9B &nbsp;·&nbsp; Choosing Transition Phrases and Conjunctive Adverbs</h2>
+      <p class="instructions">Complete the paragraph. Use the transition signals from the box. Use each word once. Add punctuation as needed. In some cases, more than one answer is possible.</p>
+      <div class="passage" style="background:#e9f0e3;border-color:#c9dab8;">
+        <p style="margin:0;"><strong>also</strong> &nbsp;&nbsp; <strong>final and most convincing</strong> &nbsp;&nbsp; <strong>for example</strong> &nbsp;&nbsp; <strong>indeed</strong><br>
+        <strong>in fact</strong> &nbsp;&nbsp; <strong>second</strong> &nbsp;&nbsp; <strong>similarly</strong> &nbsp;&nbsp; <strong>third</strong></p>
+      </div>
+      <div class="passage">
+        <h4>Time</h4>
+        <p>One stereotype about Americans says that they are overly concerned<br>
+        with time. One of the first things you notice is that for Americans, time seems<br>
+        as valuable as money. <span class="num">1</span>____________ they even have a saying, "Time is<br>
+        money." <span class="num">2</span>____________ have you noticed how many verbs can be followed<br>
+        by both <em>time</em> and <em>money</em>? <span class="num">3</span>____________ you can <em>spend time, save time, lose<br>
+        time, find time, make time, waste time,</em> and <em>run out of time</em>. <span class="num">4</span>____________ you<br>
+        can <em>spend, save, lose, find, make, waste,</em> and <em>run out of</em> money. <span class="num">5</span>____________<br>
+        Americans seem to regard time as a "thing" that one can own. You can <em>have time,<br>
+        buy time,</em> and <em>take time</em>. (One wonders how much it costs and where it is taken.)<br>
+        A <span class="num">6</span>____________ piece of evidence that Americans are obsessed with<br>
+        time is their obsession with being on time. <span class="num">7</span>____________ people who are<br>
+        habitually late risk punishment ranging from frowning disapproval to losing<br>
+        their jobs. The <span class="num">8</span>____________ proof is that these poor people sometimes<br>
+        take courses in time management! That is really overdoing it. Don't you agree?</p>
+      </div>
+      <div id="practice9b"></div>
+      <button class="check-btn" onclick="checkPractice9b()">Check Answers</button>
+      <div class="score-banner" id="p9b-score"></div>
+    </section>
+
+    <!-- ================= PRACTICE 10 ================= -->
+    <section class="block" id="sec-p10">
+      <h2 class="section-title">PRACTICE 10 &nbsp;·&nbsp; Correcting Too Many Transition Signals</h2>
+      <p class="instructions">Compare the original and corrected versions. Notice which transition signals were deleted and which were changed.</p>
+      <div class="group-box">
+        <div class="group-title">How to Grow Basil</div>
+        <div class="compare-label">Original</div>
+        <div class="passage">
+          <p>Basil is my favorite herb. You can use it to flavor foods from all over<br>
+          the world. And the best part? It is super easy to grow if you follow these<br>
+          simple steps. <span class="sig-plain">First,</span> purchase basil seeds, a small pot, and some potting<br>
+          soil. <span class="sig-plain">Second,</span> add soil to the pot until it is about a half an inch from the<br>
+          top. <span class="sig-plain">Third,</span> sprinkle basil seeds on top of the soil. <span class="sig-plain">Then,</span> water it, but not<br>
+          too much! <span class="sig-plain">After that,</span> place the pot in an area that gets a lot of sunlight.<br>
+          <span class="sig-plain">Next,</span> you'll see small plants begin to sprout. <span class="sig-plain">Furthermore,</span> you should<br>
+          keep watering the plant every 4 days, <span class="sig-plain">then after</span> one to two weeks, your<br>
+          basil plant will be big and healthy. <span class="sig-plain">However,</span> you'll need to wait a little<br>
+          while longer until the basil is ready to eat! <span class="sig-plain">Then,</span> once the stems split<br>
+          out from the main plant and big leaves appear, you can start cutting<br>
+          several leaves at a time. Now it's important to remember not to cut too<br>
+          many leaves at once because that can stop the plant from growing. <span class="sig-plain">Then</span><br>
+          you can find a recipe that uses fresh basil. <span class="sig-plain">Then</span> you can cook your first<br>
+          delicious meal. <span class="sig-plain">After that,</span> you can continue to cut a few leaves at a time;<br>
+          <span class="sig-plain">also</span> consider planting several basil plants so you can use even more<br>
+          leaves. <span class="sig-plain">Then</span> you will not have to worry about limiting the amount of<br>
+          basil you use at one time. <span class="sig-plain">Then,</span> when all of your basil plants are fully<br>
+          grown, you can invite your friends and family over for a delicious feast.<br>
+          <span class="sig-plain">In conclusion,</span> basil is easy to grow and requires very little effort and<br>
+          maintenance. <span class="sig-plain">However, first,</span> you will need to make sure you have the<br>
+          correct supplies. <span class="sig-plain">Then</span> you can officially call yourself a basil farmer.</p>
+        </div>
+        <div class="compare-label" style="margin-top:18px;">Corrected</div>
+        <div class="passage">
+          <p>Basil is my favorite herb. You can use it to flavor foods from all over<br>
+          the world. And the best part? It is super easy to grow if you follow these<br>
+          simple steps. <span class="sig-plain">First</span>, purchase basil seeds, a small pot, and some potting<br>
+          soil. <span class="del">Second,</span> <span class="ins">Then</span>, add soil to the pot until it is about a half an inch from the<br>
+          top. <span class="del">Third,</span> <span class="ins">Sprinkle</span> basil seeds on top of the soil. <span class="sig-plain">Then</span>, water it, but not<br>
+          too much! <span class="del">After that,</span> <span class="ins">Place</span> the pot in an area that gets a lot of sunlight.<br>
+          <span class="sig-plain">Next</span>, you'll see small plants begin to sprout. <span class="del">Furthermore,</span> <span class="ins">You</span> should<br>
+          keep watering the plant every 4 days. <span class="del">then</span> <span class="ins">After</span> one to two weeks, your<br>
+          basil plant will be big and healthy. <span class="sig-plain">However</span>, you'll need to wait a little<br>
+          while longer until the basil is ready to eat! <span class="del">Then,</span> <span class="ins">Once</span> the stems split<br>
+          out from the main plant and big leaves appear, you can start cutting<br>
+          several leaves at a time. Now it's important to remember not to cut too<br>
+          many leaves at once because that can stop the plant from growing. <span class="sig-plain">Then</span><br>
+          you can find a recipe that uses fresh basil. <span class="del">Then</span> <span class="ins">Cook</span> your first<br>
+          delicious meal. <span class="del">After that,</span> <span class="ins">You</span> can continue to cut a few leaves at a time;<br>
+          <span class="sig-plain">also</span> consider planting several basil plants so you can use even more<br>
+          leaves. <span class="sig-plain">Then</span> you will not have to worry about limiting the amount of<br>
+          basil you use at one time. <span class="del">Then,</span> <span class="ins">When</span> all of your basil plants are fully<br>
+          grown, you can invite your friends and family over for a delicious feast.<br>
+          <span class="del">In conclusion,</span> <span class="ins">Basil</span> is easy to grow and requires very little effort and<br>
+          maintenance. <span class="del">However,</span> <span class="ins">First</span>, you will need to make sure you have the<br>
+          correct supplies. <span class="sig-plain">Then</span> you can officially call yourself a basil farmer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LOGICAL ORDER ================= -->
+    <section class="block" id="sec-logical">
+      <h2 class="section-title">LOGICAL ORDER</h2>
+      <p>In addition to repeating key nouns and pronouns and using transition signals, a fourth way to achieve coherence is to arrange your sentences in some kind of logical order.</p>
+      <p>Your choice of one kind of logical order over another will, of course, depend on your topic and your purpose. You may even combine two or more different types of logical order in the same paragraph. The important point to remember is to arrange your ideas in some kind of order that is logical to a reader accustomed to the English way of writing.</p>
+      <p>Some common kinds of logical order in English are chronological order, the logical division of ideas, and comparison/contrast.</p>
+      <ul>
+        <li><strong>Chronological order</strong> is order by time — a sequence of events or steps in a process. The paragraph "How to Grow Basil" (see Practice 10) uses time order to organize the steps.</li>
+        <li>In a <strong>logical division of ideas</strong>, a topic is divided into parts, and each part is discussed separately.</li>
+        <li>In a <strong>comparison/contrast</strong> paragraph, the similarities and/or differences between two or more items are discussed.</li>
+      </ul>
+    </section>
+
+    <!-- ================= PRACTICE 11 ================= -->
+    <section class="block" id="sec-p11">
+      <h2 class="section-title">PRACTICE 11 &nbsp;·&nbsp; Recognizing Kinds of Logical Order</h2>
+      <p class="instructions">Work with a partner. Read the paragraphs and decide which kind of logical order is used in each. Discuss the reasons for your choice.</p>
+      <div id="practice11"></div>
+      <button class="check-btn" onclick="checkPractice11()">Check Answers</button>
+      <div class="score-banner" id="p11-score"></div>
+    </section>
+
+    <footer>Chapter 2 · Unity and Coherence — Answers are checked in your browser only and are never saved or transmitted.</footer>
+  </main>
+</div>
+
+<script>
+/* ---------------- sidebar nav : one section visible at a time ---------------- */
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+menuToggle.addEventListener("click", ()=> sidebar.classList.toggle("open"));
+
+const navLinks = Array.from(document.querySelectorAll(".sidebar a"));
+const sectionEls = navLinks.map(a=>document.querySelector(a.getAttribute("href")));
+const mainEl = document.querySelector("main");
+
+function showSection(index){
+  sectionEls.forEach((sec,i)=> sec.classList.toggle("active", i===index));
+  navLinks.forEach((a,i)=> a.classList.toggle("active", i===index));
+  mainEl.scrollTo({top:0, behavior:"instant"});
+  sidebar.classList.remove("open");
+  updatePageNavButtons(index);
+}
+navLinks.forEach((a,i)=>{
+  a.addEventListener("click", (e)=>{
+    e.preventDefault();
+    showSection(i);
+  });
+});
+
+sectionEls.forEach((sec,i)=>{
+  const nav = document.createElement("div");
+  nav.className="page-nav";
+  nav.innerHTML = `<button class="prev-btn">&larr; Previous</button><button class="next-btn">Next &rarr;</button>`;
+  sec.appendChild(nav);
+  nav.querySelector(".prev-btn").addEventListener("click", ()=>{ if(i>0) showSection(i-1); });
+  nav.querySelector(".next-btn").addEventListener("click", ()=>{ if(i<sectionEls.length-1) showSection(i+1); });
+});
+function updatePageNavButtons(index){
+  sectionEls.forEach((sec,i)=>{
+    const prev = sec.querySelector(".prev-btn");
+    const next = sec.querySelector(".next-btn");
+    if(prev) prev.disabled = (i===0);
+    if(next) next.disabled = (i===sectionEls.length-1);
+  });
+}
+showSection(0);
+
+/* ---------------- helpers ---------------- */
+function norm(s){
+  return (s||"").toLowerCase().replace(/[.,!?'"“”‘’]/g,"").replace(/\s+/g," ").trim();
+}
+function containsKeywords(answer, keywordSets){
+  const a = norm(answer);
+  if(!a) return false;
+  return keywordSets.some(set => set.every(k => a.includes(norm(k))));
+}
+function setBanner(el, correctCount, total){
+  el.classList.add("show");
+  const pct = Math.round((correctCount/total)*100);
+  el.textContent = `${correctCount} / ${total} correct (${pct}%)`;
+  el.style.background = pct===100 ? "#e6f4ed" : "#fbf0d3";
+  el.style.color = pct===100 ? "var(--correct)" : "#8a6d1a";
+}
+function revealSample(id){
+  document.getElementById(id).style.display = "block";
+}
+
+/* ================= MODEL QUESTIONS (discussion only) ================= */
+const modelQuestions = [
+  "1. What is the topic sentence of this paragraph? Underline it.",
+  "2. What two examples develop and support the topic sentence?",
+  "3. Which sentence introduces the first example? Which sentence introduces the second example?",
+  "4. Are all the sentences related to the topic sentence?",
+  "5. What is the purpose of the concluding sentence?"
+];
+const modelDiv = document.getElementById("model-questions");
+modelQuestions.forEach((q)=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${q}</label>`;
+  modelDiv.appendChild(d);
+});
+
+/* ================= PRACTICE 2 ================= */
+const p2data = [
+  {div:"practice2-p1", topicIdx:0, count:11, offSet:[7,8]},
+  {div:"practice2-p2", topicIdx:0, count:8, offSet:[4,5]}
+];
+p2data.forEach((para,pi)=>{
+  const target = document.getElementById(para.div);
+  target.innerHTML = `
+    <div class="qa-item">
+      <label class="qlabel">Topic sentence?</label>
+      <select id="p2-topic-${pi}">
+        <option value="">-- choose --</option>
+        ${Array.from({length:para.count},(_,i)=>i+1).map(n=>`<option value="${n}">Sentence ${n}</option>`).join("")}
+      </select>
+      <div class="feedback-box" id="p2-fb-topic-${pi}"></div>
+    </div>
+    <div class="qa-item">
+      <label class="qlabel">Which sentence(s) are off topic? Check all that apply.</label>
+      <div id="p2-offlist-${pi}"></div>
+      <div class="feedback-box" id="p2-fb-off-${pi}"></div>
+    </div>
+  `;
+  const offlist = document.getElementById(`p2-offlist-${pi}`);
+  for(let n=1;n<=para.count;n++){
+    const d = document.createElement("label");
+    d.style.cssText="display:inline-flex;align-items:center;gap:5px;margin-right:14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:.86rem;";
+    d.innerHTML = `<input type="checkbox" id="p2-off-${pi}-${n}"> ${n}`;
+    offlist.appendChild(d);
+  }
+});
+function checkPractice2(){
+  let correct=0; const total = p2data.length * 2;
+  p2data.forEach((para,pi)=>{
+    const topicSel = document.getElementById(`p2-topic-${pi}`).value;
+    const fbTopic = document.getElementById(`p2-fb-topic-${pi}`);
+    fbTopic.classList.add("show");
+    const topicOk = parseInt(topicSel)===(para.topicIdx+1);
+    if(topicOk){ correct++; fbTopic.className="feedback-box show correct"; fbTopic.textContent="✓ Correct."; }
+    else{ fbTopic.className="feedback-box show wrong"; fbTopic.textContent=`✗ Correct answer: sentence ${para.topicIdx+1}.`; }
+
+    let offAllOk = true;
+    for(let n=1;n<=para.count;n++){
+      const checked = document.getElementById(`p2-off-${pi}-${n}`).checked;
+      const shouldBeOff = para.offSet.includes(n);
+      if(checked !== shouldBeOff) offAllOk = false;
+    }
+    const fbOff = document.getElementById(`p2-fb-off-${pi}`);
+    fbOff.classList.add("show");
+    if(offAllOk){ correct++; fbOff.className="feedback-box show correct"; fbOff.textContent="✓ Correct."; }
+    else{ fbOff.className="feedback-box show wrong"; fbOff.textContent=`✗ Correct answer: sentence${para.offSet.length>1?"s":""} ${para.offSet.join(", ")}.`; }
+  });
+  setBanner(document.getElementById("p2-score"), correct, total);
+}
+
+/* ================= PRACTICE 3 ================= */
+const p3sentences = [
+  {n:1, off:false}, {n:2, off:false}, {n:3, off:false}, {n:4, off:false},
+  {n:5, off:true}, {n:6, off:false}, {n:7, off:false}, {n:8, off:false},
+  {n:9, off:false}, {n:10, off:false}, {n:11, off:true}
+];
+const p3div = document.getElementById("practice3");
+p3div.innerHTML = `
+  <div class="qa-item">
+    <label class="qlabel">Where should the paragraph be divided into two? (Choose the sentence number where Part 2 begins.)</label>
+    <select id="p3-split">
+      <option value="">-- choose --</option>
+      ${[2,3,4,5,6,7,8,9,10,11].map(n=>`<option value="${n}">Sentence ${n}</option>`).join("")}
+    </select>
+    <div class="feedback-box" id="p3-fb-split"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">Topic sentence of Part 1?</label>
+    <select id="p3-topic1">
+      <option value="">-- choose --</option>
+      ${[1,2,3,4,5,6,7,8,9,10,11].map(n=>`<option value="${n}">Sentence ${n}</option>`).join("")}
+    </select>
+    <div class="feedback-box" id="p3-fb-topic1"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">Topic sentence of Part 2?</label>
+    <select id="p3-topic2">
+      <option value="">-- choose --</option>
+      ${[1,2,3,4,5,6,7,8,9,10,11].map(n=>`<option value="${n}">Sentence ${n}</option>`).join("")}
+    </select>
+    <div class="feedback-box" id="p3-fb-topic2"></div>
+  </div>
+  <div class="qa-item">
+    <label class="qlabel">Which sentence is off topic? Check all that apply.</label>
+    <div id="p3-offlist"></div>
+    <div class="feedback-box" id="p3-fb-off"></div>
+  </div>
+`;
+const p3offlist = document.getElementById("p3-offlist");
+p3sentences.forEach(s=>{
+  const d = document.createElement("label");
+  d.style.cssText="display:inline-flex;align-items:center;gap:5px;margin-right:14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:.86rem;";
+  d.innerHTML = `<input type="checkbox" id="p3-off-${s.n}"> ${s.n}`;
+  p3offlist.appendChild(d);
+});
+function checkPractice3(){
+  let subcorrect=0; const subtotal=4;
+
+  const split = document.getElementById("p3-split").value;
+  const fbSplit = document.getElementById("p3-fb-split");
+  fbSplit.classList.add("show");
+  if(split==="6"){ subcorrect++; fbSplit.className="feedback-box show correct"; fbSplit.textContent="✓ Correct — Part 2 begins at sentence 6."; }
+  else{ fbSplit.className="feedback-box show wrong"; fbSplit.textContent="✗ Correct answer: sentence 6."; }
+
+  const t1 = document.getElementById("p3-topic1").value;
+  const fbT1 = document.getElementById("p3-fb-topic1");
+  fbT1.classList.add("show");
+  if(t1==="1"){ subcorrect++; fbT1.className="feedback-box show correct"; fbT1.textContent="✓ Correct."; }
+  else{ fbT1.className="feedback-box show wrong"; fbT1.textContent="✗ Correct answer: sentence 1."; }
+
+  const t2 = document.getElementById("p3-topic2").value;
+  const fbT2 = document.getElementById("p3-fb-topic2");
+  fbT2.classList.add("show");
+  if(t2==="6"){ subcorrect++; fbT2.className="feedback-box show correct"; fbT2.textContent="✓ Correct — sentence 6 introduces the topic of Part 2."; }
+  else{ fbT2.className="feedback-box show wrong"; fbT2.textContent="✗ Correct answer: sentence 6."; }
+
+  let offCorrect=0;
+  p3sentences.forEach(s=>{
+    const checked = document.getElementById(`p3-off-${s.n}`).checked;
+    if(checked === s.off) offCorrect++;
+  });
+  const fbOff = document.getElementById("p3-fb-off");
+  fbOff.classList.add("show");
+  const allOffOk = offCorrect === p3sentences.length;
+  if(allOffOk) subcorrect++;
+  fbOff.className = "feedback-box show " + (allOffOk?"correct":"wrong");
+  fbOff.textContent = allOffOk ? "✓ Correct." : "✗ Correct answer: sentences 5 and 11 are off topic (the others are all on topic).";
+
+  setBanner(document.getElementById("p3-score"), subcorrect, subtotal);
+}
+
+/* ================= PRACTICE 5 ================= */
+(function(){
+  const div = document.getElementById("practice5");
+  const d1 = document.createElement("div");
+  d1.className="qa-item";
+  d1.innerHTML = `<label class="qlabel">1. How many times does the writer use the word "children" or "Children's" in the paragraph?</label>
+    <div id="p5-q1-options">
+      ${[3,4,5,6,7].map(n=>`<label style="display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;font-size:.92rem;"><input type="radio" name="p5-q1" value="${n}"> ${n}</label>`).join("")}
+    </div>
+    <div class="feedback-box" id="p5-fb-1"></div>`;
+  div.appendChild(d1);
+
+  const qs = [
+    "2. What three words or phrases does the writer use as substitutes for \"children\"? (see sentences 4, 5, and 6)",
+    "3. What does the pronoun \"they\" refer to in sentence 7?",
+    "4. What does the pronoun \"them\" refer to in sentence 6?"
+  ];
+  qs.forEach((q,i)=>{
+    const d = document.createElement("div");
+    d.className="qa-item";
+    d.innerHTML = `<label class="qlabel">${q}</label><input type="text" id="p5-q${i+2}"><div class="feedback-box" id="p5-fb-${i+2}"></div>`;
+    div.appendChild(d);
+  });
+})();
+function checkPractice5(){
+  let correct=0;
+
+  const q1sel = document.querySelector('input[name="p5-q1"]:checked');
+  const q1 = q1sel ? q1sel.value : "";
+  const fb1 = document.getElementById("p5-fb-1");
+  fb1.classList.add("show");
+  if(q1==="7"){ correct++; fb1.className="feedback-box show correct"; fb1.textContent="✓ Correct — 7 times."; }
+  else{ fb1.className="feedback-box show wrong"; fb1.textContent="✗ Correct answer: 7 times."; }
+
+  const items = [
+    {id:"p5-q2", keys:[["young people"],["national treasure"],["sons and daughters"]], model:"the young people (of Korea) / a national treasure / (their) sons and daughters"},
+    {id:"p5-q3", keys:[["schools"],["academies"]], model:"Schools and academies"},
+    {id:"p5-q4", keys:[["sons and daughters"],["children"]], model:"their sons and daughters (the children)"}
+  ];
+  items.forEach((item,i)=>{
+    const val = document.getElementById(item.id).value;
+    const fb = document.getElementById(`p5-fb-${i+2}`);
+    const ok = containsKeywords(val, item.keys);
+    fb.classList.add("show");
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Good.`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `Compare with the sample answer: ${item.model}`; }
+  });
+  setBanner(document.getElementById("p5-score"), correct, items.length+1);
+}
+
+/* ================= PRACTICE 9A ================= */
+const p9aData = [
+  {n:2, text:`The same article said that the causes of inflation were easy to find _____ (however / for example / therefore) the cure for inflation was not so easy to prescribe.`,
+   keyword:"however",
+   sentences:[
+     "The same article said that the causes of inflation were easy to find; however, the cure for inflation was not so easy to prescribe.",
+     "The same article said that the causes of inflation were easy to find. However, the cure for inflation was not so easy to prescribe."
+   ]},
+  {n:3, text:`<em>Era</em> also suggested that rising wages were one of the primary causes of inflation _____ (however / therefore / for example) the government should take action to control wages.`,
+   keyword:"therefore",
+   sentences:[
+     "Era also suggested that rising wages were one of the primary causes of inflation; therefore, the government should take action to control wages.",
+     "Era also suggested that rising wages were one of the primary causes of inflation. Therefore, the government should take action to control wages."
+   ]},
+  {n:4, text:`In physics, the weight of an object is the gravitational force with which Earth attracts it; _____ (moreover / therefore / for example) if a man weighs 150 pounds, this means that Earth pulls him down with a force of 150 pounds.`,
+   keyword:"for example",
+   sentences:[
+     "In physics, the weight of an object is the gravitational force with which Earth attracts it; for example, if a man weighs 150 pounds, this means that Earth pulls him down with a force of 150 pounds."
+   ]},
+  {n:5, text:`The farther away from Earth a person is, the less the gravitational force of Earth. _____ (in conclusion / therefore / however) a man weighs less when he is 50,000 miles from Earth than when he is only 5,000 miles away.`,
+   keyword:"therefore",
+   sentences:[
+     "The farther away from Earth a person is, the less the gravitational force of Earth. Therefore, a man weighs less when he is 50,000 miles from Earth than when he is only 5,000 miles away."
+   ]},
+  {n:6, text:`A tsunami is a tidal wave produced by an earthquake on the ocean floor. The waves are very long and low in open water, but when they get close to land, they encounter friction because the water is shallow _____ (on the other hand / as a result / for example) the waves increase in height and can cause considerable damage when they finally reach land.`,
+   keyword:"as a result",
+   sentences:[
+     "A tsunami is a tidal wave produced by an earthquake on the ocean floor. The waves are very long and low in open water, but when they get close to land, they encounter friction because the water is shallow. As a result, the waves increase in height and can cause considerable damage when they finally reach land."
+   ]}
+];
+const p9aDiv = document.getElementById("practice9a");
+p9aData.forEach((item)=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.text}</label>
+    <input type="text" id="p9a-${item.n}">
+    <div class="feedback-box" id="p9a-fb-${item.n}"></div>`;
+  p9aDiv.appendChild(d);
+});
+function checkPractice9a(){
+  let correct=0, total=0;
+  p9aData.forEach(item=>{
+    total++;
+    const val = document.getElementById(`p9a-${item.n}`).value;
+    const fb = document.getElementById(`p9a-fb-${item.n}`);
+    fb.classList.add("show");
+    const answerList = item.sentences.map(s=>`&bull; ${s}`).join("<br>");
+    if(containsKeywords(val,[[item.keyword]])){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Correct.<br>${answerList}`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `✗ Correct answer:<br>${answerList}`; }
+  });
+  setBanner(document.getElementById("p9a-score"), correct, total);
+}
+
+/* ================= PRACTICE 9B ================= */
+const p9bData = [
+  {n:1, keys:[["indeed"],["in fact"]], answer:'Indeed, / In fact,'},
+  {n:2, keys:[["also"]], answer:'Also,'},
+  {n:3, keys:[["for example"]], answer:'For example,'},
+  {n:4, keys:[["similarly"]], answer:'Similarly,'},
+  {n:5, keys:[["second"]], answer:'Second,'},
+  {n:6, keys:[["third"]], answer:'third'},
+  {n:7, keys:[["in fact"],["indeed"]], answer:'In fact, / Indeed,'},
+  {n:8, keys:[["final and most convincing"]], answer:'final and most convincing'}
+];
+const p9bDiv = document.getElementById("practice9b");
+p9bData.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}.</label>
+    <input type="text" id="p9b-${item.n}">
+    <div class="feedback-box" id="p9b-fb-${item.n}"></div>`;
+  p9bDiv.appendChild(d);
+});
+function checkPractice9b(){
+  let correct=0;
+  p9bData.forEach(item=>{
+    const val = document.getElementById(`p9b-${item.n}`).value;
+    const fb = document.getElementById(`p9b-fb-${item.n}`);
+    fb.classList.add("show");
+    if(containsKeywords(val,item.keys)){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${item.answer}`; }
+  });
+  setBanner(document.getElementById("p9b-score"), correct, p9bData.length);
+}
+
+/* ================= PRACTICE 11 ================= */
+const p11data = [
+  {title:"Paragraph 1", passage:`The process of machine translation of languages is complex.<br>
+To translate a document from English into Japanese, for example,<br>
+the computer first analyzes an English sentence, determining its<br>
+grammatical structure and identifying the subject, verb, objects, and<br>
+modifiers. Next, the words are translated by an English-Japanese<br>
+dictionary. After that, another part of the computer program analyzes<br>
+the resulting awkward jumble of words and meanings and produces<br>
+an intelligible sentence based on the rules of Japanese syntax and the<br>
+machine's understanding of what the original English sentence meant.<br>
+Finally, a human bilingual editor polishes the computer-produced<br>
+translation.`, answer:"chronological"},
+  {title:"Paragraph 2", passage:`Although there has been some success in decreasing the spread<br>
+of polio, this campaign has not been as successful as the smallpox<br>
+campaign. The slower progress against polio is due to differences<br>
+between the viruses. These differences can cause difficulty for polio<br>
+eradication. The main difference involves visibility of the disease. Unlike<br>
+smallpox, polio does not always show symptoms. Smallpox symptoms<br>
+were immediately visible to health professionals. For some cases of<br>
+polio, on the other hand, the disease is difficult to identify. Doctors<br>
+may have to do a lengthy examination to find it. Thus, some cases may<br>
+go unnoticed. Compared to smallpox, then, it is easier for poliovirus<br>
+to circulate.`, answer:"comparison"},
+  {title:"Paragraph 3", passage:`The many different calendars used throughout the world are all<br>
+based on the phases of the moon, on the revolution of Earth around the<br>
+sun, or on a combination of the two. The first kind of calendar is the<br>
+lunar calendar, based on the phases of the moon. A month is calculated<br>
+as the time between two full moons, 29.5 days, and a year has 354 days.<br>
+The Islamic calendar used in Muslim countries is a lunar calendar. It<br>
+has 12 months and a cycle of 30 years in which the 2nd, 5th, 7th, 10th,<br>
+13th, 16th, 18th, 21st, 24th, 26th, and 29th years have 355 days, and the<br>
+others 354 days. A second kind of calendar is the solar calendar, which is<br>
+based on the revolution of Earth around the sun. The ancient Egyptians<br>
+used a solar calendar divided into 12 months of 30 days each, which left<br>
+five uncounted days at the end of each year. A very accurate calendar<br>
+developed by the Mayan Indians in North America was also a solar<br>
+calendar. It had 365 days, 364 of which were divided into 28 weeks of 13<br>
+days each. The new year began on the 365th day. Because the solar year<br>
+is exactly 365 days, 5 hours, 48 minutes, and 46 seconds long, however, a<br>
+solar calendar is not totally accurate, so many cultures developed a third<br>
+kind of calendar, the lunisolar calendar. In a lunisolar calendar, extra<br>
+days are added every so often to reconcile the lunar months with the<br>
+solar year. The Chinese, Hebrew, and Gregorian calendars used today<br>
+are lunisolar calendars.`, answer:"division"}
+];
+const p11div = document.getElementById("practice11");
+p11data.forEach((item,i)=>{
+  const d = document.createElement("div");
+  d.className="group-box";
+  d.innerHTML = `<div class="group-title">${item.title}</div>
+    <p>${item.passage}</p>
+    <span class="tag">Kind of logical order</span>
+    <select id="p11-${i}">
+      <option value="">-- choose --</option>
+      <option value="chronological">chronological order</option>
+      <option value="comparison">comparison / contrast</option>
+      <option value="division">logical division of ideas</option>
+    </select>
+    <div class="feedback-box" id="p11-fb-${i}"></div>`;
+  p11div.appendChild(d);
+});
+function checkPractice11(){
+  let correct=0;
+  const answerLabels = {chronological:"chronological order", comparison:"comparison / contrast", division:"logical division of ideas"};
+  p11data.forEach((item,i)=>{
+    const val = document.getElementById(`p11-${i}`).value;
+    const fb = document.getElementById(`p11-fb-${i}`);
+    fb.classList.add("show");
+    if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${answerLabels[item.answer]}`; }
+  });
+  setBanner(document.getElementById("p11-score"), correct, p11data.length);
+}
+</script>
+</body>
+</html>
