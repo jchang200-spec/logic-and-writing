@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3: Using Outside Sources</title>
+<style>
+  :root{
+    --purple:#6b4a92;
+    --purple-dark:#4f3670;
+    --maroon:#7d1949;
+    --gold:#f2c869;
+    --gold-pale:#fbf0d3;
+    --cream:#fffdf8;
+    --ink:#2a2430;
+    --ink-soft:#5c5566;
+    --line:#e7dfd0;
+    --correct:#2f7d5b;
+    --correct-bg:#e6f4ed;
+    --wrong:#b3413a;
+    --wrong-bg:#fbebe9;
+  }
+  *{box-sizing:border-box;}
+  html{ font-size:19px; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Georgia","Noto Serif KR",serif;
+    line-height:1.7;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .top-banner{
+    background:linear-gradient(135deg,var(--purple) 0%,var(--purple-dark) 100%);
+    color:#fff;
+    padding:14px 24px;
+    flex-shrink:0;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .top-banner .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.7rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .top-banner h1{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:700;
+    display:inline;
+  }
+  .top-banner p{
+    margin:0;
+    color:#e7defb;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    flex:1;
+    min-width:200px;
+  }
+
+  .layout{
+    display:flex;
+    align-items:stretch;
+    flex:1;
+    min-height:0;
+  }
+  .sidebar{
+    position:relative;
+    top:0;
+    height:100%;
+    width:270px;
+    flex-shrink:0;
+    overflow-y:auto;
+    background:#faf6ec;
+    border-right:1px solid var(--line);
+    padding:22px 0;
+  }
+  .sidebar nav{
+    display:flex;
+    flex-direction:column;
+  }
+  .sidebar a{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:9px 22px;
+    border-left:3px solid transparent;
+  }
+  .sidebar a:hover{ color:var(--purple); background:#f2ecdd; }
+  .sidebar a.active{
+    color:var(--maroon);
+    font-weight:700;
+    border-left-color:var(--maroon);
+    background:#f2ecdd;
+  }
+  .sidebar .group-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a89f8c;
+    padding:14px 22px 4px;
+  }
+
+  .menu-toggle{
+    display:none;
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:50;
+    background:var(--maroon);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:9px 14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    cursor:pointer;
+  }
+
+  main{
+    flex:1;
+    min-width:0;
+    max-width:1040px;
+    margin:0 auto;
+    padding:30px 56px 90px;
+    height:100%;
+    overflow-y:auto;
+  }
+  section.block{
+    display:none;
+    margin-top:0;
+    animation:fadeIn .2s ease;
+  }
+  section.block.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:36px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .page-nav button{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:#fff;
+    border:1px solid var(--purple);
+    color:var(--purple);
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .page-nav button:hover{ background:var(--purple); color:#fff; }
+  .page-nav button:disabled{ opacity:.35; cursor:default; }
+  .page-nav button:disabled:hover{ background:#fff; color:var(--purple); }
+  h2.section-title{
+    background:var(--maroon);
+    color:#fff;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1rem;
+    letter-spacing:.04em;
+    padding:11px 18px;
+    margin:0 0 18px;
+    border-radius:2px;
+  }
+  h3.sub-title{
+    color:var(--maroon);
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:1.02rem;
+    border-bottom:2px solid var(--gold);
+    display:inline-block;
+    padding-bottom:4px;
+    margin:28px 0 14px;
+  }
+  .model-para{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--purple);
+    padding:20px 22px;
+    border-radius:4px;
+    font-size:1.02rem;
+  }
+  .model-para .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage .num{
+    color:#1d5fc4;
+    font-weight:700;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    vertical-align:super;
+    margin-right:2px;
+  }
+  .passage{
+    background:var(--gold-pale);
+    border:1px solid #ecd9a0;
+    padding:18px 20px;
+    border-radius:4px;
+    font-size:1rem;
+    margin-bottom:16px;
+  }
+  .passage h4{
+    margin:0 0 10px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--maroon);
+    font-size:.95rem;
+  }
+  .vocab{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .instructions{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.94rem;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .qa-item{ margin-bottom:16px; }
+  .qa-item label.qlabel{
+    display:block;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:600;
+    font-size:.93rem;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  textarea, input[type="text"]{
+    width:100%;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:.98rem;
+    padding:9px 11px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{ resize:vertical; min-height:52px; }
+  input[type="text"]{ height:38px; }
+  select{
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:9px 11px;
+    height:42px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+
+  .group-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 18px 6px;
+    margin-bottom:22px;
+  }
+  .group-title{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--maroon);
+    font-size:.92rem;
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .item-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px dashed var(--line);
+  }
+  .item-row:first-of-type{ border-top:none; }
+  .item-letter{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    color:var(--purple);
+    min-width:18px;
+  }
+  .item-text{ flex:1; font-size:.97rem; }
+  .item-select select{
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:8px 10px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+  .mark{
+    display:inline-block;
+    min-width:22px;
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    margin-left:8px;
+  }
+  .mark.ok{ color:var(--correct); }
+  .mark.no{ color:var(--wrong); }
+
+  .radio-line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.88rem;
+    margin-top:6px;
+    align-items:center;
+  }
+  .radio-line label{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+  }
+
+  .feedback-box{
+    margin-top:6px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    padding:8px 12px;
+    border-radius:3px;
+    display:none;
+  }
+  .feedback-box.show{ display:block; }
+  .feedback-box.correct{ background:var(--correct-bg); color:var(--correct); }
+  .feedback-box.wrong{ background:var(--wrong-bg); color:var(--wrong); }
+
+  .check-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    font-size:.92rem;
+    font-weight:600;
+    cursor:pointer;
+    margin:10px 0 6px;
+  }
+  .check-btn:hover{ background:var(--purple-dark); }
+
+  .score-banner{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:4px;
+    margin-top:10px;
+    display:none;
+  }
+  .score-banner.show{ display:block; }
+
+  .p4-sentence{
+    font-size:1rem;
+    margin-bottom:8px;
+  }
+  .label-tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#1d5fc4;
+    font-style:normal;
+    letter-spacing:.02em;
+  }
+  .p4-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .p4-col{
+    flex:1;
+    min-width:220px;
+  }
+  .p4-col span.tag{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:3px;
+  }
+  .p4-col select{
+    width:100%;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:9px 10px;
+    border-radius:3px;
+    border:1px solid #cfc6b8;
+    background:#fff;
+  }
+
+  footer{
+    text-align:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+    color:var(--ink-soft);
+    margin-top:60px;
+  }
+
+  @media (max-width:900px){
+    .menu-toggle{ display:block; }
+    .sidebar{
+      position:fixed;
+      top:0; left:0;
+      height:100vh;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:40;
+      box-shadow:2px 0 12px rgba(0,0,0,.15);
+    }
+    .sidebar.open{ transform:translateX(0); }
+    main{ padding:0 18px 90px; }
+    .top-banner h1{ font-size:1.5rem; }
+  }
+
+  .form-link-box{
+    background:#f2ecdd;
+    border:1px solid var(--gold);
+    border-radius:6px;
+    padding:16px 20px;
+    margin:16px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .form-link-box .flabel{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.92rem;
+    color:var(--ink);
+  }
+  .form-link-box .flabel strong{ color:var(--maroon); }
+  .form-link-box a.form-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:var(--purple);
+    color:#fff;
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:.86rem;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .form-link-box a.form-btn:hover{ background:var(--purple-dark); }
+  .missing-note{
+    background:var(--wrong-bg);
+    border:1px solid #e3b8b3;
+    border-radius:4px;
+    padding:12px 16px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--wrong);
+    margin:12px 0;
+  }
+  .compare-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .del{ text-decoration:line-through; color:#a89f8f; }
+  .ins{ color:#1d5fc4; font-weight:700; }
+  .sig-plain{ color:inherit; font-weight:700; text-transform:none; }
+  .example-block{
+    margin:16px 0;
+    padding:2px 0;
+  }
+  .example-block em{ display:block; margin:8px 0; }
+  .rule-item{ display:flex; gap:8px; align-items:flex-start; }
+  .rule-no{ font-weight:700; flex-shrink:0; }
+  .rule-text{ flex:1; }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">Sections ☰</button>
+
+<div class="top-banner">
+  <div class="eyebrow">Chapter 3</div>
+  <h1>Using Outside Sources</h1>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <span class="group-label">Introduction</span>
+      <a href="#sec-intro">Introduction</a>
+      <a href="#sec-model1">Analyzing the Model</a>
+      <span class="group-label">Using &amp; Citing Outside Sources</span>
+      <a href="#sec-plagiarism1">Plagiarism</a>
+      <a href="#sec-correct-citations">Correct Citations</a>
+      <span class="group-label">Quotations</span>
+      <a href="#sec-quotations">Quotations</a>
+      <a href="#sec-p3">Practice 3</a>
+      <a href="#sec-reporting">Reporting Verbs and Phrases</a>
+      <a href="#sec-punctuating">Punctuating Direct Quotations</a>
+      <a href="#sec-p4">Practice 4</a>
+      <a href="#sec-changing">Changing Direct Quotations to Indirect Quotations</a>
+      <a href="#sec-p5">Practice 5</a>
+      <span class="group-label">Paraphrasing</span>
+      <a href="#sec-paraphrasing">Paraphrasing</a>
+      <a href="#sec-model2">Analyzing the Model (Paraphrase)</a>
+      <a href="#sec-plagiarism">Plagiarism and Paraphrasing</a>
+      <a href="#sec-using-paraphrases">Using Paraphrases as Support</a>
+      <a href="#sec-writing-paraphrase">Writing a Successful Paraphrase</a>
+      <a href="#sec-p6">Practice 6</a>
+      <span class="group-label">Summarizing</span>
+      <a href="#sec-summarizing">Summarizing</a>
+      <a href="#sec-model3">Analyzing the Model (Summary)</a>
+      <a href="#sec-writing-summary">Writing a Successful Summary</a>
+      <a href="#sec-p8">Practice 8</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- ================= INTRODUCTION ================= -->
+    <section class="block" id="sec-intro">
+      <h2 class="section-title">INTRODUCTION</h2>
+      <p>In this chapter, you will practice using information from outside sources to support your ideas. Outside sources are materials you refer to other than your own knowledge and experience. Outside sources can include information you gain from reliable online websites, books, other print materials such as newspapers, or interviews.</p>
+      <p>There are three ways to insert outside information into your own writing: You can quote it; you can paraphrase it; or you can summarize it. Whichever way you choose, you must tell your readers where you found the information you use. In this chapter, you will learn more about each method. Your final assignment will be to write an academic summary on the topic of language.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL ================= -->
+    <section class="block" id="sec-model1">
+      <h2 class="section-title">ANALYZING THE MODEL</h2>
+
+      <div class="model-para">
+        <h4 style="margin-top:0;color:var(--maroon);font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;">Hope for Dying Languages</h4>
+        <p>
+          <span class="num">1</span>Inupiaq, an Alaskan language, has been threatened with extinction, but new educational<br>
+          initiatives may bring it back to life. <span class="num">2</span>The threat to Inupiaq is very serious. <span class="num">3</span>According to the<br>
+          National Geographic "Enduring Voice" project, a language dies every two weeks ("Disappearing<br>
+          Languages"). <span class="num">4</span>Since Inupiaq has only 1,500 remaining speakers, it is in grave danger of following<br>
+          this trend (Hopkins). <span class="num">5</span>The decline began under a harsh policy of assimilation in the last century.<br>
+          <span class="num">6</span>This directive forced Native Americans to attend English language schools. <span class="num">7</span>At these schools,<br>
+          they were discouraged from speaking their native tongues. <span class="num">8</span>Now, however, that policy has been<br>
+          changed. <span class="num">9</span>Inupiaq is currently taught at the University of Alaska. <span class="num">10</span>Similarly, software developers<br>
+          are writing computer programs to help children learn Inupiaq and other endangered languages.<br>
+          <span class="num">11</span>These efforts may increase Inupiaq use in the younger generation. <span class="num">12</span>As Henry Goodman,<br>
+          a young Inupiat man, comments, "Listening to the elders . . . speak the language, I couldn't<br>
+          understand; it's part of our culture, and I never did learn [the] language growing up" (qtd. in<br>
+          Woodroof). <span class="num">13</span>Happily, the new Inupiaq language projects will give him a chance to learn it now.
+        </p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:14px;">
+          <strong>Sources:</strong><br>
+          1. "Disappearing Languages." <em>National Geographic</em>.<br>
+          2. Hopkins, Kyle. "Alaska Natives Team with Rosetta Stone."<br>
+          3. Woodroof, Martha. "Endangered Alaskan Language Goes Digital."
+        </p>
+      </div>
+      <p class="instructions">The writing model discusses an Alaskan language that is on the edge of extinction.</p>
+
+      <h3 class="sub-title">Questions about the Model</h3>
+      <p class="instructions">(We'll go over these together in class.)</p>
+      <div class="qa-item"><label class="qlabel">1. What is the topic sentence? Underline it.</label></div>
+      <div class="qa-item"><label class="qlabel">2. How do sentences 2 and 11 develop the topic sentence?</label></div>
+      <div class="qa-item"><label class="qlabel">3. What key supporting fact is included in sentence 3? Where did the author of this paragraph find this information?</label></div>
+      <div class="qa-item"><label class="qlabel">4. How do you think this paragraph might have been different if the author had relied only on information from his or her personal experience?</label></div>
+    </section>
+
+    <!-- ================= USING & CITING OUTSIDE SOURCES ================= -->
+    <section class="block" id="sec-plagiarism1">
+      <h2 class="section-title">PLAGIARISM</h2>
+      <p>Using reliable outside sources can help your writing, but there are many things you need to know before you start using the words and ideas of others to support and expand your ideas.</p>
+      <p>When you use information from an outside source without acknowledging that source, you are guilty of plagiarism. Plagiarism is using someone else's words or ideas as if they were your own, and it is a serious offense. Students who plagiarize may fail a class or even be expelled from school.</p>
+      <p>To avoid plagiarism, you should always put quotation marks around words that you copy exactly. You do not need to use quotation marks if you change the words. However, whether you copy the words exactly or state an idea in your own words, you must cite the source. To cite a source means to tell where you got the information.</p>
+    </section>
+
+    <!-- ================= CORRECT CITATIONS ================= -->
+    <section class="block" id="sec-correct-citations">
+      <h2 class="section-title">CORRECT CITATIONS</h2>
+      <p>The purpose of a citation is not only to avoid plagiarism, but also to refer your readers to the source of your information. That way, they can read the original source if they want to learn more about the topic. It is important to be accurate in your citations.</p>
+      <p>There are a number of different ways of citing information. In general, you will want to follow whatever guidelines your instructor gives you to complete an assignment. However, for most of your academic work, you will find this two-stage process useful and sufficient for citing your sources:</p>
+      <ol>
+        <li>Insert a short reference in parentheses at the end of each piece of borrowed information. This short reference is called an <strong>in-text citation</strong>.</li>
+        <li>Prepare a list describing all your sources completely. This list is titled "Works Cited" ("A List of References" or "References") and appears as the last page of your paper.</li>
+      </ol>
+    </section>
+
+    <!-- ================= QUOTATIONS ================= -->
+    <section class="block" id="sec-quotations">
+      <h2 class="section-title">QUOTATIONS</h2>
+      <p>Quotations from reliable and knowledgeable sources are good supporting details. There are two different types of quotations: direct and indirect. When you use a <strong>direct quotation</strong> in academic writing, you copy another person's exact words (spoken or written) and enclose them in quotation marks. When you use an <strong>indirect quotation</strong>, the speaker's or writer's words are reported indirectly, without quotation marks. For this reason, indirect quotations are sometimes called reported speech.</p>
+      <p>In academic writing, you should never use an indirect quotation without paraphrasing, or rephrasing information in your own words.</p>
+    </section>
+
+    <!-- ================= PRACTICE 3 ================= -->
+    <section class="block" id="sec-p3">
+      <h2 class="section-title">PRACTICE 3 &nbsp;·&nbsp; Analyzing Direct Quotations</h2>
+      <p class="instructions">Work with a partner. Reread the writing model "Hope for Dying Languages" below — especially the quotation from Henry Goodman in sentence 12. Then answer the questions.</p>
+
+      <div class="model-para">
+        <h4 style="margin-top:0;color:var(--maroon);font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;">Hope for Dying Languages</h4>
+        <p>
+          <span class="num">1</span>Inupiaq, an Alaskan language, has been threatened with extinction, but new educational<br>
+          initiatives may bring it back to life. <span class="num">2</span>The threat to Inupiaq is very serious. <span class="num">3</span>According to the<br>
+          National Geographic "Enduring Voice" project, a language dies every two weeks ("Disappearing<br>
+          Languages"). <span class="num">4</span>Since Inupiaq has only 1,500 remaining speakers, it is in grave danger of following<br>
+          this trend (Hopkins). <span class="num">5</span>The decline began under a harsh policy of assimilation in the last century.<br>
+          <span class="num">6</span>This directive forced Native Americans to attend English language schools. <span class="num">7</span>At these schools,<br>
+          they were discouraged from speaking their native tongues. <span class="num">8</span>Now, however, that policy has been<br>
+          changed. <span class="num">9</span>Inupiaq is currently taught at the University of Alaska. <span class="num">10</span>Similarly, software developers<br>
+          are writing computer programs to help children learn Inupiaq and other endangered languages.<br>
+          <span class="num">11</span>These efforts may increase Inupiaq use in the younger generation. <span class="num">12</span>As Henry Goodman,<br>
+          a young Inupiat man, comments, "Listening to the elders . . . speak the language, I couldn't<br>
+          understand; it's part of our culture, and I never did learn [the] language growing up" (qtd. in<br>
+          Woodroof). <span class="num">13</span>Happily, the new Inupiaq language projects will give him a chance to learn it now.
+        </p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:14px;">
+          <strong>Sources:</strong><br>
+          1. "Disappearing Languages." <em>National Geographic</em>.<br>
+          2. Hopkins, Kyle. "Alaska Natives Team with Rosetta Stone."<br>
+          3. Woodroof, Martha. "Endangered Alaskan Language Goes Digital."
+        </p>
+      </div>
+
+      <h3 class="sub-title">Questions</h3>
+      <div class="qa-item"><label class="qlabel">1. Who spoke the words in quotation marks?</label></div>
+      <div class="qa-item"><label class="qlabel">2. What verb introduces the quotation?</label></div>
+      <div class="qa-item">
+        <label class="qlabel">3. What information is provided by the in-text citation at the end of the quotation?</label>
+        <ul style="margin:8px 0 0;padding-left:22px;">
+          <li style="margin-bottom:8px;">Who wrote the article in which the quotation originally appeared?</li>
+          <li style="margin-bottom:8px;">Is the source a printed article or an online article? How do you know?</li>
+          <li>Why do you think the author of the paragraph included the quotation? How does the quotation support the main idea?</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= PUNCTUATING DIRECT QUOTATIONS ================= -->
+    <section class="block" id="sec-reporting">
+      <h2 class="section-title">REPORTING VERBS AND PHRASES</h2>
+      <p>As you probably noticed, the verb <em>comments</em> introduced the quotation in the writing model on page 47. To introduce borrowed information — direct quotations, indirect quotations, or specific facts or ideas — from someone else's work, use the phrase <em>according to</em> or a reporting verb such as <em>comment</em> or one of these verbs:</p>
+      <table style="border-collapse:collapse;margin:14px 0 14px 20px;font-size:1rem;">
+        <tr><td style="padding:3px 28px 3px 0;">assert</td><td style="padding:3px 28px 3px 0;">insist</td><td style="padding:3px 28px 3px 0;">note</td><td style="padding:3px 0;">state</td></tr>
+        <tr><td style="padding:3px 28px 3px 0;">claim</td><td style="padding:3px 28px 3px 0;">maintain</td><td style="padding:3px 28px 3px 0;">report</td><td style="padding:3px 0;">suggest</td></tr>
+        <tr><td style="padding:3px 28px 3px 0;">declare</td><td style="padding:3px 28px 3px 0;">mention</td><td style="padding:3px 28px 3px 0;">say</td><td style="padding:3px 0;">write</td></tr>
+      </table>
+
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem;margin:14px 0;min-width:600px;">
+        <tr style="background:#1c6ea4;color:#fff;">
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);width:35%;">Rules</th>
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Examples</th>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">1.</span><span class="rule-text">Reporting verbs can appear before, in the middle of, or after a quotation.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">One instructor <span class="ins">says</span>, "It is impossible to teach language without teaching grammar" (Jones 12).<br><br>
+          "It is impossible to teach a language," <span class="ins">says</span> one instructor, "without teaching grammar" (Jones 12).<br><br>
+          "It is impossible to teach language without teaching grammar," <span class="ins">says</span> one instructor (Jones 12).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">2.</span><span class="rule-text">The reporting phrase <em>according to</em> usually appears at the beginning or end, but not in the middle of a sentence.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);"><span class="ins">According to</span> one instructor, teaching language without teaching grammar is impossible (Jones 12).<br><br>
+          Teaching language without teaching grammar is impossible, <span class="ins">according to</span> one instructor (Jones 12).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">3.</span><span class="rule-text">Use <em>according to</em> with a reporting verb only when two separate people are saying two separate things.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);"><span class="ins">According to</span> <strong>linguist Deborah Tannen</strong>, journalist <strong>David Broder</strong> <span class="ins">claims</span> that more news coverage is devoted to political analysis of events than to the events themselves (Tannen 34).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">4.</span><span class="rule-text">Reporting verbs can be used either with or without the subordinator <em>as</em>.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);"><span class="ins">As</span> one middle school teacher <span class="ins">says</span>, when discussing the teaching of grammar, "When you learn your first language, your mind automatically understands the grammar" (Jones 15).<br><br>
+          One middle school teacher <span class="ins">says</span>, when discussing the teaching of grammar, "When you learn your first language, your mind automatically understands the grammar" (Jones 15).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">5.</span><span class="rule-text">Reporting verbs can be in any tense. However, a past tense reporting verb may cause changes in verbs, pronouns, and time expressions in an indirect quotation. See Sequence of Tenses Rules, page 56, for more information on these types of changes.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">Some critics <span class="ins">claim / have claimed</span> that certain programs have not provided enough grammar teaching in ESL classes for young children ("English for Tots Not So Hot").<br><br>
+          Some critics <span class="ins">claimed</span> that certain programs had not provided enough grammar teaching in ESL classes for young children ("English for Tots Not So Hot").</td>
+        </tr>
+      </table>
+      </div>
+
+      <div style="background:#f3e6e9;border:1px solid #d8b9c2;border-radius:4px;margin:16px 0;overflow:hidden;">
+        <div style="background:var(--maroon);color:#fff;padding:8px 16px;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700;">Writing Tip</div>
+        <p style="padding:14px 16px;margin:0;">Including the source of the borrowed information with the reporting expression gives authority to your writing because it lets your reader know immediately that your information is from a credible source.</p>
+      </div>
+    </section>
+
+    <!-- ================= PUNCTUATING DIRECT QUOTATIONS ================= -->
+    <section class="block" id="sec-punctuating">
+      <h2 class="section-title">PUNCTUATING DIRECT QUOTATIONS</h2>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem;margin:14px 0;min-width:600px;">
+        <tr style="background:#1c6ea4;color:#fff;">
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);width:35%;">Rules</th>
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Examples</th>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">1.</span><span class="rule-text">Put quotation marks around information that you copy word-for-word from a source. Do not use quotation marks with paraphrases, summaries, or indirect quotations.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">According to <em>Language / Brain Magazine</em><span class="ins">,</span> <span class="ins">"</span>Many people believe that some people have more talent for learning language than others<span class="ins">."</span></td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">2.</span><span class="rule-text">Normally, place commas (and periods) before the first mark and also before the second mark in a pair of quotation marks.<br><br><strong>Exceptions:</strong><br>If you insert only a few quoted words into your own sentence, do not use commas.<br><br>When you add an in-text citation after a quotation, put the period after the closing parenthesis mark.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">"Many people believe that some people have more talent for learning language than others<span class="ins">,</span>" according to <em>Language / Brain Magazine</em>.<br><br>
+          Susanna Wong, a professor at Upper Midwest State University, argues that "a large percentage" of language learners never fully acquire proficiency (128).<br><br>
+          The Association for Childhood English Learning warns, "A solely grammatical curriculum can prevent the children from learning how to communicate, yet grammar in some amount is required for a learner to become highly proficient" (qtd. in Torralba 26)<span class="ins">.</span></td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">3.</span><span class="rule-text">When quoting a complete sentence, capitalize the first word of the quotation as well as the first word of your sentence.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);"><span class="ins">T</span>he Association for Childhood English Learning warns, "<span class="ins">A</span> solely grammatical curriculum can prevent the children from learning how to communicate, yet grammar in some amount is required for a learner to become highly proficient" (qtd. in Torralba 26).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">4.</span><span class="rule-text">If you break a quoted sentence into two parts, enclose both parts in quotation marks and separate the parts with commas. Capitalize only the first word of the sentence.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">"<span class="ins">A</span> solely grammatical curriculum can prevent the children from learning how to communicate<span class="ins">,</span>" warns The Association for Childhood English Learning, "<span class="ins">y</span>et grammar in some amount is required for a learner to become highly proficient" (qtd. in Torralba 26).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">5.</span><span class="rule-text">If you omit words, use an ellipsis (three spaced periods).</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">As Henry Goodman, a young Inupiat man, comments, "Listening to the elders <span class="ins">. . .</span> speak the language, I couldn't understand."</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">6.</span><span class="rule-text">If you add words, put square brackets around the words you have added.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">He added, "It's part of our culture and I never did learn <span class="ins">[the]</span> language growing up" (qtd. in Woodroof).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">7.</span><span class="rule-text">Use single quotation marks to enclose a quotation within a quotation.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">A student said, "When I first started learning English, I would say things like <span class="ins">'</span>he go<span class="ins">'</span> or <span class="ins">'</span>I no have.<span class="ins">'</span>" (qtd. in Jones 14).</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">8.</span><span class="rule-text">If your quotation is four lines or longer, do not use quotation marks. Introduce this type of quotation with a colon and indent it one inch from the left-hand margin.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">A national news agency reported these survey results<span class="ins">:</span><br><br>
+          Several years ago [when] 198 teachers in the city were asked how much time they spend on grammar teaching in the classroom, 75 teachers said they spent more than 90% of their time on grammar, 90 said they spent less than 10% of their time on grammar, and only 10 said they spent about 50% of their time on grammar (qtd. in Torralba 34).</td>
+        </tr>
+      </table>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE 4 ================= -->
+    <section class="block" id="sec-p4">
+      <h2 class="section-title">PRACTICE 4 &nbsp;·&nbsp; Punctuating Direct Quotations</h2>
+      <p class="instructions">Add punctuation to the direct quotations, and change the capitalization as necessary.</p>
+      <div id="practice4"></div>
+      <button class="check-btn" onclick="checkPractice4()">Check Answers</button>
+      <div class="score-banner" id="p4-score"></div>
+    </section>
+
+    <!-- ================= CHANGING DIRECT QUOTATIONS TO INDIRECT ================= -->
+    <section class="block" id="sec-changing">
+      <h2 class="section-title">CHANGING DIRECT QUOTATIONS TO INDIRECT QUOTATIONS</h2>
+      <p>When you change a direct quotation to an indirect quotation, use this method:</p>
+      <ul>
+        <li>Omit the quotation marks.</li>
+        <li>Add the subordinator <em>that</em>.* </li>
+        <li>Change the verb tense if necessary. Follow the sequence of tenses rules.</li>
+        <li>Change pronouns (and time expressions if necessary) to keep the sense of the original.</li>
+      </ul>
+      <p style="font-size:.85rem;color:var(--ink-soft);">* The subordinator <em>that</em> is often omitted in reported speech, especially in spoken language.</p>
+
+      <h3 class="sub-title">Sequence of Tenses Rules</h3>
+      <p>If the reporting verb is in a past tense, the verbs in an indirect quotation may change tense according to the rules below. Also, pronouns (and sometimes time expressions) may change.</p>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:.88rem;margin:14px 0;min-width:640px;">
+        <tr style="background:#1c6ea4;color:#fff;">
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);width:30%;">Rules</th>
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Direct Quotations</th>
+          <th style="text-align:left;padding:8px;border:1px solid var(--line);">Indirect Quotations</th>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">1.</span><span class="rule-text">Simple present changes to simple past.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">Susan said, "The exam <span class="ins">is</span> at eight o'clock."</td>
+          <td style="padding:8px;border:1px solid var(--line);">Susan said (that) the exam <span class="ins">was</span> at eight o'clock.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">2.</span><span class="rule-text">Simple past and present perfect change to past perfect.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">She said, "We <span class="ins">didn't have</span> time to eat breakfast."<br><br>He said, "The exam <span class="ins">has just started</span>."</td>
+          <td style="padding:8px;border:1px solid var(--line);">She said (that) they <span class="ins">hadn't had</span> time to eat breakfast.<br><br>He said (that) the exam <span class="ins">had just started</span>.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">3.</span><span class="rule-text"><em>Will</em> changes to <em>would</em>, <em>can</em> to <em>could</em>, <em>may</em> to <em>might</em>, and <em>must</em> to <em>had to</em>.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">The teacher said, "You <span class="ins">must</span> finish the test right now."</td>
+          <td style="padding:8px;border:1px solid var(--line);">The teacher said (that) we <span class="ins">had to</span> finish the test right then.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;border:1px solid var(--line);background:var(--gold-pale);"><div class="rule-item"><span class="rule-no">4.</span><span class="rule-text">Time expressions may change if the meaning requires it.</span></div></td>
+          <td style="padding:8px;border:1px solid var(--line);">Sam mentioned, "<span class="ins">Today</span> I will eat Chinese food, and <span class="ins">tomorrow</span> I will eat French food if I find a good restaurant."</td>
+          <td style="padding:8px;border:1px solid var(--line);">Sam mentioned that <span class="ins">that day</span> he would eat Chinese food and that <span class="ins">the next day</span> he would eat French food if he found a good restaurant.</td>
+        </tr>
+      </table>
+      </div>
+
+      <h3 class="sub-title">Exceptions</h3>
+      <ul>
+        <li>When the reporting verb is simple present, present perfect, or future, the verb tense in the quotation does not change.<br><em>He says, "I can finish it today." → He says that he can finish it today.</em></li>
+        <li>When the reporting phrase is <em>according to</em>, the verb tense does not change.<br><em>The lawyer said, "My client <span class="ins">is</span> innocent." → According to the lawyer, his client <span class="ins">is</span> innocent.</em></li>
+        <li>When the quoted information is a fact or general truth, the verb tense in the quotation does not change.<br><em>He said, "Water <span class="ins">boils</span> at a lower temperature in the mountains." → He said that water <span class="ins">boils</span> at a lower temperature in the mountains.</em></li>
+      </ul>
+
+      <h3 class="sub-title">Time and Place Words</h3>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin:14px 0;min-width:420px;">
+        <tr style="background:var(--gold-pale);"><th style="text-align:left;padding:7px;border:1px solid var(--line);">Direct Speech</th><th style="text-align:left;padding:7px;border:1px solid var(--line);">Reported Speech</th></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">now</td><td style="padding:7px;border:1px solid var(--line);">then, at that time</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">today</td><td style="padding:7px;border:1px solid var(--line);">that day</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">tonight</td><td style="padding:7px;border:1px solid var(--line);">that night</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">yesterday</td><td style="padding:7px;border:1px solid var(--line);">the day before, the previous day</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">last night</td><td style="padding:7px;border:1px solid var(--line);">the night before, the previous night</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">the day before yesterday</td><td style="padding:7px;border:1px solid var(--line);">two days before</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">tomorrow</td><td style="padding:7px;border:1px solid var(--line);">the next/following day</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">the day after tomorrow</td><td style="padding:7px;border:1px solid var(--line);">two days later</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">this week/month/year</td><td style="padding:7px;border:1px solid var(--line);">that week/month/year</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">last week/month/year</td><td style="padding:7px;border:1px solid var(--line);">the previous week/month/year</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">next week/month/year</td><td style="padding:7px;border:1px solid var(--line);">the following week/month/year</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">two minutes ago</td><td style="padding:7px;border:1px solid var(--line);">two minutes before</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">here</td><td style="padding:7px;border:1px solid var(--line);">there</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">this book</td><td style="padding:7px;border:1px solid var(--line);">that book</td></tr>
+        <tr><td style="padding:7px;border:1px solid var(--line);">in this room</td><td style="padding:7px;border:1px solid var(--line);">in that room</td></tr>
+      </table>
+      </div>
+
+      <h3 class="sub-title">Writing Tip</h3>
+      <p>Notice that indirect quotation is typically used in conversation. Indirect quotation is forbidden in academic writing. If you use the same words as a source, changing only the verb tense, it is considered plagiarism and can be cause for serious punishment. Instead of indirect quotation, in academic writing use paraphrase.</p>
+    </section>
+
+    <!-- ================= PRACTICE 5 ================= -->
+    <section class="block" id="sec-p5">
+      <h2 class="section-title">PRACTICE 5 &nbsp;·&nbsp; Changing Direct Quotations to Indirect Quotations</h2>
+      <p class="instructions">Change the direct quotations to indirect quotations.</p>
+      <div id="practice5"></div>
+      <button class="check-btn" onclick="checkPractice5()">Check Answers</button>
+      <div class="score-banner" id="p5-score"></div>
+    </section>
+
+    <!-- ================= PARAPHRASING ================= -->
+    <section class="block" id="sec-paraphrasing">
+      <h2 class="section-title">PARAPHRASING</h2>
+      <p>When you paraphrase, you rewrite information from an outside source in your own words without changing the meaning. Unlike when you use indirect quotation or reported speech, you do not simply change verb tense. In addition, when you paraphrase, you convey the author's idea but change the author's words and sentence structure. You think about the message the author is trying to send in the text, and then try to express that idea in your own way. A paraphrase may be shorter and more concise than the original, but only slightly. Because you include in your rewrite all or nearly all of the content of the original passage — including many of the details — a paraphrase is almost as long as the original.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL (PARAPHRASE) ================= -->
+    <section class="block" id="sec-model2">
+      <h2 class="section-title">ANALYZING THE MODEL (PARAPHRASE)</h2>
+      <p class="instructions">The writing model consists of two passages about language. One is an excerpt from an encyclopedia entry about language by an author named Stephanie Wallen. The other is a paraphrase of the excerpt. Read the models. Then answer the questions.</p>
+
+      <div class="passage">
+        <h4>Original Passage</h4>
+        <p><span class="num">1</span>There are more than 6,500 unique spoken languages across the globe.<br>
+        <span class="num">2</span>Technology has made great progress in helping speakers of different<br>
+        languages communicate with one another. <span class="num">3</span>However, there are still many<br>
+        challenges. <span class="num">4</span>Linguists have tried to develop a universal language. <span class="num">5</span>A<br>
+        universal language is one language that all people in the world could learn.<br>
+        <span class="num">6</span>If we were able to successfully create such a language, many things would<br>
+        be much simpler, including education, global business, and possibly even world<br>
+        peace (Wallen).</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:12px;"><strong>Source:</strong> Wallen, Stephanie M. "Language and the World."</p>
+      </div>
+
+      <div class="passage">
+        <h4>Paraphrase</h4>
+        <p><span class="num">1</span>The world is home to many different languages. <span class="num">2</span>People<br>
+        have developed new methods to help simplify communication,<br>
+        but challenges still exist. <span class="num">3</span>Some people believe the answer to these<br>
+        difficulties is a universal language, a language that all people in the<br>
+        world could speak. <span class="num">4</span>Language experts believe this would eliminate<br>
+        challenges and could benefit the world in countless ways. <span class="num">5</span>It would<br>
+        also make communication between people much easier, which could<br>
+        increase global cooperation (Wallen).</p>
+      </div>
+
+      <div class="qa-item">
+        <label class="qlabel">1-1. How many sentences are there in the original passage?</label>
+        <select id="m2-q11">
+          <option value="">-- choose --</option>
+          <option value="3">3 sentences</option>
+          <option value="4">4 sentences</option>
+          <option value="5">5 sentences</option>
+          <option value="6">6 sentences</option>
+        </select>
+        <div class="feedback-box" id="m2-fb-11"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">1-2. How many sentences are there in the paraphrase?</label>
+        <select id="m2-q12">
+          <option value="">-- choose --</option>
+          <option value="3">3 sentences</option>
+          <option value="4">4 sentences</option>
+          <option value="5">5 sentences</option>
+          <option value="6">6 sentences</option>
+        </select>
+        <div class="feedback-box" id="m2-fb-12"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-a-1. What is the last word of the first sentence in the original passage?</label>
+        <input type="text" id="m2-q2a1">
+        <div class="feedback-box" id="m2-fb-2a1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-a-2. Where does a synonym of this word (2-a-1) appear in the first sentence of the paraphrase?</label>
+        <select id="m2-q2a2">
+          <option value="">-- choose --</option>
+          <option value="beginning">At the beginning of the first sentence</option>
+          <option value="middle">In the middle of the first sentence</option>
+          <option value="end">At the end of the first sentence</option>
+          <option value="none">It does not appear in the first sentence.</option>
+        </select>
+        <div class="feedback-box" id="m2-fb-2a2"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-b-1. What is the first word of the second sentence in the original passage?</label>
+        <input type="text" id="m2-q2b1">
+        <div class="feedback-box" id="m2-fb-2b1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-b-2. What word replaces it in the second sentence of the paraphrase?</label>
+        <input type="text" id="m2-q2b2">
+        <div class="feedback-box" id="m2-fb-2b2"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-c-1. What word replaces "challenges" in the third sentence?</label>
+        <input type="text" id="m2-q2c1">
+        <div class="feedback-box" id="m2-fb-2c1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-c-2. What word or phrase replaces "linguists" in the fourth sentence?</label>
+        <input type="text" id="m2-q2c2">
+        <div class="feedback-box" id="m2-fb-2c2"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2-d. Which two sentences in the original become one sentence in the paraphrase?</label>
+        <select id="m2-q2d">
+          <option value="">-- choose --</option>
+          <option value="12">Sentences 1 and 2</option>
+          <option value="23">Sentences 2 and 3</option>
+          <option value="34">Sentences 3 and 4</option>
+          <option value="45">Sentences 4 and 5</option>
+          <option value="56">Sentences 5 and 6</option>
+        </select>
+        <div class="feedback-box" id="m2-fb-2d"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkModel2()">Check Answers</button>
+      <div class="score-banner" id="m2-score"></div>
+    </section>
+
+    <!-- ================= PLAGIARISM AND PARAPHRASING ================= -->
+    <section class="block" id="sec-plagiarism">
+      <h2 class="section-title">PLAGIARISM AND PARAPHRASING</h2>
+      <p>Learning to paraphrase properly can help you use information from outside sources accurately and ethically. It is essential to avoid committing plagiarism.</p>
+      <p>There are two kinds of plagiarism that you need to consider when paraphrasing:</p>
+      <ol>
+        <li>When you use information from an outside source without citing the source (telling where you got the information), you are guilty of plagiarism.</li>
+        <li>Even when you cite your source, if your paraphrase is too similar to the original, you are guilty of plagiarism.</li>
+      </ol>
+      <p class="instructions">Reread the model above (Analyzing the Model — Paraphrase). Pay attention to the paraphrase. Then read these two unacceptable paraphrases and decide which kind of plagiarism each example is guilty of.</p>
+
+      <div class="passage">
+        <h4>Unacceptable Paraphrase 1</h4>
+        <p>The world is home to many different languages. People have developed new methods to help simplify communication, but challenges still exist. Some people believe the answer to these difficulties is a universal language, a language that all people in the world could speak. Language experts believe this would eliminate challenges and could benefit the world in countless ways. It would also make communication between people much easier, which could increase global cooperation.</p>
+      </div>
+      <p><strong>Answer:</strong> In Paraphrase 1, the source is not cited.</p>
+
+      <div class="passage">
+        <h4>Unacceptable Paraphrase 2</h4>
+        <p>There are more than 6,500 different spoken languages across the globe. Technology has made a lot of progress in helping speakers of different languages talk to each other. However, there are still many difficulties. Linguists tried to develop a universal language in the past. A universal language is a language that everyone in the world could learn. If we could successfully create a language like this, many things would be easier, including schooling, the world economy, and maybe even global friendship (Wallen).</p>
+      </div>
+      <p><strong>Answer:</strong> Paraphrase 2 is too similar to the original passage. For example, in the first sentence, only one word has been changed: <em>different</em> replaces <em>unique</em>. In the second sentence, only a few words have been changed.</p>
+      <p>You can avoid the first kind of plagiarism by always citing your sources. You can avoid the second kind of plagiarism by learning to paraphrase correctly.</p>
+    </section>
+
+    <!-- ================= USING PARAPHRASES AS SUPPORT ================= -->
+    <section class="block" id="sec-using-paraphrases">
+      <h2 class="section-title">USING PARAPHRASES AS SUPPORT</h2>
+      <p>You previously learned how to use quotations as support for your ideas. Similarly, the purpose of learning to paraphrase is to be able to use paraphrases as supporting material in your writing. In fact, paraphrase is usually preferred over quotation in academic writing because it shows that the writer truly understands the information, and it is often easier to understand how the information relates to the writer's points. Thus, whenever the exact words of your source are not important, you should use paraphrase.</p>
+    </section>
+
+    <!-- ================= WRITING A SUCCESSFUL PARAPHRASE ================= -->
+    <section class="block" id="sec-writing-paraphrase">
+      <h2 class="section-title">WRITING A SUCCESSFUL PARAPHRASE</h2>
+      <p>To paraphrase correctly, you first need to make sure that you fully understand the original passage. Use this method to write a good paraphrase.</p>
+      <ul>
+        <li>Read the original passage several times until you understand it fully. Underline the key words. Look up unfamiliar words and find synonyms for them. It is not always possible to find synonyms for every word, especially technical vocabulary. In this case, use the original word.</li>
+        <li>Take notes while you read. Write down only a few words for each idea — not complete sentences. Here are one writer's notes on the original passage about universal language:<br>
+        <em>6,500 languages — technology helps — but difficult to communicate — universal language — all people can learn — benefits: school, economy, friendship</em></li>
+        <li>Make a brief outline:<br>
+        A. World Languages — over 6,500<br>
+        &nbsp;&nbsp;1. There are difficulties communicating with people who don't speak your language.<br>
+        &nbsp;&nbsp;2. A universal language would help people communicate.<br>
+        B. Benefits<br>
+        &nbsp;&nbsp;1. Education<br>
+        &nbsp;&nbsp;2. Economy<br>
+        &nbsp;&nbsp;3. Friendship</li>
+        <li>Write your paraphrase from your notes. Don't look at the original while you are writing.</li>
+        <li>Check your paraphrase against the original to make sure you have not copied vocabulary or sentence structure too closely. Above all, make sure that you have not changed the meaning of the original or given any wrong information.</li>
+        <li>Add in-text citations. Also add a works-cited list if appropriate.</li>
+      </ul>
+    </section>
+
+    <!-- ================= PRACTICE 6 ================= -->
+    <section class="block" id="sec-p6">
+      <h2 class="section-title">PRACTICE 6 &nbsp;·&nbsp; Choosing the Best Paraphrase</h2>
+      <p class="instructions">Read each original passage. Then read the paraphrases in each group and decide which is the best. Label it <em>Best</em>. Label the others <em>Too sim.</em> (too similar), <em>No cit.</em> (no in-text citation), or <em>Inc. / Inacc.</em> (incomplete and/or inaccurate information).</p>
+
+      <div class="group-box">
+        <div class="group-title">Original Passage 2</div>
+        <p>The kind of language the child hears and how people respond to the child can affect the speed of language development.</p>
+        <div id="p6-passage2"></div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-title">Original Passage 3</div>
+        <p>Children with communication disorders frequently do not perform at grade level. They may struggle with reading. Similarly, they may have difficulty understanding and expressing spoken language. Individuals with reading and writing problems also may have trouble using language to think and learn.</p>
+        <div id="p6-passage3"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkPractice6()">Check Answers</button>
+      <div class="score-banner" id="p6-score"></div>
+    </section>
+
+    <!-- ================= SUMMARIZING ================= -->
+    <section class="block" id="sec-summarizing">
+      <h2 class="section-title">SUMMARIZING</h2>
+      <p>Another way to use borrowed information from an outside source is to summarize the material. What is the difference between a paraphrase and a summary? When you retell a story that someone has told you, you repeat the story in your own words. If your retelling is about the same length as the original and includes many of the details, it is a paraphrase. If you shorten the story — retelling only the most important points and leaving out the details — it is a summary.</p>
+      <p>Summaries have many uses in academic writing. Like paraphrases, they can be used to support a point. They can also be part of a longer piece of writing, such as a book report. You might summarize a book before going on to write a response to it. Writing a summary can also be a good strategy for remembering things that you've read. For example, your teacher may ask you to summarize a textbook chapter.</p>
+      <p class="instructions">You previously learned how to use quotations as support for your ideas. Similarly, the purpose of learning to paraphrase is to be able to use paraphrases as supporting material in your writing. In fact, paraphrase is usually preferred over quotation in academic writing because it shows that the writer truly understands the information, and it is often easier to understand how the information relates to the writer's points. Thus, whenever the exact words of your source are not important, you should use paraphrase.</p>
+    </section>
+
+    <!-- ================= ANALYZING THE MODEL (SUMMARY) ================= -->
+    <section class="block" id="sec-model3">
+      <h2 class="section-title">ANALYZING THE MODEL (SUMMARY)</h2>
+      <p class="instructions">You previously read the original passage and paraphrase on this same material. Here you will also read a summary of the same material. Read the models. Then answer the questions.</p>
+
+      <div class="passage">
+        <h4>Original Passage (82 words)</h4>
+        <p>There are more than 6,500 unique spoken languages across the<br>
+        globe. Technology has made great progress in helping speakers of different<br>
+        languages communicate with one another. However, there are still many<br>
+        challenges. Linguists have tried to develop a universal language. A universal<br>
+        language is one language that all people in the world could learn. If we<br>
+        were able to successfully create such a language, many things would be<br>
+        much simpler, including education, global business, and possibly even world<br>
+        peace (Wallen).</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:12px;"><strong>Source:</strong> Wallen, Stephanie M. "Language and the World."</p>
+      </div>
+
+      <div class="passage">
+        <h4>Paraphrase (74 words, about the same length as the original)</h4>
+        <p>The world is home to many different languages. People have<br>
+        developed new methods to help simplify communication, but challenges<br>
+        still exist. Some people believe the answer to these difficulties is a universal<br>
+        language, a language that all people in the world could speak. Language<br>
+        experts believe this would eliminate challenges and could benefit the<br>
+        world in countless ways. It would also make communication between<br>
+        people much easier, which could increase global cooperation (Wallen).</p>
+      </div>
+
+      <div class="passage">
+        <h4>Summary (32 words, much shorter)</h4>
+        <p>There are many languages in the world, and difficulties in<br>
+        communicating can arise when two people don't share a common<br>
+        language. One solution is a global language, which could bring<br>
+        many benefits.</p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Model</h3>
+      <p class="instructions">(We'll go over these together in class.)</p>
+      <div class="qa-item"><label class="qlabel">1. How many sentences are there in the original passage? In the paraphrase? In the summary?</label></div>
+      <div class="qa-item"><label class="qlabel">2. What are some other differences between the paraphrase and the summary? What are some details that were left out of the summary?</label></div>
+    </section>
+
+    <!-- ================= WRITING A SUCCESSFUL SUMMARY ================= -->
+    <section class="block" id="sec-writing-summary">
+      <h2 class="section-title">WRITING A SUCCESSFUL SUMMARY</h2>
+      <p>To write a successful summary, you must focus on the most important points of the original passage. These are strategies for writing a good summary.</p>
+      <ul>
+        <li>Use your own words and your own sentence structure.</li>
+        <li>Remember that a summary is much shorter than a paraphrase. Include only the main points and main supporting points, leaving out most details.</li>
+        <li>Do not change the meaning of the original.</li>
+      </ul>
+      <p>The method for writing a summary is similar to the one for writing a paraphrase.</p>
+      <ul>
+        <li>Read the original passage several times until you understand it fully. Look up any words that you don't understand.</li>
+        <li>Decide what the most important points are. It helps to underline them. It also helps to take notes on the passage. Write down only a few words for each idea — not complete sentences.</li>
+        <li>Write your summary from your notes. Don't look at the original while you are writing.</li>
+        <li>Include a sentence that sums up the main idea of the article.</li>
+        <li>Use transition signals between sentences as needed.</li>
+        <li>Check your summary against the original to make sure you have used different words but have not changed the meaning.</li>
+        <li>Add an in-text citation at the end of the summary.</li>
+      </ul>
+    </section>
+
+    <!-- ================= PRACTICE 8 ================= -->
+    <section class="block" id="sec-p8">
+      <h2 class="section-title">PRACTICE 8 &nbsp;·&nbsp; Choosing the Best Summary</h2>
+      <p class="instructions">Read the original passage and the two summaries. Then answer the questions.</p>
+
+      <div class="passage">
+        <h4>Original Passage — Bilingualism and Its Advantages</h4>
+        <p><span class="num">1</span>It was once believed that learning to speak two languages at an early age could create confusion between them. However, research today indicates that bilingualism, or speaking two or more languages, has many advantages. One very obvious benefit is that individuals who speak several languages can communicate with more people.</p>
+        <p><span class="num">2</span>Being bilingual also can have a deep impact on how the brain functions. Research shows that bilingual children are often better able to learn words, form rhymes, and solve problems than monolingual children. Children who are bilingual are adept as well at categorizing words ("The Advantages of Being Bilingual"). This is because the brains of bilingual children, according to experts, are able to process information with great efficiency. Having to switch between two languages on a constant basis seems to help these children develop a capacity to focus and ignore distractions. At the same time, they are able to retain information (Cuda-Kroen).</p>
+        <p><span class="num">3</span>Bilingualism has been shown to have advantages for adults as well as children. At St. Michael's Hospital in Toronto, researchers found that being bilingual can delay the onset of Alzheimer's symptoms. Alzheimer's disease, an illness that affects the brain and memory, seems to progress more slowly in bilingual adults. This may be because their brains are better prepared to compensate for changes in brain function (Bhattacharjee). Based on these and other findings, it seems clear that being bilingual is not only beneficial for children. It may also be vital to a person's health and wellness later in life.</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:12px;">
+          <strong>Sources:</strong><br>
+          1. "The Advantages of Being Bilingual." <em>American Speech-Language-Hearing Association</em>.<br>
+          2. Bhattacharjee, Yudhijit. "The Benefits of Bilingualism." <em>NYTimes.com</em>.<br>
+          3. Cuda-Kroen, Gretchen. "Being Bilingual May Boost Your Brain Power." <em>NPR</em>.
+        </p>
+      </div>
+
+      <div class="passage">
+        <h4>Summary A</h4>
+        <p>Research suggests that speaking more than one language has many benefits. First, a person who speaks another language can communicate with more people. Also, learning another language can help brain development. Bilingual children are better at learning vocabulary, rhyming, problem solving, and analyzing words. Experts think bilingual children's brains are better at these tasks because changing from one language to another helps the brain become better at focusing. Being bilingual also has an advantage when a person is older. Researchers in Toronto found that Alzheimer's disease progressed more slowly in bilingual adults. In conclusion, bilingualism is great for both children and adults.</p>
+      </div>
+
+      <div class="passage">
+        <h4>Summary B</h4>
+        <p>Being bilingual is advantageous in many ways. Bilingual people can speak to more people around the world. Children that are bilingual are smarter, too. They can learn words, rhyme, and problem solve better than monolingual children. Their brains process information better because they have to go back and forth between languages. Being bilingual is also good for adults and helps stop diseases such as Alzheimer's.</p>
+      </div>
+
+      <h3 class="sub-title">Questions about the Summaries</h3>
+      <div class="qa-item">
+        <label class="qlabel">1. Which summary is better?</label>
+        <select id="p8-q1">
+          <option value="">-- choose --</option>
+          <option value="A">Summary A</option>
+          <option value="B">Summary B</option>
+        </select>
+        <div class="feedback-box" id="p8-fb-1"></div>
+      </div>
+      <div class="qa-item">
+        <label class="qlabel">2. Which summary contains an idea that was not in the original passage?</label>
+        <select id="p8-q2">
+          <option value="">-- choose --</option>
+          <option value="A">Summary A</option>
+          <option value="B">Summary B</option>
+        </select>
+        <div class="feedback-box" id="p8-fb-2"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkPractice8()">Check Answers</button>
+      <div class="score-banner" id="p8-score"></div>
+    </section>
+
+    <footer>Chapter 3 · Using Outside Sources — Answers are checked in your browser only and are never saved or transmitted.</footer>
+  </main>
+</div>
+
+<script>
+/* ---------------- sidebar nav : one section visible at a time ---------------- */
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+menuToggle.addEventListener("click", ()=> sidebar.classList.toggle("open"));
+
+const navLinks = Array.from(document.querySelectorAll(".sidebar a"));
+const sectionEls = navLinks.map(a=>document.querySelector(a.getAttribute("href")));
+const mainEl = document.querySelector("main");
+
+function showSection(index){
+  sectionEls.forEach((sec,i)=> sec.classList.toggle("active", i===index));
+  navLinks.forEach((a,i)=> a.classList.toggle("active", i===index));
+  mainEl.scrollTo({top:0, behavior:"instant"});
+  sidebar.classList.remove("open");
+  updatePageNavButtons(index);
+}
+navLinks.forEach((a,i)=>{
+  a.addEventListener("click", (e)=>{
+    e.preventDefault();
+    showSection(i);
+  });
+});
+
+sectionEls.forEach((sec,i)=>{
+  const nav = document.createElement("div");
+  nav.className="page-nav";
+  nav.innerHTML = `<button class="prev-btn">&larr; Previous</button><button class="next-btn">Next &rarr;</button>`;
+  sec.appendChild(nav);
+  nav.querySelector(".prev-btn").addEventListener("click", ()=>{ if(i>0) showSection(i-1); });
+  nav.querySelector(".next-btn").addEventListener("click", ()=>{ if(i<sectionEls.length-1) showSection(i+1); });
+});
+function updatePageNavButtons(index){
+  sectionEls.forEach((sec,i)=>{
+    const prev = sec.querySelector(".prev-btn");
+    const next = sec.querySelector(".next-btn");
+    if(prev) prev.disabled = (i===0);
+    if(next) next.disabled = (i===sectionEls.length-1);
+  });
+}
+showSection(0);
+
+/* ---------------- helpers ---------------- */
+function norm(s){
+  return (s||"").toLowerCase().replace(/[.,!?'"“”‘’]/g,"").replace(/\s+/g," ").trim();
+}
+function containsKeywords(answer, keywordSets){
+  const a = norm(answer);
+  if(!a) return false;
+  return keywordSets.some(set => set.every(k => a.includes(norm(k))));
+}
+function setBanner(el, correctCount, total){
+  el.classList.add("show");
+  const pct = Math.round((correctCount/total)*100);
+  el.textContent = `${correctCount} / ${total} correct (${pct}%)`;
+  el.style.background = pct===100 ? "#e6f4ed" : "#fbf0d3";
+  el.style.color = pct===100 ? "var(--correct)" : "#8a6d1a";
+}
+
+/* ================= PRACTICE 4 ================= */
+const p4data = [
+  {n:1, prompt:`Dr. Yixuan Ma, a well-known astrophysicist who has been studying black holes, said they are the most interesting phenomena we astrophysicists have ever studied.`,
+   answer:`Dr. Yixuan Ma, a well-known astrophysicist who has been studying black holes, said, "They are the most interesting phenomena we astrophysicists have ever studied."`},
+  {n:2, prompt:`As she explained in black holes the laws of nature do not seem to apply.`,
+   answer:`As she explained, "In black holes the laws of nature do not seem to apply."`},
+  {n:3, prompt:`A black hole is a tiny point with the mass 25 times the mass of our sun explained Ma's associate, Chun-Yi Su. Black holes are created by the death of a very large star she stated.`,
+   answer:`"A black hole is a tiny point with the mass 25 times the mass of our sun," explained Ma's associate, Chun-Yi Su. "Black holes are created by the death of a very large star," she stated.`},
+  {n:4, prompt:`It is an invisible vacuum cleaner in space she added with tremendous gravitational pull.`,
+   answer:`"It is an invisible vacuum cleaner in space," she added, "with tremendous gravitational pull."`},
+  {n:5, prompt:`According to Dr. Su, if a person falls into a black hole, he will eventually be crushed due to the tremendous gravitational forces.`,
+   answer:`According to Dr. Su, "If a person falls into a black hole, he will eventually be crushed due to the tremendous gravitational forces."`},
+  {n:6, prompt:`Time will slow down for him as he approaches the point of no return she said and when he reaches the point of no return, time will stand still for him.`,
+   answer:`"Time will slow down for him as he approaches the point of no return," she said, "and when he reaches the point of no return, time will stand still for him."`}
+];
+const p4div = document.getElementById("practice4");
+p4data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.prompt}</label>
+    <textarea id="p4-${item.n}" rows="2"></textarea>
+    <div class="feedback-box" id="p4-fb-${item.n}"></div>`;
+  p4div.appendChild(d);
+});
+function checkPractice4(){
+  let correct=0;
+  p4data.forEach(item=>{
+    const val = document.getElementById(`p4-${item.n}`).value;
+    const fb = document.getElementById(`p4-fb-${item.n}`);
+    fb.classList.add("show");
+    const hasQuotes = /["“”]/.test(val);
+    const ok = hasQuotes && val.trim().length > 10;
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Looks reasonable — compare with the model answer:<br><span style="opacity:.85;">${item.answer}</span>`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `✗ Correct answer:<br><span style="opacity:.9;">${item.answer}</span>`; }
+  });
+  setBanner(document.getElementById("p4-score"), correct, p4data.length);
+}
+
+/* ================= PRACTICE 5 ================= */
+const AVATAR_F = `<div style="text-align:center;margin:12px 0;">
+<svg width="110" height="110" viewBox="0 0 110 110">
+  <circle cx="55" cy="55" r="55" fill="#f6e4d6"/>
+  <path d="M55 22c-14 0-24 11-24 25 0 6 2 12 5 16-2 2-4 5-4 8v3h46v-3c0-3-2-6-4-8 3-4 5-10 5-16 0-14-10-25-24-25z" fill="#7a4a2b"/>
+  <path d="M55 24c11 8 17 14 17 26 0 3-1 6-2 8l-3-2c1-6 1-13-3-19-3 8-8 12-16 14-2 1-4 4-4 7l-3 2c-1-2-2-5-2-8 0-14 6-22 16-28z" fill="#7a4a2b"/>
+  <circle cx="55" cy="52" r="15" fill="#f0c9a8"/>
+  <circle cx="49" cy="52" r="1.6" fill="#3a2c22"/>
+  <circle cx="61" cy="52" r="1.6" fill="#3a2c22"/>
+  <path d="M50 60c2 2 8 2 10 0" stroke="#a8654a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M18 108c2-16 16-28 37-28s35 12 37 28" fill="#c65f7c"/>
+</svg>
+<div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:.8rem;color:var(--ink-soft);margin-top:4px;">Alma Rodriguez</div>
+</div>`;
+const AVATAR_M = `<div style="text-align:center;margin:12px 0;">
+<svg width="110" height="110" viewBox="0 0 110 110">
+  <circle cx="55" cy="55" r="55" fill="#dbe6f0"/>
+  <circle cx="55" cy="50" r="16" fill="#eec19a"/>
+  <path d="M39 46c0-11 7-19 16-19s16 8 16 19c0 2 0 4-1 6-1-3-2-5-4-6-2 3-6 5-11 5s-9-2-11-5c-2 1-3 3-4 6-1-2-1-4-1-6z" fill="#2b2119"/>
+  <circle cx="49" cy="51" r="1.6" fill="#2b2119"/>
+  <circle cx="61" cy="51" r="1.6" fill="#2b2119"/>
+  <path d="M50 58c2 2 8 2 10 0" stroke="#8a5a3a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M20 108c2-15 15-26 35-26s33 11 35 26" fill="#33526e"/>
+  <path d="M50 84l5 7 5-7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:.8rem;color:var(--ink-soft);margin-top:4px;">Amir Mehdizadeh</div>
+</div>`;
+const p5data = [
+  {n:1, prompt:`OnlineEd, Inc., General Manager Jim Burns said, "Not everyone can attend college in the traditional way; therefore, taking courses via the Internet will offer many more students the chance to earn a college degree."`,
+   avatar:null,
+   answers:[`OnlineEd, Inc., General Manager Jim Burns said that not everyone could attend college in the traditional way; therefore, taking courses via the Internet would offer many more students the chance to earn a college degree.`]},
+  {n:2, prompt:`Premed student Alma Rodriguez commented, "I miss being on campus, but I have to work and take care of my family."`,
+   avatar:AVATAR_F,
+   answers:[
+     `Premed student Alma Rodriguez commented that she missed being on campus but that she had to work and take care of her family.`,
+     `Premed student Alma Rodriguez commented that she missed being on campus but she had to work and take care of her family.`
+   ]},
+  {n:3, prompt:`Other students noted, "Last year, we spent several hours a day commuting to and from school. Now, we don't have to do that."`,
+   avatar:null,
+   answers:[
+     `Other students noted that the previous year, they had spent several hours a day commuting to and from school. They also noted that they didn't have to do that then.`,
+     `Other students noted that the previous year, they had spent several hours a day commuting to and from school. They also noted that they didn't have to do that at that time.`,
+     `Other students noted that the previous year, they had spent several hours a day commuting to and from school and that they didn't have to do that then.`,
+     `Other students noted that the previous year, they had spent several hours a day commuting to and from school and that they didn't have to do that at that time.`
+   ]},
+  {n:4, prompt:`Computer engineering student Amir Mehdizadeh stated, "I can choose when to study and how to study without pressure." He also said, "I will take two more online classes in the fall."`,
+   avatar:AVATAR_M,
+   answers:[`Computer engineering student Amir Mehdizadeh stated that he could choose when to study and how to study without pressure. He also said that he would take two more online classes in the fall.`]}
+];
+const p5div = document.getElementById("practice5");
+p5data.forEach(item=>{
+  const d = document.createElement("div");
+  d.className="qa-item";
+  d.innerHTML = `<label class="qlabel">${item.n}. ${item.prompt}</label>
+    ${item.avatar || ""}
+    <textarea id="p5-${item.n}" rows="2"></textarea>
+    <div class="feedback-box" id="p5-fb-${item.n}"></div>`;
+  p5div.appendChild(d);
+});
+function checkPractice5(){
+  let correct=0;
+  p5data.forEach(item=>{
+    const val = document.getElementById(`p5-${item.n}`).value;
+    const fb = document.getElementById(`p5-fb-${item.n}`);
+    fb.classList.add("show");
+    const noQuotes = !/["“”]/.test(val);
+    const ok = noQuotes && val.trim().length > 10;
+    const answerList = `<ul style="margin:4px 0 0;padding-left:20px;">${item.answers.map(a=>`<li style="margin-bottom:4px;">${a}</li>`).join("")}</ul>`;
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Looks reasonable — compare with the model answer${item.answers.length>1?"s":""}:<br><span style="opacity:.85;">${answerList}</span>`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `✗ Correct answer${item.answers.length>1?"s":""}:<br><span style="opacity:.9;">${answerList}</span>`; }
+  });
+  setBanner(document.getElementById("p5-score"), correct, p5data.length);
+}
+
+/* ================= ANALYZING THE MODEL (PARAPHRASE) ================= */
+function checkModel2(){
+  let correct=0; const total=9;
+  function check(id, ok, fbId, ans){
+    const fb = document.getElementById(fbId);
+    fb.classList.add("show");
+    if(ok){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+    else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${ans}`; }
+  }
+  check("m2-q11", document.getElementById("m2-q11").value==="6", "m2-fb-11", "6 sentences");
+  check("m2-q12", document.getElementById("m2-q12").value==="5", "m2-fb-12", "5 sentences");
+  check("m2-q2a1", containsKeywords(document.getElementById("m2-q2a1").value,[["globe"]]), "m2-fb-2a1", "the globe");
+  check("m2-q2a2", document.getElementById("m2-q2a2").value==="beginning", "m2-fb-2a2", "At the beginning of the first sentence (\"The world...\")");
+  check("m2-q2b1", containsKeywords(document.getElementById("m2-q2b1").value,[["technology"]]), "m2-fb-2b1", "Technology");
+  check("m2-q2b2", containsKeywords(document.getElementById("m2-q2b2").value,[["methods"]]), "m2-fb-2b2", "methods / new methods");
+  check("m2-q2c1", containsKeywords(document.getElementById("m2-q2c1").value,[["difficulties"],["difficulty"]]), "m2-fb-2c1", "difficulties");
+  check("m2-q2c2", containsKeywords(document.getElementById("m2-q2c2").value,[["language experts"]]), "m2-fb-2c2", "Language experts");
+  check("m2-q2d", document.getElementById("m2-q2d").value==="23", "m2-fb-2d", "Sentences 2 and 3");
+  setBanner(document.getElementById("m2-score"), correct, total);
+}
+
+/* ================= PRACTICE 6 ================= */
+const p6data = {
+  passage2: [
+    {letter:"a", text:`People's response to the child and the kind of language the child hears can affect his rate of language development ("Late-bloomer").`, answer:"toosim"},
+    {letter:"b", text:`Language can develop at different rates depending on the child's exposure to language and the response he or she gets when using it ("Late-bloomer").`, answer:"best"},
+    {letter:"c", text:`Rate of language development can be influenced by children's exposure to language and response to their language use.`, answer:"nocit"},
+    {letter:"d", text:`Language develops more quickly if children are exposed to different languages and if they receive a response ("Late-bloomer").`, answer:"incacc"}
+  ],
+  passage3: [
+    {letter:"a", text:`Communication disorders prevent children from learning and are evidence of low intelligence ("Speech and Language Disorders").`, answer:"incacc"},
+    {letter:"b", text:`Children with speech and language challenges can fall behind in school because of trouble processing text or comprehending and using speech. Difficulty reading and writing can lead to problems with thinking and learning.`, answer:"nocit"},
+    {letter:"c", text:`Children with communication disabilities often do not work at grade level. They may have challenges with reading or have trouble comprehending and using spoken language. People with reading and writing problems also may have trouble using language to process ideas ("Speech and Language Disorders").`, answer:"toosim"},
+    {letter:"d", text:`Communication disabilities can cause problems for children in the areas of reading, writing, speaking, listening, thinking, and learning, which can result in poor performance in school ("Speech and Language Disorders").`, answer:"best"}
+  ]
+};
+const p6labels = {best:"Best", toosim:"Too sim.", nocit:"No cit.", incacc:"Inc. / Inacc."};
+Object.keys(p6data).forEach(key=>{
+  const container = document.getElementById(`p6-${key}`);
+  p6data[key].forEach((item,i)=>{
+    const d = document.createElement("div");
+    d.className="item-row";
+    d.style.cssText="flex-direction:column;align-items:flex-start;gap:6px;";
+    d.innerHTML = `<span class="item-text">${item.letter}. ${item.text}</span>
+      <select id="p6-${key}-${i}">
+        <option value="">-- label --</option>
+        <option value="best">Best</option>
+        <option value="toosim">Too sim.</option>
+        <option value="nocit">No cit.</option>
+        <option value="incacc">Inc. / Inacc.</option>
+      </select>
+      <div class="feedback-box" id="p6-fb-${key}-${i}"></div>`;
+    container.appendChild(d);
+  });
+});
+function checkPractice6(){
+  let correct=0, total=0;
+  Object.keys(p6data).forEach(key=>{
+    p6data[key].forEach((item,i)=>{
+      total++;
+      const val = document.getElementById(`p6-${key}-${i}`).value;
+      const fb = document.getElementById(`p6-fb-${key}-${i}`);
+      fb.classList.add("show");
+      if(val===item.answer){ correct++; fb.className="feedback-box show correct"; fb.textContent="✓ Correct."; }
+      else{ fb.className="feedback-box show wrong"; fb.textContent=`✗ Correct answer: ${p6labels[item.answer]}`; }
+    });
+  });
+  setBanner(document.getElementById("p6-score"), correct, total);
+}
+
+/* ================= PRACTICE 8 ================= */
+function checkPractice8(){
+  let correct=0; const total=2;
+  const q1 = document.getElementById("p8-q1").value;
+  const fb1 = document.getElementById("p8-fb-1");
+  fb1.classList.add("show");
+  if(q1==="A"){ correct++; fb1.className="feedback-box show correct"; fb1.textContent="✓ Correct — Summary A, because it has all the important ideas and nothing extra."; }
+  else{ fb1.className="feedback-box show wrong"; fb1.textContent="✗ Correct answer: Summary A, because it has all the important ideas and nothing extra."; }
+
+  const q2 = document.getElementById("p8-q2").value;
+  const fb2 = document.getElementById("p8-fb-2");
+  fb2.classList.add("show");
+  if(q2==="B"){ correct++; fb2.className="feedback-box show correct"; fb2.textContent="✓ Correct — Summary B claims bilingualism \"helps stop diseases such as Alzheimer's,\" which overstates what the original passage says (it only delays the onset / slows progression)."; }
+  else{ fb2.className="feedback-box show wrong"; fb2.textContent="✗ Correct answer: Summary B (it overstates the Alzheimer's finding)."; }
+
+  setBanner(document.getElementById("p8-score"), correct, total);
+}
+</script>
+</body>
+</html>

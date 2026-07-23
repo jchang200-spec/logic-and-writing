@@ -256,6 +256,16 @@
   }
   textarea{ resize:vertical; min-height:52px; }
   input[type="text"]{ height:38px; }
+  select{
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:9px 11px;
+    height:42px;
+    border:1px solid #cfc6b8;
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
 
   .group-box{
     background:#fff;
@@ -288,9 +298,9 @@
   }
   .item-text{ flex:1; font-size:.97rem; }
   .item-select select{
-    font-family:"Helvetica Neue",Arial,sans-serif;
-    font-size:.86rem;
-    padding:6px 8px;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:8px 10px;
     border-radius:3px;
     border:1px solid #cfc6b8;
     background:#fff;
@@ -389,9 +399,9 @@
   }
   .p4-col select{
     width:100%;
-    font-family:"Helvetica Neue",Arial,sans-serif;
-    font-size:.88rem;
-    padding:7px 9px;
+    font-family:"Georgia","Noto Serif KR",serif;
+    font-size:1rem;
+    padding:9px 10px;
     border-radius:3px;
     border:1px solid #cfc6b8;
     background:#fff;
@@ -1430,9 +1440,9 @@ function checkPractice9a(){
     const val = document.getElementById(`p9a-${item.n}`).value;
     const fb = document.getElementById(`p9a-fb-${item.n}`);
     fb.classList.add("show");
-    const answerList = item.sentences.map(s=>`&bull; ${s}`).join("<br>");
-    if(containsKeywords(val,[[item.keyword]])){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Correct.<br>${answerList}`; }
-    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `✗ Correct answer:<br>${answerList}`; }
+    const answerList = `<ul style="margin:4px 0 0;padding-left:20px;">${item.sentences.map(s=>`<li style="margin-bottom:4px;">${s}</li>`).join("")}</ul>`;
+    if(containsKeywords(val,[[item.keyword]])){ correct++; fb.className="feedback-box show correct"; fb.innerHTML = `✓ Correct.${answerList}`; }
+    else{ fb.className="feedback-box show wrong"; fb.innerHTML = `✗ Correct answer:${answerList}`; }
   });
   setBanner(document.getElementById("p9a-score"), correct, total);
 }
